@@ -1,0 +1,327 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="Хранилище atomModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="ut_MenuField">
+          <Key>
+            <PropertyRef Name="pkid" />
+          </Key>
+          <Property Name="pkid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="idpage" Type="int" />
+          <Property Name="nam" Type="nvarchar" MaxLength="300" />
+          <Property Name="fld" Type="nvarchar" MaxLength="200" />
+          <Property Name="idparent" Type="int" />
+          <Property Name="fldbd" Type="nvarchar" MaxLength="250" />
+          <Property Name="tabbd" Type="nvarchar" MaxLength="250" />
+          <Property Name="keyfield" Type="nvarchar" MaxLength="250" />
+          <Property Name="keyfieldvalue" Type="int" />
+          <Property Name="idparenttable" Type="int" />
+          <Property Name="isconsidered" Type="bit" />
+          <Property Name="isNotEdited" Type="int" Nullable="false" />
+          <Property Name="isFakeHistory" Type="bit" />
+          <Property Name="FldParentForParams" Type="varchar" MaxLength="250" />
+        </EntityType>
+        <EntityType Name="ut_MenuPageView">
+          <Key>
+            <PropertyRef Name="pkid" />
+          </Key>
+          <Property Name="pkid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="idgroup" Type="int" />
+          <Property Name="idparentpage" Type="int" />
+          <Property Name="nam" Type="nvarchar" MaxLength="200" />
+          <Property Name="sorder" Type="int" />
+          <Property Name="idmenupage" Type="int" />
+          <Property Name="gs" Type="char" MaxLength="2" />
+        </EntityType>
+        <EntityType Name="ut_RoleField">
+          <Key>
+            <PropertyRef Name="pkid" />
+          </Key>
+          <Property Name="pkid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="idrole" Type="int" />
+          <Property Name="idfld" Type="int" />
+          <Property Name="visability" Type="int" />
+        </EntityType>
+        <EntityType Name="ut_Roles">
+          <Key>
+            <PropertyRef Name="pkid" />
+          </Key>
+          <Property Name="pkid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="nam" Type="nvarchar" MaxLength="200" />
+          <Property Name="groupad" Type="nvarchar" MaxLength="200" />
+          <Property Name="nams" Type="nvarchar" MaxLength="100" />
+          <Property Name="isregionrequired" Type="bit" />
+          <Property Name="isblockrequired" Type="bit" />
+          <Property Name="gs" Type="nchar" MaxLength="2" Nullable="false" />
+          <Property Name="demandmanager" Type="bit" />
+          <Property Name="range" Type="int" />
+          <Property Name="Unpublic" Type="bit" />
+          <Property Name="type" Type="int" />
+        </EntityType>
+        <Association Name="FK_ut_MenuField_ut_MenuField">
+          <End Role="ut_MenuField" Type="Self.ut_MenuField" Multiplicity="0..1" />
+          <End Role="ut_MenuField1" Type="Self.ut_MenuField" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ut_MenuField">
+              <PropertyRef Name="pkid" />
+            </Principal>
+            <Dependent Role="ut_MenuField1">
+              <PropertyRef Name="idparent" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ut_RoleField_ut_MenuField">
+          <End Role="ut_MenuField" Type="Self.ut_MenuField" Multiplicity="0..1" />
+          <End Role="ut_RoleField" Type="Self.ut_RoleField" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ut_MenuField">
+              <PropertyRef Name="pkid" />
+            </Principal>
+            <Dependent Role="ut_RoleField">
+              <PropertyRef Name="idfld" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ut_RoleField_ut_Roles">
+          <End Role="ut_Roles" Type="Self.ut_Roles" Multiplicity="0..1" />
+          <End Role="ut_RoleField" Type="Self.ut_RoleField" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ut_Roles">
+              <PropertyRef Name="pkid" />
+            </Principal>
+            <Dependent Role="ut_RoleField">
+              <PropertyRef Name="idrole" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Хранилище atomModelContainer">
+          <EntitySet Name="ut_MenuField" EntityType="Self.ut_MenuField" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ut_MenuPageView" EntityType="Self.ut_MenuPageView" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ut_RoleField" EntityType="Self.ut_RoleField" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ut_Roles" EntityType="Self.ut_Roles" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_ut_MenuField_ut_MenuField" Association="Self.FK_ut_MenuField_ut_MenuField">
+            <End Role="ut_MenuField" EntitySet="ut_MenuField" />
+            <End Role="ut_MenuField1" EntitySet="ut_MenuField" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ut_RoleField_ut_MenuField" Association="Self.FK_ut_RoleField_ut_MenuField">
+            <End Role="ut_MenuField" EntitySet="ut_MenuField" />
+            <End Role="ut_RoleField" EntitySet="ut_RoleField" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ut_RoleField_ut_Roles" Association="Self.FK_ut_RoleField_ut_Roles">
+            <End Role="ut_Roles" EntitySet="ut_Roles" />
+            <End Role="ut_RoleField" EntitySet="ut_RoleField" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="atomModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="ut_MenuField">
+          <Key>
+            <PropertyRef Name="pkid" />
+          </Key>
+          <Property Name="pkid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="idpage" Type="Int32" />
+          <Property Name="nam" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="fld" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="idparent" Type="Int32" />
+          <Property Name="fldbd" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="tabbd" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="keyfield" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="keyfieldvalue" Type="Int32" />
+          <Property Name="idparenttable" Type="Int32" />
+          <Property Name="isconsidered" Type="Boolean" />
+          <Property Name="isNotEdited" Type="Int32" Nullable="false" />
+          <Property Name="isFakeHistory" Type="Boolean" />
+          <Property Name="FldParentForParams" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="ut_MenuField1" Relationship="atomModel.FK_ut_MenuField_ut_MenuField" FromRole="ut_MenuField" ToRole="ut_MenuField1" />
+          <NavigationProperty Name="ut_MenuField2" Relationship="atomModel.FK_ut_MenuField_ut_MenuField" FromRole="ut_MenuField1" ToRole="ut_MenuField" />
+          <NavigationProperty Name="ut_RoleField" Relationship="atomModel.FK_ut_RoleField_ut_MenuField" FromRole="ut_MenuField" ToRole="ut_RoleField" />
+        </EntityType>
+        <EntityType Name="ut_MenuPageView">
+          <Key>
+            <PropertyRef Name="pkid" />
+          </Key>
+          <Property Name="pkid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="idgroup" Type="Int32" />
+          <Property Name="idparentpage" Type="Int32" />
+          <Property Name="nam" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="sorder" Type="Int32" />
+          <Property Name="idmenupage" Type="Int32" />
+          <Property Name="gs" Type="String" MaxLength="2" FixedLength="true" Unicode="false" />
+        </EntityType>
+        <EntityContainer Name="atomEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="ut_MenuField" EntityType="Self.ut_MenuField" />
+          <EntitySet Name="ut_MenuPageView" EntityType="Self.ut_MenuPageView" />
+          <AssociationSet Name="FK_ut_MenuField_ut_MenuField" Association="atomModel.FK_ut_MenuField_ut_MenuField">
+            <End Role="ut_MenuField" EntitySet="ut_MenuField" />
+            <End Role="ut_MenuField1" EntitySet="ut_MenuField" />
+          </AssociationSet>
+          <EntitySet Name="ut_RoleField" EntityType="atomModel.ut_RoleField" />
+          <AssociationSet Name="FK_ut_RoleField_ut_MenuField" Association="atomModel.FK_ut_RoleField_ut_MenuField">
+            <End Role="ut_MenuField" EntitySet="ut_MenuField" />
+            <End Role="ut_RoleField" EntitySet="ut_RoleField" />
+          </AssociationSet>
+          <EntitySet Name="ut_Roles" EntityType="atomModel.ut_Roles" />
+          <AssociationSet Name="FK_ut_RoleField_ut_Roles" Association="atomModel.FK_ut_RoleField_ut_Roles">
+            <End Role="ut_Roles" EntitySet="ut_Roles" />
+            <End Role="ut_RoleField" EntitySet="ut_RoleField" />
+          </AssociationSet>
+        </EntityContainer>
+        <Association Name="FK_ut_MenuField_ut_MenuField">
+          <End Type="atomModel.ut_MenuField" Role="ut_MenuField" Multiplicity="0..1" />
+          <End Type="atomModel.ut_MenuField" Role="ut_MenuField1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ut_MenuField">
+              <PropertyRef Name="pkid" />
+            </Principal>
+            <Dependent Role="ut_MenuField1">
+              <PropertyRef Name="idparent" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ut_RoleField">
+          <Key>
+            <PropertyRef Name="pkid" />
+          </Key>
+          <Property Name="pkid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="idrole" Type="Int32" />
+          <Property Name="idfld" Type="Int32" />
+          <Property Name="visability" Type="Int32" />
+          <NavigationProperty Name="ut_MenuField" Relationship="atomModel.FK_ut_RoleField_ut_MenuField" FromRole="ut_RoleField" ToRole="ut_MenuField" />
+          <NavigationProperty Name="ut_Roles" Relationship="atomModel.FK_ut_RoleField_ut_Roles" FromRole="ut_RoleField" ToRole="ut_Roles" />
+        </EntityType>
+        <Association Name="FK_ut_RoleField_ut_MenuField">
+          <End Type="atomModel.ut_MenuField" Role="ut_MenuField" Multiplicity="0..1" />
+          <End Type="atomModel.ut_RoleField" Role="ut_RoleField" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ut_MenuField">
+              <PropertyRef Name="pkid" />
+            </Principal>
+            <Dependent Role="ut_RoleField">
+              <PropertyRef Name="idfld" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ut_Roles">
+          <Key>
+            <PropertyRef Name="pkid" />
+          </Key>
+          <Property Name="pkid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nam" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="groupad" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="nams" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="isregionrequired" Type="Boolean" />
+          <Property Name="isblockrequired" Type="Boolean" />
+          <Property Name="gs" Type="String" Nullable="false" MaxLength="2" FixedLength="true" Unicode="true" />
+          <Property Name="demandmanager" Type="Boolean" />
+          <Property Name="range" Type="Int32" />
+          <Property Name="Unpublic" Type="Boolean" />
+          <Property Name="type" Type="Int32" />
+          <NavigationProperty Name="ut_RoleField" Relationship="atomModel.FK_ut_RoleField_ut_Roles" FromRole="ut_Roles" ToRole="ut_RoleField" />
+        </EntityType>
+        <Association Name="FK_ut_RoleField_ut_Roles">
+          <End Type="atomModel.ut_Roles" Role="ut_Roles" Multiplicity="0..1" />
+          <End Type="atomModel.ut_RoleField" Role="ut_RoleField" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ut_Roles">
+              <PropertyRef Name="pkid" />
+            </Principal>
+            <Dependent Role="ut_RoleField">
+              <PropertyRef Name="idrole" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Хранилище atomModelContainer" CdmEntityContainer="atomEntities">
+          <EntitySetMapping Name="ut_MenuField">
+            <EntityTypeMapping TypeName="atomModel.ut_MenuField">
+              <MappingFragment StoreEntitySet="ut_MenuField">
+                <ScalarProperty Name="pkid" ColumnName="pkid" />
+                <ScalarProperty Name="idpage" ColumnName="idpage" />
+                <ScalarProperty Name="nam" ColumnName="nam" />
+                <ScalarProperty Name="fld" ColumnName="fld" />
+                <ScalarProperty Name="idparent" ColumnName="idparent" />
+                <ScalarProperty Name="fldbd" ColumnName="fldbd" />
+                <ScalarProperty Name="tabbd" ColumnName="tabbd" />
+                <ScalarProperty Name="keyfield" ColumnName="keyfield" />
+                <ScalarProperty Name="keyfieldvalue" ColumnName="keyfieldvalue" />
+                <ScalarProperty Name="idparenttable" ColumnName="idparenttable" />
+                <ScalarProperty Name="isconsidered" ColumnName="isconsidered" />
+                <ScalarProperty Name="isNotEdited" ColumnName="isNotEdited" />
+                <ScalarProperty Name="isFakeHistory" ColumnName="isFakeHistory" />
+                <ScalarProperty Name="FldParentForParams" ColumnName="FldParentForParams" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ut_MenuPageView">
+            <EntityTypeMapping TypeName="atomModel.ut_MenuPageView">
+              <MappingFragment StoreEntitySet="ut_MenuPageView">
+                <ScalarProperty Name="pkid" ColumnName="pkid" />
+                <ScalarProperty Name="idgroup" ColumnName="idgroup" />
+                <ScalarProperty Name="idparentpage" ColumnName="idparentpage" />
+                <ScalarProperty Name="nam" ColumnName="nam" />
+                <ScalarProperty Name="sorder" ColumnName="sorder" />
+                <ScalarProperty Name="idmenupage" ColumnName="idmenupage" />
+                <ScalarProperty Name="gs" ColumnName="gs" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ut_RoleField">
+            <EntityTypeMapping TypeName="atomModel.ut_RoleField">
+              <MappingFragment StoreEntitySet="ut_RoleField">
+                <ScalarProperty Name="visability" ColumnName="visability" />
+                <ScalarProperty Name="idfld" ColumnName="idfld" />
+                <ScalarProperty Name="idrole" ColumnName="idrole" />
+                <ScalarProperty Name="pkid" ColumnName="pkid" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ut_Roles">
+            <EntityTypeMapping TypeName="atomModel.ut_Roles">
+              <MappingFragment StoreEntitySet="ut_Roles">
+                <ScalarProperty Name="type" ColumnName="type" />
+                <ScalarProperty Name="Unpublic" ColumnName="Unpublic" />
+                <ScalarProperty Name="range" ColumnName="range" />
+                <ScalarProperty Name="demandmanager" ColumnName="demandmanager" />
+                <ScalarProperty Name="gs" ColumnName="gs" />
+                <ScalarProperty Name="isblockrequired" ColumnName="isblockrequired" />
+                <ScalarProperty Name="isregionrequired" ColumnName="isregionrequired" />
+                <ScalarProperty Name="nams" ColumnName="nams" />
+                <ScalarProperty Name="groupad" ColumnName="groupad" />
+                <ScalarProperty Name="nam" ColumnName="nam" />
+                <ScalarProperty Name="pkid" ColumnName="pkid" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
