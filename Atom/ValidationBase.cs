@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Atom
 {
@@ -15,7 +16,9 @@ namespace Atom
         private readonly Dictionary<string, List<string>> _errors = new Dictionary<string, List<string>>();
         public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
         private readonly object _lock = new object();
+        [JsonIgnore]
         public bool HasErrors { get { return _errors.Any(propErrors => propErrors.Value != null && propErrors.Value.Count > 0); } }
+        [JsonIgnore]
         public bool IsValid { get { return !this.HasErrors; } }
 
         public IEnumerable GetErrors(string propertyName)

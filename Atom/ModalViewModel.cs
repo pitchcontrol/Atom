@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using Atom.Behavior;
+using Newtonsoft.Json;
 
 namespace Atom
 {
@@ -16,6 +17,7 @@ namespace Atom
             Types = new[] { "int", "decimal", "bit", "varchar", "file", "dictionary" };
             Validate();
         }
+        [JsonIgnore]
         public IEnumerable<string> Types { get; set; }
 
 

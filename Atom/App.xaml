@@ -4,6 +4,7 @@
              xmlns:local="clr-namespace:Atom"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <!--Привязки типов и моделей-->
+        <ResourceDictionary Source="ResourceDictionary.xaml"/>
     </Application.Resources>
 </Application>

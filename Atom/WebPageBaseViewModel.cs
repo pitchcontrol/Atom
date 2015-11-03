@@ -2,6 +2,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using Atom.Behavior;
+using Newtonsoft.Json;
 
 namespace Atom
 {
@@ -10,6 +11,7 @@ namespace Atom
     /// </summary>
     public abstract class WebPageBaseViewModel : ViewModelBase
     {
+        [JsonIgnore]
         public ObservableCollection<WebPageBaseViewModel> ParentCollection { get; set; }
 
         public WebPageBaseViewModel(ObservableCollection<WebPageBaseViewModel> parentCollection)
@@ -17,21 +19,23 @@ namespace Atom
             ParentCollection = parentCollection;
             Children = new ObservableCollection<WebPageBaseViewModel>();
         }
+
         /// <summary>
         /// Можно таскать
         /// </summary>
+        [JsonIgnore]
         public abstract bool IsDragable { get; }
+        [JsonIgnore]
         public abstract bool IsDropable { get; }
-        public virtual void Remove(WebPageBaseViewModel i)
-        {
-            ParentCollection.Remove(i);
-        }
         /// <summary>
         /// Бросаем обьект
         /// </summary>
         public virtual void Drop(WebPageBaseViewModel data, int index = -1)
         {
+            //Удаляем у родителя
+            data.ParentCollection.Remove(data);
             Children.Add(data);
+            data.ParentCollection = Children;
         }
         private string _controlIdView;
         private string _controlIdEdit;
@@ -44,6 +48,7 @@ namespace Atom
         /// Тип поля
         /// </summary>
         [Required]
+        [JsonIgnore]
         public virtual string Type
         {
             get { return _type; }
@@ -126,7 +131,7 @@ namespace Atom
         /// <summary>
         /// Дочерние контролы
         /// </summary>
-        public ObservableCollection<WebPageBaseViewModel> Children { get; }
+        public ObservableCollection<WebPageBaseViewModel> Children { get; private set; }
         protected void SetID()
         {
             string edit = "";
@@ -151,9 +156,24 @@ namespace Atom
                     view = "vlbl";
                     edit = "vddl";
                     break;
+                case "panel":
+                    view = "cp";
+                    edit = "cp";
+                    break;
             }
             ControlIdView = view + FieldInDb;
             ControlIdEdit = edit + FieldInDb;
+        }
+        /// <summary>
+        /// Кратинка
+        /// </summary>
+        public virtual string Image
+        {
+            get { return @"/Images/change.gif"; }
+        }
+        public override string ToString()
+        {
+            return string.Format("{0}: {1}", Type, FieldInDb);
         }
     }
 }

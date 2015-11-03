@@ -13,10 +13,10 @@ namespace Atom.Behavior
             base.OnAttached();
 
             this.AssociatedObject.AllowDrop = true;
-            this.AssociatedObject.DragEnter += new DragEventHandler(AssociatedObject_DragEnter);
-            this.AssociatedObject.DragOver += new DragEventHandler(AssociatedObject_DragOver);
-            this.AssociatedObject.DragLeave += new DragEventHandler(AssociatedObject_DragLeave);
-            this.AssociatedObject.Drop += new DragEventHandler(AssociatedObject_Drop);
+            this.AssociatedObject.DragEnter += AssociatedObject_DragEnter;
+            this.AssociatedObject.DragOver += AssociatedObject_DragOver;
+            this.AssociatedObject.DragLeave += AssociatedObject_DragLeave;
+            this.AssociatedObject.Drop += AssociatedObject_Drop;
         }
 
         void AssociatedObject_Drop(object sender, DragEventArgs e)
@@ -30,12 +30,6 @@ namespace Atom.Behavior
                 if (target != null && target.IsDropable)
                 {
                     target.Drop((WebPageBaseViewModel)e.Data.GetData(type));
-
-                    //remove the data from the source
-                    WebPageBaseViewModel source = e.Data.GetData(type) as WebPageBaseViewModel;
-                    source.Remove((WebPageBaseViewModel)e.Data.GetData(type));
-                    //Теперь нужно поменять родителя
-                    source.ParentCollection = target.Children;
                 }
             }
             if (this.adorner != null)
@@ -58,7 +52,7 @@ namespace Atom.Behavior
             //if item can be dropped
             if (e.Data.GetDataPresent(type))
             {
-                IDropable target = this.AssociatedObject.DataContext as IDropable;
+                WebPageBaseViewModel target = this.AssociatedObject.DataContext as WebPageBaseViewModel;
                 if (target != null)
                 {
                     //give mouse effect
@@ -76,7 +70,7 @@ namespace Atom.Behavior
 
             if (this.AssociatedObject.DataContext != null)
             {
-                IDropable dropObject = this.AssociatedObject.DataContext as IDropable;
+                WebPageBaseViewModel dropObject = this.AssociatedObject.DataContext as WebPageBaseViewModel;
                 if (dropObject != null)
                 {
                     if (this.adorner == null)

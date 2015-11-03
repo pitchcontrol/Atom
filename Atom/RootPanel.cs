@@ -16,7 +16,10 @@ namespace Atom
         {
             get { return "Корень"; }
         }
-
+        public override string Image
+        {
+            get { return @"/Images/Organization.png"; }
+        }
         public RootPanel(ObservableCollection<WebPageBaseViewModel> parentCollection) : base(parentCollection)
         {
         }

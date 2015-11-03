@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
+using System.Windows.Input;
+using Atom.Services;
 using Microsoft.Win32;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace Atom
 {
@@ -26,9 +27,11 @@ namespace Atom
         private string _script;
         private string _pageText;
         private string _resuorseText;
-        private ModalViewModel _currentProperty;
+        private WebPageBaseViewModel _currentProperty;
         private ut_Roles _selectedRole;
         private readonly RootPanel _rootPanel;
+        private ObservableCollection<WebPageBaseViewModel> _properties;
+
         public string Page
         {
             get { return _page; }
@@ -67,26 +70,27 @@ namespace Atom
             EditPropertyCommand = new DelegateCommand<string>(EditProperty, (obj) => CurrentProperty != null);
             RuResourceCommand = new DelegateCommand<string>(GetRuResource, (onj) => Properties.Count() != 0);
             EnResourceCommand = new DelegateCommand<string>(GetEnResource, (onj) => Properties.Count() != 0);
+
+            AddPanelCommand = new NotifyCommand<MainViewModel>(this, new string[0], AddPanel, (m) => true);
             //PageViews = _context.ut_MenuPageView.ToList();
             //GlobalRoles = _context.ut_Roles.ToList();
             Properties = new ObservableCollection<WebPageBaseViewModel>();
-
-            _rootPanel= new RootPanel(Properties);
+            _rootPanel = new RootPanel(Properties);
             Properties.Add(_rootPanel);
-            //Root
-            //ДЛя теста 
-            _rootPanel.Children.Add(new ModalViewModel(_rootPanel.Children)
-            {
-                FieldInDb = "field1"
-            });
-            _rootPanel.Children.Add(new Panel(_rootPanel.Children)
-            {
-                FieldInDb = "Panel1"
-            });
-            _rootPanel.Children.Add(new ModalViewModel(_rootPanel.Children)
-            {
-                FieldInDb = "field3"
-            });
+            ////Root
+            ////ДЛя теста 
+            //_rootPanel.Children.Add(new ModalViewModel(_rootPanel.Children)
+            //{
+            //    FieldInDb = "field1"
+            //});
+            //_rootPanel.Children.Add(new Panel(_rootPanel.Children)
+            //{
+            //    FieldInDb = "Panel1"
+            //});
+            //_rootPanel.Children.Add(new ModalViewModel(_rootPanel.Children)
+            //{
+            //    FieldInDb = "field3"
+            //});
         }
 
         public DelegateCommand<string> GetScriptCommand { get; set; }
@@ -98,7 +102,7 @@ namespace Atom
         public DelegateCommand<string> EditPropertyCommand { get; set; }
         public DelegateCommand<string> RuResourceCommand { get; set; }
         public DelegateCommand<string> EnResourceCommand { get; set; }
-
+        public ICommand AddPanelCommand { get; private set; }
         public event PropertyChangedEventHandler PropertyChanged;
 
         public string Script
@@ -146,9 +150,24 @@ namespace Atom
                 OnPropertyChanged();
             }
         }
-        public ObservableCollection<WebPageBaseViewModel> Properties { get; }
+        /// <summary>
+        /// Контролы на странице
+        /// </summary>
+        public ObservableCollection<WebPageBaseViewModel> Properties
+        {
+            get { return _properties; }
+            private set
+            {
+                if (value == _properties) return;
+                _properties = value;
+                OnPropertyChanged();
+                GetScriptCommand.RaiseCanExecuteChanged();
+                EnResourceCommand.RaiseCanExecuteChanged();
+                RuResourceCommand.RaiseCanExecuteChanged();
+            }
+        }
 
-        public ModalViewModel CurrentProperty
+        public WebPageBaseViewModel CurrentProperty
         {
             get { return _currentProperty; }
             set
@@ -168,16 +187,7 @@ namespace Atom
             {
             }
         }
-        private void AddProperty(string obj)
-        {
-            ModalView window = new ModalView();
-            ModalViewModel model = new ModalViewModel(Properties);
-            window.DataContext = model;
-            if (window.ShowDialog() == true)
-            {
-                Properties.Add(model);
-            }
-        }
+
         /// <summary>
         /// Получить XML ресурса
         /// </summary>
@@ -208,34 +218,9 @@ namespace Atom
         /// <param name="obj"></param>
         private void GetViewPage(string obj)
         {
-            string result = "";
-            foreach (ModalViewModel modalViewModel in Properties)
-            {
-                result += string.Format("<%--{0}--%>\n", modalViewModel.RuDescription);
-                switch (modalViewModel.Type)
-                {
-                    case "int":
-                    case "varchar":
-                    case "datetime":
-                    case "decimal":
-                    case "dictionary":
-                        result += string.Format("<gp:ValidatingLabel ID=\"{0}\" runat=\"server\" SkinID=\"ViewModeSkin\" Caption=\"\" DataBoundField=\"{1}\" EnableDate=\"true\" HistType=\"HISTORY_TYPE_UL\"/>\n",
-                            modalViewModel.ControlIdView,
-                            modalViewModel.FieldInDb);
-                        break;
-                    case "bit":
-                        result += string.Format("<gp:ValidatingBoolLabel ID=\"{0}\" runat=\"server\" SkinID=\"ViewModeSkin\" Caption=\"\" DataBoundField=\"{1}\" EnableDate=\"true\" HistType=\"HISTORY_TYPE_UL\"/>\n",
-                            modalViewModel.ControlIdView,
-                            modalViewModel.FieldInDb);
-                        break;
-                    case "file":
-                        result += string.Format("<gp:ValidatingFileView ID=\"{0}\" runat=\"server\" SkinID=\"ViewModeSkin\" Caption=\"\" DataBoundField=\"{1}\" EnableDate=\"true\" HistType=\"HISTORY_TYPE_UL\"/>\n",
-                            modalViewModel.ControlIdView,
-                            modalViewModel.FieldInDb);
-                        break;
-                }
-            }
-            PageText = result;
+            PageConstructotHelper helper = new PageConstructotHelper();
+            helper.Construct(_rootPanel.Children, false);
+            PageText = helper.ToString();
         }
 
         private void SaveObj(string obj)
@@ -244,7 +229,10 @@ namespace Atom
             saveFileDialog.Filter = "json (*.json)|*.json";
             if (saveFileDialog.ShowDialog() == true)
             {
-                string json = JsonConvert.SerializeObject(Properties, Formatting.Indented);
+                string json = JsonConvert.SerializeObject(Properties, Formatting.Indented, new JsonSerializerSettings
+                                {
+                                    TypeNameHandling = TypeNameHandling.Objects
+                                });
                 File.WriteAllText(saveFileDialog.FileName, json);
             }
         }
@@ -256,61 +244,41 @@ namespace Atom
             if (openFileDialog.ShowDialog() == true)
             {
                 string json = File.ReadAllText(openFileDialog.FileName);
-                var lst = JsonConvert.DeserializeObject<List<ModalViewModel>>(json);
-                Properties.Clear();
-                lst.ForEach(Properties.Add);
-                GetScriptCommand.RaiseCanExecuteChanged();
-                EnResourceCommand.RaiseCanExecuteChanged();
-                RuResourceCommand.RaiseCanExecuteChanged();
+                Properties = JsonConvert.DeserializeObject<ObservableCollection<WebPageBaseViewModel>>(json, new JsonSerializerSettings
+                {
+                    TypeNameHandling = TypeNameHandling.Objects
+                });
+
+
             }
         }
+        private void AddProperty(string obj)
+        {
+            ModalView window = new ModalView();
+            ModalViewModel model = new ModalViewModel(_rootPanel.Children);
+            window.DataContext = model;
+            if (window.ShowDialog() == true)
+            {
+                _rootPanel.Children.Add(model);
+            }
+        }
+        private void AddPanel(MainViewModel model)
+        {
+            ModalView window = new ModalView();
+            Panel panel = new Panel(_rootPanel.Children);
+            window.DataContext = panel;
+            if (window.ShowDialog() == true)
+            {
+                _rootPanel.Children.Add(panel);
+            }
+
+        }
+
         private void GetEditPage(string obj)
         {
-            string result = "";
-            foreach (ModalViewModel modalViewModel in Properties)
-            {
-                result += string.Format("<%--{0}--%>\n", modalViewModel.RuDescription);
-                switch (modalViewModel.Type)
-                {
-                    case "datetime":
-                        result += string.Format("<gp:ValidatingJsCalendar ID=\"{0}\" runat=\"server\" SkinID=\"ViewModeSkin\" Caption=\"\" DataBoundField=\"{1}\" EnableDate=\"true\" HistType=\"HISTORY_TYPE_UL\" ImageUrl=\"~/Images/week_small.gif\"  ValidType=\"FORM_ERROR_TYPE_DATE\" />\n",
-                            modalViewModel.ControlIdView,
-                            modalViewModel.FieldInDb);
-                        break;
-                    case "int":
-                        result += string.Format("<gp:ValidatingTextBox ID=\"{0}\" runat=\"server\" sqlType=\"Int\" SkinID=\"ViewModeSkin\" Caption=\"\" DataBoundField=\"{1}\" EnableDate=\"true\" HistType=\"HISTORY_TYPE_UL\"/>\n",
-                        modalViewModel.ControlIdView,
-                        modalViewModel.FieldInDb);
-                        break;
-                    case "decimal":
-                        result += string.Format("<gp:ValidatingTextBox ID=\"{0}\" runat=\"server\" sqlType=\"Decimal\" SkinID=\"ViewModeSkin\" Caption=\"\" DataBoundField=\"{1}\" EnableDate=\"true\" HistType=\"HISTORY_TYPE_UL\"/>\n",
-                        modalViewModel.ControlIdView,
-                        modalViewModel.FieldInDb);
-                        break;
-                    case "varchar":
-                        result += string.Format("<gp:ValidatingTextBox ID=\"{0}\" runat=\"server\" SkinID=\"ViewModeSkin\" Caption=\"\" DataBoundField=\"{1}\" EnableDate=\"true\" HistType=\"HISTORY_TYPE_UL\"/>\n",
-                            modalViewModel.ControlIdView,
-                            modalViewModel.FieldInDb);
-                        break;
-                    case "bit":
-                        result += string.Format("<gp:ValidatingBoolLabel ID=\"{0}\" runat=\"server\" SkinID=\"ViewModeSkin\" Caption=\"\" DataBoundField=\"{1}\" EnableDate=\"true\" HistType=\"HISTORY_TYPE_UL\"/>\n",
-                            modalViewModel.ControlIdView,
-                            modalViewModel.FieldInDb);
-                        break;
-                    case "file":
-                        result += string.Format("<gp:ValidatingFileView ID=\"{0}\" runat=\"server\" SkinID=\"ViewModeSkin\" Caption=\"\" DataBoundField=\"{1}\" EnableDate=\"true\" HistType=\"HISTORY_TYPE_UL\"/>\n",
-                            modalViewModel.ControlIdView,
-                            modalViewModel.FieldInDb);
-                        break;
-                    case "dictionary":
-                        result += string.Format("<gp:ValidatingDropDawnList ID=\"{0}\" runat=\"server\" SkinID=\"ViewModeSkin\" Caption=\"\" DataBoundField=\"{1}\" EnableDate=\"true\" HistType=\"HISTORY_TYPE_UL\"/>\n",
-                            modalViewModel.ControlIdView,
-                            modalViewModel.FieldInDb);
-                        break;
-
-                }
-            }
-            PageText = result;
+            PageConstructotHelper helper = new PageConstructotHelper();
+            helper.Construct(_rootPanel.Children, true);
+            PageText = helper.ToString();
         }
         /// <summary>
         /// Получить скрипт

@@ -75,17 +75,17 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Behavior\BindableSelectedItemBehavior.cs" />
     <Compile Include="Behavior\FrameworkElementAdorner.cs" />
     <Compile Include="Behavior\FrameworkElementDragBehavior.cs" />
     <Compile Include="Behavior\FrameworkElementDropBehavior.cs" />
-    <Compile Include="Behavior\IDragable.cs" />
-    <Compile Include="Behavior\IDropable.cs" />
     <Compile Include="DelegateCommand.cs" />
     <Compile Include="MainViewModel.cs" />
     <Compile Include="ModalView.xaml.cs">
       <DependentUpon>ModalView.xaml</DependentUpon>
     </Compile>
     <Compile Include="ModalViewModel.cs" />
+    <Compile Include="NotifyCommand.cs" />
     <Compile Include="Panel.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="RootPanel.cs" />
@@ -104,6 +104,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Schema.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Services\PageConstructotHelper.cs" />
+    <Compile Include="Services\ScriptConstructorHelper.cs" />
     <Compile Include="ut_MenuField.cs">
       <DependentUpon>Schema.tt</DependentUpon>
     </Compile>
@@ -132,6 +134,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="ModalView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ResourceDictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -172,6 +178,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Images\change.gif" />
+    <Resource Include="Images\Organization.png" />
+    <Resource Include="Images\mainMenuFolderGray.gif" />
     <Content Include="Schema.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>Schema.edmx</DependentUpon>

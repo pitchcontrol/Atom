@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Input;
+using Enumerable = System.Linq.Enumerable;
 
 namespace Atom
 {
@@ -27,7 +28,7 @@ namespace Atom
             _canExecute = canExecute;
         }
 
-        public  bool CanExecute(object parameter)
+        public bool CanExecute(object parameter)
         {
             if (_canExecute == null)
             {

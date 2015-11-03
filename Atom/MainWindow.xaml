@@ -37,12 +37,13 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="216*"/>
                 </Grid.RowDefinitions>
-                <Button  Content="Добавить" Margin="0,10,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="75" Command="{Binding AddPropertyCommand}" Height="22"/>
+                <Button  Content="Добавить" Margin="0,10,90,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="75" Command="{Binding AddPropertyCommand}" Height="22"/>
                 <!--<DataGrid Margin="10,0" Grid.Row="1" ItemsSource="{Binding Properties}" SelectedItem="{Binding CurrentProperty}"/>-->
-                <TreeView ItemsSource="{Binding Properties}" Grid.Row="1" >
+                <TreeView ItemsSource="{Binding Properties}" Grid.Row="1" Margin="10,0">
                     <TreeView.ItemTemplate>
                         <HierarchicalDataTemplate ItemsSource="{Binding Children}">
-                            <StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="{Binding Image}"/>
                                 <TextBlock Text="{Binding FieldInDb}"/>
                                 <i:Interaction.Behaviors>
                                     <behavior:FrameworkElementDragBehavior/>
@@ -51,8 +52,11 @@
                             </StackPanel>
                         </HierarchicalDataTemplate>
                     </TreeView.ItemTemplate>
+                    <i:Interaction.Behaviors>
+                        <behavior:BindableSelectedItemBehavior SelectedItem="{Binding CurrentProperty,Mode=OneWayToSource}" />
+                    </i:Interaction.Behaviors>
                 </TreeView>
-                <Button Content="View" Margin="0,10,90,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="75" Command="{Binding ViewPageCommand}" Height="22"/>
+                <Button Content="View" Margin="0,10,170,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="75" Command="{Binding ViewPageCommand}" Height="22"/>
                 <RichTextBox Margin="10,0,10,10" Grid.Row="3">
                     <FlowDocument>
                         <Paragraph>
@@ -60,11 +64,12 @@
                         </Paragraph>
                     </FlowDocument>
                 </RichTextBox>
-                <Button Content="Edit" HorizontalAlignment="Right" Margin="0,10,170,0" VerticalAlignment="Top" Width="75" Command="{Binding EditPageCommand}" Height="22"/>
+                <Button Content="Edit" HorizontalAlignment="Right" Margin="0,10,250,0" VerticalAlignment="Top" Width="75" Command="{Binding EditPageCommand}" Height="22"/>
                 <Button Content="Сохранить" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="75" Command="{Binding SaveCommand}" Height="22"/>
                 <Button Content="Загрузить" HorizontalAlignment="Left" Margin="90,10,0,0" VerticalAlignment="Top" Width="75" Command="{Binding LoadCommand}" Height="22"/>
-                <Button Content="Редактировать" HorizontalAlignment="Right" Margin="0,10,250,0" VerticalAlignment="Top" Width="75" Command="{Binding EditPropertyCommand}" Height="22"/>
+                <Button Content="Редактировать" HorizontalAlignment="Right" Margin="0,10,330,0" VerticalAlignment="Top" Width="75" Command="{Binding EditPropertyCommand}" Height="22"/>
                 <GridSplitter HorizontalAlignment="Stretch" Height="5" Grid.Row="2"  VerticalAlignment="Center" Margin="10,0" />
+                <Button Content="Панел" Margin="0,10,10,0" VerticalAlignment="Top" Command="{Binding AddPanelCommand}" HorizontalAlignment="Right" Width="75"/>
             </Grid>
         </TabItem>
         <TabItem Header="Скрипт для базы">
