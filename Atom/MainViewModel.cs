@@ -77,20 +77,6 @@ namespace Atom
             Properties = new ObservableCollection<WebPageBaseViewModel>();
             _rootPanel = new RootPanel(Properties);
             Properties.Add(_rootPanel);
-            ////Root
-            ////ДЛя теста 
-            //_rootPanel.Children.Add(new ModalViewModel(_rootPanel.Children)
-            //{
-            //    FieldInDb = "field1"
-            //});
-            //_rootPanel.Children.Add(new Panel(_rootPanel.Children)
-            //{
-            //    FieldInDb = "Panel1"
-            //});
-            //_rootPanel.Children.Add(new ModalViewModel(_rootPanel.Children)
-            //{
-            //    FieldInDb = "field3"
-            //});
         }
 
         public DelegateCommand<string> GetScriptCommand { get; set; }
@@ -286,29 +272,31 @@ namespace Atom
         /// <param name="obj"></param>
         private void GetScript(string obj)
         {
-            string result = "DECLARE @id int;\n";
-            foreach (ModalViewModel model in Properties)
-            {
-                string description = string.Format("ru-RU:{0};en-EN:{1};", model.RuDescription, model.EnDescription);
-                result += string.Format("--{0}\n", model.FieldInDb);
-                result +=
-                    string.Format(
-                        "INSERT INTO [ut_MenuField] (idpage,fld, idparent, fldbd, tabbd, isNotEdited, nam) VALUES ({0}, '{1}', null, '{2}', '{3}' , 0, '{4}');\n",
-                        CurrentMenuPageView.idmenupage,
-                        model.ControlIdView,
-                        model.FieldInDb ?? "null",
-                        model.TableName ?? "null",
-                        description);
-
-                result += "set @id  = scope_identity();\n";
-                result += string.Format("insert into [ut_RoleField] (idrole, idfld,visability)\nvalues\n");
-                result += string.Format("({0},@id,{1})\n", SelectedRole.pkid, 1);
-                //                result = SelectedRole.ut_RoleField.Aggregate(result,
-                //                    (current, utRoleField) =>
-                //                        current + string.Format("({0},@id,{1}),\n", utRoleField.idrole, 1));
-                //                result = result.TrimEnd('\n', ',') + ";";
-            }
-            Script = result;
+//            string result = "DECLARE @id int;\n";
+//            foreach (ModalViewModel model in Properties)
+//            {
+//                string description = string.Format("ru-RU:{0};en-EN:{1};", model.RuDescription, model.EnDescription);
+//                result += string.Format("--{0}\n", model.FieldInDb);
+//                result +=
+//                    string.Format(
+//                        "INSERT INTO [ut_MenuField] (idpage,fld, idparent, fldbd, tabbd, isNotEdited, nam) VALUES ({0}, '{1}', null, '{2}', '{3}' , 0, '{4}');\n",
+//                        CurrentMenuPageView.idmenupage,
+//                        model.ControlIdView,
+//                        model.FieldInDb ?? "null",
+//                        model.TableName ?? "null",
+//                        description);
+//
+//                result += "set @id  = scope_identity();\n";
+//                result += string.Format("insert into [ut_RoleField] (idrole, idfld,visability)\nvalues\n");
+//                result += string.Format("({0},@id,{1})\n", SelectedRole.pkid, 1);
+//                //                result = SelectedRole.ut_RoleField.Aggregate(result,
+//                //                    (current, utRoleField) =>
+//                //                        current + string.Format("({0},@id,{1}),\n", utRoleField.idrole, 1));
+//                //                result = result.TrimEnd('\n', ',') + ";";
+//            }
+            ScriptConstructorHelper helper = new ScriptConstructorHelper();
+            helper.Constructor(_rootPanel.Children, false, (int)CurrentMenuPageView.idmenupage, SelectedRole.pkid);
+            Script = helper.ToString();
         }
 
         public IEnumerable<ut_MenuPageView> PageViews
