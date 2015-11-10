@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Atom.Services;
+using Atom.ViewModels;
 using NUnit.Framework;
 
 namespace Atom.UnitTests
@@ -53,6 +54,23 @@ namespace Atom.UnitTests
             result += "insert into [ut_RoleField] (idrole, idfld,visability)\nvalues\n";
             result += "(3,@id,1)\n";
             _helper.Constructor(_rootPanel.Children, false, 100, 3);
+            Assert.AreEqual(result, _helper.ToString());
+        }
+        [Test(Description = "Тестируем несколько ролей")]
+        public void MultiRoleTest()
+        {
+            _rootPanel.Children.Add(new ModalViewModel(_rootPanel.Children) { Type = "int", FieldInDb = "field1", RuDescription = "Комент", ControlIdView = "lb1" });
+            _helper.Constructor(_rootPanel.Children, false, 100, new int[] { 3, 8, 15 });
+            string result = "DECLARE @id int;\n";
+            //field1
+            result += "--field1\n";
+            result +=
+                "INSERT INTO [ut_MenuField] (idpage,fld, idparent, fldbd, tabbd, isNotEdited, nam) VALUES (100, 'lb1', null, 'field1', null, 0, 'ru-RU:Комент;en-EN:;');\n";
+            result += "set @id  = scope_identity();\n";
+            result += "insert into [ut_RoleField] (idrole, idfld,visability)\nvalues\n";
+            result += "(3,@id,3),\n";
+            result += "(8,@id,3),\n";
+            result += "(15,@id,3)\n";
             Assert.AreEqual(result, _helper.ToString());
         }
     }

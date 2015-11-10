@@ -79,12 +79,14 @@
     <Compile Include="Behavior\FrameworkElementAdorner.cs" />
     <Compile Include="Behavior\FrameworkElementDragBehavior.cs" />
     <Compile Include="Behavior\FrameworkElementDropBehavior.cs" />
+    <Compile Include="Behavior\IListItemConverter.cs" />
+    <Compile Include="Behavior\MultiSelectorBehaviours.cs" />
+    <Compile Include="Behavior\TwoListSynchronizer.cs" />
     <Compile Include="DelegateCommand.cs" />
     <Compile Include="MainViewModel.cs" />
     <Compile Include="ModalView.xaml.cs">
       <DependentUpon>ModalView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ModalViewModel.cs" />
     <Compile Include="NotifyCommand.cs" />
     <Compile Include="Panel.cs" />
     <Compile Include="Properties\Annotations.cs" />
@@ -119,8 +121,12 @@
       <DependentUpon>Schema.tt</DependentUpon>
     </Compile>
     <Compile Include="ValidationBase.cs" />
-    <Compile Include="ViewModelBase.cs" />
+    <Compile Include="ViewModels\ModalViewModel.cs" />
+    <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="WebPageBaseViewModel.cs" />
+    <Compile Include="Window1.xaml.cs">
+      <DependentUpon>Window1.xaml</DependentUpon>
+    </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -138,6 +144,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ResourceDictionary.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Window1.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -181,6 +191,8 @@
     <Resource Include="Images\change.gif" />
     <Resource Include="Images\Organization.png" />
     <Resource Include="Images\mainMenuFolderGray.gif" />
+    <Resource Include="Images\FileOpen.png" />
+    <Resource Include="Images\Save.gif" />
     <Content Include="Schema.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>Schema.edmx</DependentUpon>

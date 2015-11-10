@@ -2,6 +2,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using Atom.Behavior;
+using Atom.ViewModels;
 using Newtonsoft.Json;
 
 namespace Atom
@@ -18,6 +19,7 @@ namespace Atom
         {
             ParentCollection = parentCollection;
             Children = new ObservableCollection<WebPageBaseViewModel>();
+            IsEditable = true;
         }
 
         /// <summary>
@@ -43,12 +45,12 @@ namespace Atom
         private string _ruDescription;
         private string _enDescription;
         private string _type;
+        private bool _isEditable;
 
         /// <summary>
         /// Тип поля
         /// </summary>
         [Required]
-        [JsonIgnore]
         public virtual string Type
         {
             get { return _type; }
@@ -89,6 +91,21 @@ namespace Atom
                 OnPropertyChanged();
             }
         }
+        /// <summary>
+        /// Означает что данное свойство редактируемо
+        /// </summary>
+        public bool IsEditable
+        {
+            get { return _isEditable; }
+            set
+            {
+                if (value.Equals(_isEditable)) return;
+                _isEditable = value;
+                ValidateProperty(value);
+                OnPropertyChanged();
+            }
+        }
+
 
         [Required]
         public string FieldInDb
@@ -103,7 +120,9 @@ namespace Atom
                 SetID();
             }
         }
-
+        /// <summary>
+        /// Описание на русском
+        /// </summary>
         [Required]
         public string RuDescription
         {
@@ -116,7 +135,9 @@ namespace Atom
                 OnPropertyChanged();
             }
         }
-
+        /// <summary>
+        /// Описание на английском
+        /// </summary>
         public string EnDescription
         {
             get { return _enDescription; }

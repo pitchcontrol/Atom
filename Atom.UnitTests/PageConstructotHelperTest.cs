@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Atom.Services;
+using Atom.ViewModels;
 using NUnit.Framework;
 
 namespace Atom.UnitTests
@@ -33,7 +34,7 @@ namespace Atom.UnitTests
         //Тест простой вьюхи
         public void ViewSimpleTest(string type, string fieldName, string id, string result)
         {
-            _rootPanel.Children.Add(new ModalViewModel(_rootPanel.Children) { Type = type, FieldInDb = fieldName, RuDescription = "Комент",ControlIdView = id});
+            _rootPanel.Children.Add(new ModalViewModel(_rootPanel.Children) { Type = type, FieldInDb = fieldName, RuDescription = "Комент", ControlIdView = id });
             _helper.Construct(_rootPanel.Children, false);
             Assert.AreEqual(result, _helper.ToString());
         }
@@ -63,7 +64,7 @@ namespace Atom.UnitTests
         public void ComplexTest1()
         {
             _rootPanel.Children.Add(new ModalViewModel(_rootPanel.Children) { Type = "int", FieldInDb = "field1", RuDescription = "Комент", ControlIdView = "lb1" });
-            Panel panel = new Panel(_rootPanel.Children) {ControlIdView = "clId1", RuDescription = "Комент"};
+            Panel panel = new Panel(_rootPanel.Children) { ControlIdView = "clId1", RuDescription = "Комент" };
             _rootPanel.Children.Add(panel);
             panel.Children.Add(new ModalViewModel(_rootPanel.Children) { Type = "varchar", FieldInDb = "field2", RuDescription = "Комент", ControlIdView = "lb2" });
             string result = "<%--Комент--%>\n<gp:ValidatingLabel ID=\"lb1\" runat=\"server\" SkinID=\"ViewModeSkin\" Caption=\"\" DataBoundField=\"field1\" EnableDate=\"true\" HistType=\"HISTORY_TYPE_UL\"/>\n";
@@ -96,6 +97,15 @@ namespace Atom.UnitTests
             result += "</gp:CollapsePanel>\n";
             result += "</gp:CollapsePanel>\n";
             _helper.Construct(_rootPanel.Children, false);
+            Assert.AreEqual(result, _helper.ToString());
+        }
+        [Test(Description = "Проверяем добавление только редактируемых")]
+        public void IsEditableTest()
+        {
+            _rootPanel.Children.Add(new ModalViewModel(_rootPanel.Children) { Type = "int", FieldInDb = "field1", RuDescription = "Комент", ControlIdView = "lb1" });
+            _rootPanel.Children.Add(new ModalViewModel(_rootPanel.Children) { Type = "int", FieldInDb = "field2", RuDescription = "Комент", ControlIdView = "lb2", IsEditable = false });
+            _helper.Construct(_rootPanel.Children, true);
+            string result = "<%--Комент--%>\n<gp:ValidatingTextBox ID=\"lb1\" runat=\"server\" sqlType=\"Int\" SkinID=\"ViewModeSkin\" Caption=\"\" DataBoundField=\"field1\" EnableDate=\"true\" HistType=\"HISTORY_TYPE_UL\"/>\n";
             Assert.AreEqual(result, _helper.ToString());
         }
     }

@@ -1,13 +1,12 @@
-п»їusing System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel.DataAnnotations;
-using Atom.Behavior;
 using Newtonsoft.Json;
 
-namespace Atom
+namespace Atom.ViewModels
 {
+    /// <summary>
+    /// Модель для для создания контрола
+    /// </summary>
     public class ModalViewModel : WebPageBaseViewModel
     {
         private string _tableName;

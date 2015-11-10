@@ -1,11 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Windows;
 using System.Windows.Input;
 using Atom.Services;
+using Atom.ViewModels;
 using Microsoft.Win32;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -28,7 +32,7 @@ namespace Atom
         private string _pageText;
         private string _resuorseText;
         private WebPageBaseViewModel _currentProperty;
-        private ut_Roles _selectedRole;
+        private ObservableCollection<ut_Roles> _selectedRole;
         private readonly RootPanel _rootPanel;
         private ObservableCollection<WebPageBaseViewModel> _properties;
 
@@ -42,7 +46,8 @@ namespace Atom
                 OnPropertyChanged();
                 if (string.IsNullOrEmpty(_page))
                 {
-                    //PageViews = _context.ut_MenuPageView.ToList();
+                    //При пустом значении сброс
+                    PageViews = _context.ut_MenuPageView.ToList();
                 }
                 else
                 {
@@ -61,7 +66,7 @@ namespace Atom
 
         public MainViewModel()
         {
-            GetScriptCommand = new DelegateCommand<string>(GetScript, (obj) => SelectedRole != null && Properties.Count() != 0 && CurrentMenuPageView != null);
+            GetScriptCommand = new DelegateCommand<string>(GetScript, (obj) => SelectedRole.Count != 0 && Properties.Count() != 0 && CurrentMenuPageView != null);
             AddPropertyCommand = new DelegateCommand<string>(AddProperty, null);
             ViewPageCommand = new DelegateCommand<string>(GetViewPage, null);
             EditPageCommand = new DelegateCommand<string>(GetEditPage, null);
@@ -72,13 +77,18 @@ namespace Atom
             EnResourceCommand = new DelegateCommand<string>(GetEnResource, (onj) => Properties.Count() != 0);
 
             AddPanelCommand = new NotifyCommand<MainViewModel>(this, new string[0], AddPanel, (m) => true);
+            GetUtMenuPageViewCommand = new SimlpleCommand(() => PageViews = _context.ut_MenuPageView.ToList(), null);
+            GetGlobalRoles = new SimlpleCommand(() => GlobalRoles = _context.ut_Roles.ToList(), null);
+            SelectedRole = new ObservableCollection<ut_Roles>();
+            SelectedRole.CollectionChanged += (s, e) => GetScriptCommand.RaiseCanExecuteChanged();
             //PageViews = _context.ut_MenuPageView.ToList();
             //GlobalRoles = _context.ut_Roles.ToList();
             Properties = new ObservableCollection<WebPageBaseViewModel>();
             _rootPanel = new RootPanel(Properties);
             Properties.Add(_rootPanel);
         }
-
+        public SimlpleCommand GetGlobalRoles { get; set; }
+        public SimlpleCommand GetUtMenuPageViewCommand { get; set; }
         public DelegateCommand<string> GetScriptCommand { get; set; }
         public DelegateCommand<string> AddPropertyCommand { get; set; }
         public DelegateCommand<string> ViewPageCommand { get; set; }
@@ -114,7 +124,7 @@ namespace Atom
         /// <summary>
         /// Выбранные роли
         /// </summary>
-        public ut_Roles SelectedRole
+        public ObservableCollection<ut_Roles> SelectedRole
         {
             get { return _selectedRole; }
             set
@@ -205,7 +215,7 @@ namespace Atom
         private void GetViewPage(string obj)
         {
             PageConstructotHelper helper = new PageConstructotHelper();
-            helper.Construct(_rootPanel.Children, false);
+            helper.Construct(Properties, false);
             PageText = helper.ToString();
         }
 
@@ -229,11 +239,18 @@ namespace Atom
             openFileDialog.Filter = "json (*.json)|*.json";
             if (openFileDialog.ShowDialog() == true)
             {
-                string json = File.ReadAllText(openFileDialog.FileName);
-                Properties = JsonConvert.DeserializeObject<ObservableCollection<WebPageBaseViewModel>>(json, new JsonSerializerSettings
+                try
                 {
-                    TypeNameHandling = TypeNameHandling.Objects
-                });
+                    string json = File.ReadAllText(openFileDialog.FileName);
+                    Properties = JsonConvert.DeserializeObject<ObservableCollection<WebPageBaseViewModel>>(json, new JsonSerializerSettings
+                    {
+                        TypeNameHandling = TypeNameHandling.Objects
+                    });
+                }
+                catch (Exception exception)
+                {
+                    MessageBox.Show(exception.Message, "Ошибка");
+                }
 
 
             }
@@ -263,7 +280,7 @@ namespace Atom
         private void GetEditPage(string obj)
         {
             PageConstructotHelper helper = new PageConstructotHelper();
-            helper.Construct(_rootPanel.Children, true);
+            helper.Construct(Properties, true);
             PageText = helper.ToString();
         }
         /// <summary>
@@ -272,30 +289,8 @@ namespace Atom
         /// <param name="obj"></param>
         private void GetScript(string obj)
         {
-//            string result = "DECLARE @id int;\n";
-//            foreach (ModalViewModel model in Properties)
-//            {
-//                string description = string.Format("ru-RU:{0};en-EN:{1};", model.RuDescription, model.EnDescription);
-//                result += string.Format("--{0}\n", model.FieldInDb);
-//                result +=
-//                    string.Format(
-//                        "INSERT INTO [ut_MenuField] (idpage,fld, idparent, fldbd, tabbd, isNotEdited, nam) VALUES ({0}, '{1}', null, '{2}', '{3}' , 0, '{4}');\n",
-//                        CurrentMenuPageView.idmenupage,
-//                        model.ControlIdView,
-//                        model.FieldInDb ?? "null",
-//                        model.TableName ?? "null",
-//                        description);
-//
-//                result += "set @id  = scope_identity();\n";
-//                result += string.Format("insert into [ut_RoleField] (idrole, idfld,visability)\nvalues\n");
-//                result += string.Format("({0},@id,{1})\n", SelectedRole.pkid, 1);
-//                //                result = SelectedRole.ut_RoleField.Aggregate(result,
-//                //                    (current, utRoleField) =>
-//                //                        current + string.Format("({0},@id,{1}),\n", utRoleField.idrole, 1));
-//                //                result = result.TrimEnd('\n', ',') + ";";
-//            }
             ScriptConstructorHelper helper = new ScriptConstructorHelper();
-            helper.Constructor(_rootPanel.Children, false, (int)CurrentMenuPageView.idmenupage, SelectedRole.pkid);
+            helper.Constructor(Properties, false, (int)CurrentMenuPageView.idmenupage, SelectedRole.Select(i=>i.pkid));
             Script = helper.ToString();
         }
 

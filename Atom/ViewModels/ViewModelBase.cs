@@ -2,8 +2,11 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Atom.Annotations;
 
-namespace Atom
+namespace Atom.ViewModels
 {
+    /// <summary>
+    /// Базовая модель с валидацией и нотификацией
+    /// </summary>
     public class ViewModelBase : ValidationBase, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;

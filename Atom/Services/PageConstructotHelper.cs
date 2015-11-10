@@ -10,6 +10,8 @@ namespace Atom.Services
         {
             foreach (WebPageBaseViewModel modalViewModel in collection)
             {
+                if (isEdit && !modalViewModel.IsEditable)
+                    continue;
                 if (modalViewModel is Panel)
                 {
                     _stringBuilder.AppendFormat("<%--{0}--%>\n", modalViewModel.RuDescription);
