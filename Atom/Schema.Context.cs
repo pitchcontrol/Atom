@@ -29,5 +29,7 @@ namespace Atom
         public virtual DbSet<ut_MenuPageView> ut_MenuPageView { get; set; }
         public virtual DbSet<ut_RoleField> ut_RoleField { get; set; }
         public virtual DbSet<ut_Roles> ut_Roles { get; set; }
+        public virtual DbSet<ut_MenuGroupView> ut_MenuGroupView { get; set; }
+        public virtual DbSet<ut_RolePage> ut_RolePage { get; set; }
     }
 }

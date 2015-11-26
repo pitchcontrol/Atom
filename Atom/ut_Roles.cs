@@ -18,6 +18,7 @@ namespace Atom
         public ut_Roles()
         {
             this.ut_RoleField = new HashSet<ut_RoleField>();
+            this.ut_RolePage = new HashSet<ut_RolePage>();
         }
     
         public int pkid { get; set; }
@@ -34,5 +35,7 @@ namespace Atom
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ut_RoleField> ut_RoleField { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ut_RolePage> ut_RolePage { get; set; }
     }
 }

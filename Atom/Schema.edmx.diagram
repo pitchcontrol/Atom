@@ -6,12 +6,16 @@
     <edmx:Diagrams>
       <Diagram DiagramId="d227675b11f745259d38b351c3e6ef10" Name="Diagram1">
         <EntityTypeShape EntityType="atomModel.ut_MenuField" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="atomModel.ut_MenuPageView" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="atomModel.ut_MenuPageView" Width="1.875" PointX="2.75" PointY="0.75" IsExpanded="true" />
         <AssociationConnector Association="atomModel.FK_ut_MenuField_ut_MenuField" />
         <EntityTypeShape EntityType="atomModel.ut_RoleField" Width="1.5" PointX="5.5" PointY="3.875" />
         <AssociationConnector Association="atomModel.FK_ut_RoleField_ut_MenuField" />
         <EntityTypeShape EntityType="atomModel.ut_Roles" Width="1.5" PointX="3" PointY="4.25" />
         <AssociationConnector Association="atomModel.FK_ut_RoleField_ut_Roles" />
+        <EntityTypeShape EntityType="atomModel.ut_MenuGroupView" Width="2.25" PointX="5.375" PointY="0.75" />
+        <EntityTypeShape EntityType="atomModel.ut_RolePage" Width="1.5" PointX="8.375" PointY="3.125" />
+        <AssociationConnector Association="atomModel.FK_ut_rolepage_ut_MenuPageView" />
+        <AssociationConnector Association="atomModel.FK_ut_RolePage_ut_Roles" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

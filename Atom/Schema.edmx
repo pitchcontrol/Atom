@@ -24,6 +24,18 @@
           <Property Name="isFakeHistory" Type="bit" />
           <Property Name="FldParentForParams" Type="varchar" MaxLength="250" />
         </EntityType>
+        <EntityType Name="ut_MenuGroupView">
+          <Key>
+            <PropertyRef Name="pkid" />
+          </Key>
+          <Property Name="pkid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="nam" Type="nvarchar" MaxLength="200" />
+          <Property Name="sorder" Type="int" />
+          <Property Name="idparent" Type="int" />
+          <Property Name="isnavshow" Type="bit" />
+          <Property Name="idmenugroup" Type="int" Nullable="false" />
+          <Property Name="gs" Type="char" MaxLength="2" />
+        </EntityType>
         <EntityType Name="ut_MenuPageView">
           <Key>
             <PropertyRef Name="pkid" />
@@ -43,6 +55,15 @@
           <Property Name="pkid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="idrole" Type="int" />
           <Property Name="idfld" Type="int" />
+          <Property Name="visability" Type="int" />
+        </EntityType>
+        <EntityType Name="ut_RolePage">
+          <Key>
+            <PropertyRef Name="pkid" />
+          </Key>
+          <Property Name="pkid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="idrole" Type="int" />
+          <Property Name="idpage" Type="int" />
           <Property Name="visability" Type="int" />
         </EntityType>
         <EntityType Name="ut_Roles">
@@ -97,10 +118,36 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_ut_rolepage_ut_MenuPageView">
+          <End Role="ut_MenuPageView" Type="Self.ut_MenuPageView" Multiplicity="0..1" />
+          <End Role="ut_RolePage" Type="Self.ut_RolePage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ut_MenuPageView">
+              <PropertyRef Name="pkid" />
+            </Principal>
+            <Dependent Role="ut_RolePage">
+              <PropertyRef Name="idpage" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ut_RolePage_ut_Roles">
+          <End Role="ut_Roles" Type="Self.ut_Roles" Multiplicity="0..1" />
+          <End Role="ut_RolePage" Type="Self.ut_RolePage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ut_Roles">
+              <PropertyRef Name="pkid" />
+            </Principal>
+            <Dependent Role="ut_RolePage">
+              <PropertyRef Name="idrole" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="Хранилище atomModelContainer">
           <EntitySet Name="ut_MenuField" EntityType="Self.ut_MenuField" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ut_MenuGroupView" EntityType="Self.ut_MenuGroupView" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ut_MenuPageView" EntityType="Self.ut_MenuPageView" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ut_RoleField" EntityType="Self.ut_RoleField" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ut_RolePage" EntityType="Self.ut_RolePage" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ut_Roles" EntityType="Self.ut_Roles" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_ut_MenuField_ut_MenuField" Association="Self.FK_ut_MenuField_ut_MenuField">
             <End Role="ut_MenuField" EntitySet="ut_MenuField" />
@@ -113,6 +160,14 @@
           <AssociationSet Name="FK_ut_RoleField_ut_Roles" Association="Self.FK_ut_RoleField_ut_Roles">
             <End Role="ut_Roles" EntitySet="ut_Roles" />
             <End Role="ut_RoleField" EntitySet="ut_RoleField" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ut_rolepage_ut_MenuPageView" Association="Self.FK_ut_rolepage_ut_MenuPageView">
+            <End Role="ut_MenuPageView" EntitySet="ut_MenuPageView" />
+            <End Role="ut_RolePage" EntitySet="ut_RolePage" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ut_RolePage_ut_Roles" Association="Self.FK_ut_RolePage_ut_Roles">
+            <End Role="ut_Roles" EntitySet="ut_Roles" />
+            <End Role="ut_RolePage" EntitySet="ut_RolePage" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -152,6 +207,7 @@
           <Property Name="sorder" Type="Int32" />
           <Property Name="idmenupage" Type="Int32" />
           <Property Name="gs" Type="String" MaxLength="2" FixedLength="true" Unicode="false" />
+          <NavigationProperty Name="ut_RolePage" Relationship="atomModel.FK_ut_rolepage_ut_MenuPageView" FromRole="ut_MenuPageView" ToRole="ut_RolePage" />
         </EntityType>
         <EntityContainer Name="atomEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="ut_MenuField" EntityType="Self.ut_MenuField" />
@@ -169,6 +225,16 @@
           <AssociationSet Name="FK_ut_RoleField_ut_Roles" Association="atomModel.FK_ut_RoleField_ut_Roles">
             <End Role="ut_Roles" EntitySet="ut_Roles" />
             <End Role="ut_RoleField" EntitySet="ut_RoleField" />
+          </AssociationSet>
+          <EntitySet Name="ut_MenuGroupView" EntityType="atomModel.ut_MenuGroupView" />
+          <EntitySet Name="ut_RolePage" EntityType="atomModel.ut_RolePage" />
+          <AssociationSet Name="FK_ut_rolepage_ut_MenuPageView" Association="atomModel.FK_ut_rolepage_ut_MenuPageView">
+            <End Role="ut_MenuPageView" EntitySet="ut_MenuPageView" />
+            <End Role="ut_RolePage" EntitySet="ut_RolePage" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ut_RolePage_ut_Roles" Association="atomModel.FK_ut_RolePage_ut_Roles">
+            <End Role="ut_Roles" EntitySet="ut_Roles" />
+            <End Role="ut_RolePage" EntitySet="ut_RolePage" />
           </AssociationSet>
         </EntityContainer>
         <Association Name="FK_ut_MenuField_ut_MenuField">
@@ -222,6 +288,7 @@
           <Property Name="Unpublic" Type="Boolean" />
           <Property Name="type" Type="Int32" />
           <NavigationProperty Name="ut_RoleField" Relationship="atomModel.FK_ut_RoleField_ut_Roles" FromRole="ut_Roles" ToRole="ut_RoleField" />
+          <NavigationProperty Name="ut_RolePage" Relationship="atomModel.FK_ut_RolePage_ut_Roles" FromRole="ut_Roles" ToRole="ut_RolePage" />
         </EntityType>
         <Association Name="FK_ut_RoleField_ut_Roles">
           <End Type="atomModel.ut_Roles" Role="ut_Roles" Multiplicity="0..1" />
@@ -231,6 +298,53 @@
               <PropertyRef Name="pkid" />
             </Principal>
             <Dependent Role="ut_RoleField">
+              <PropertyRef Name="idrole" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ut_MenuGroupView">
+          <Key>
+            <PropertyRef Name="pkid" />
+          </Key>
+          <Property Name="pkid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nam" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="sorder" Type="Int32" />
+          <Property Name="idparent" Type="Int32" />
+          <Property Name="isnavshow" Type="Boolean" />
+          <Property Name="idmenugroup" Type="Int32" Nullable="false" />
+          <Property Name="gs" Type="String" MaxLength="2" FixedLength="true" Unicode="false" />
+        </EntityType>
+        <EntityType Name="ut_RolePage">
+          <Key>
+            <PropertyRef Name="pkid" />
+          </Key>
+          <Property Name="pkid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="idrole" Type="Int32" />
+          <Property Name="idpage" Type="Int32" />
+          <Property Name="visability" Type="Int32" />
+          <NavigationProperty Name="ut_MenuPageView" Relationship="atomModel.FK_ut_rolepage_ut_MenuPageView" FromRole="ut_RolePage" ToRole="ut_MenuPageView" />
+          <NavigationProperty Name="ut_Roles" Relationship="atomModel.FK_ut_RolePage_ut_Roles" FromRole="ut_RolePage" ToRole="ut_Roles" />
+        </EntityType>
+        <Association Name="FK_ut_rolepage_ut_MenuPageView">
+          <End Type="atomModel.ut_MenuPageView" Role="ut_MenuPageView" Multiplicity="0..1" />
+          <End Type="atomModel.ut_RolePage" Role="ut_RolePage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ut_MenuPageView">
+              <PropertyRef Name="pkid" />
+            </Principal>
+            <Dependent Role="ut_RolePage">
+              <PropertyRef Name="idpage" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ut_RolePage_ut_Roles">
+          <End Type="atomModel.ut_Roles" Role="ut_Roles" Multiplicity="0..1" />
+          <End Type="atomModel.ut_RolePage" Role="ut_RolePage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ut_Roles">
+              <PropertyRef Name="pkid" />
+            </Principal>
+            <Dependent Role="ut_RolePage">
               <PropertyRef Name="idrole" />
             </Dependent>
           </ReferentialConstraint>
@@ -297,6 +411,29 @@
                 <ScalarProperty Name="nams" ColumnName="nams" />
                 <ScalarProperty Name="groupad" ColumnName="groupad" />
                 <ScalarProperty Name="nam" ColumnName="nam" />
+                <ScalarProperty Name="pkid" ColumnName="pkid" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ut_MenuGroupView">
+            <EntityTypeMapping TypeName="atomModel.ut_MenuGroupView">
+              <MappingFragment StoreEntitySet="ut_MenuGroupView">
+                <ScalarProperty Name="gs" ColumnName="gs" />
+                <ScalarProperty Name="idmenugroup" ColumnName="idmenugroup" />
+                <ScalarProperty Name="isnavshow" ColumnName="isnavshow" />
+                <ScalarProperty Name="idparent" ColumnName="idparent" />
+                <ScalarProperty Name="sorder" ColumnName="sorder" />
+                <ScalarProperty Name="nam" ColumnName="nam" />
+                <ScalarProperty Name="pkid" ColumnName="pkid" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ut_RolePage">
+            <EntityTypeMapping TypeName="atomModel.ut_RolePage">
+              <MappingFragment StoreEntitySet="ut_RolePage">
+                <ScalarProperty Name="visability" ColumnName="visability" />
+                <ScalarProperty Name="idpage" ColumnName="idpage" />
+                <ScalarProperty Name="idrole" ColumnName="idrole" />
                 <ScalarProperty Name="pkid" ColumnName="pkid" />
               </MappingFragment>
             </EntityTypeMapping>

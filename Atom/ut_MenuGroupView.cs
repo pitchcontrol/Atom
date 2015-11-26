@@ -12,23 +12,14 @@ namespace Atom
     using System;
     using System.Collections.Generic;
     
-    public partial class ut_MenuPageView
+    public partial class ut_MenuGroupView
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public ut_MenuPageView()
-        {
-            this.ut_RolePage = new HashSet<ut_RolePage>();
-        }
-    
         public int pkid { get; set; }
-        public Nullable<int> idgroup { get; set; }
-        public Nullable<int> idparentpage { get; set; }
         public string nam { get; set; }
         public Nullable<int> sorder { get; set; }
-        public Nullable<int> idmenupage { get; set; }
+        public Nullable<int> idparent { get; set; }
+        public Nullable<bool> isnavshow { get; set; }
+        public int idmenugroup { get; set; }
         public string gs { get; set; }
-    
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ut_RolePage> ut_RolePage { get; set; }
     }
 }

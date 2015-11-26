@@ -8,6 +8,8 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
+using Atom.Commands;
+using Atom.Models;
 using Atom.Services;
 using Atom.ViewModels;
 using Microsoft.Win32;
@@ -19,10 +21,11 @@ namespace Atom
     public class MainViewModel : INotifyPropertyChanged
     {
         readonly atomEntities _context = new atomEntities();
+        readonly Dal _dal = new Dal();
 
         private string _page;
         private IEnumerable<ut_MenuPageView> _pageViews;
-        private ut_MenuPageView _currentMenuPageView;
+        private MenuTree _currentMenuPageView;
         private IEnumerable<int> _roles;
         private IEnumerable<ut_MenuField> _menuFields;
         private IEnumerable<ut_Roles> _utRoleses;
@@ -35,6 +38,8 @@ namespace Atom
         private ObservableCollection<ut_Roles> _selectedRole;
         private readonly RootPanel _rootPanel;
         private ObservableCollection<WebPageBaseViewModel> _properties;
+        private IEnumerable<MenuTree> _menuGroupViews;
+        private IEnumerable<Role> _rolesForPage;
 
         public string Page
         {
@@ -47,18 +52,20 @@ namespace Atom
                 if (string.IsNullOrEmpty(_page))
                 {
                     //При пустом значении сброс
-                    PageViews = _context.ut_MenuPageView.ToList();
+                    MenuGroupViews = _dal.GetMenuTree();
                 }
                 else
                 {
                     int id;
                     if (int.TryParse(Page, out id))
                     {
-                        PageViews = _context.ut_MenuPageView.Where(i => i.idmenupage == id).ToList();
+                        MenuGroupViews = _dal.GetMenuTree(id);
+                        //  PageViews = _context.ut_MenuPageView.Where(i => i.idmenupage == id).ToList();
                     }
                     else
                     {
-                        PageViews = _context.ut_MenuPageView.Where(i => i.nam.Contains(Page)).ToList();
+                        MenuGroupViews = _dal.GetMenuTree(_page);
+                        //PageViews = _context.ut_MenuPageView.Where(i => i.nam.Contains(Page)).ToList();
                     }
                 }
             }
@@ -73,11 +80,18 @@ namespace Atom
             SaveCommand = new DelegateCommand<string>(SaveObj, null);
             LoadCommand = new DelegateCommand<string>(LoadObj, null);
             EditPropertyCommand = new DelegateCommand<string>(EditProperty, (obj) => CurrentProperty != null);
-            RuResourceCommand = new DelegateCommand<string>(GetRuResource, (onj) => Properties.Count() != 0);
-            EnResourceCommand = new DelegateCommand<string>(GetEnResource, (onj) => Properties.Count() != 0);
+
+            
+            //RuResourceCommand = new DelegateCommand<string>(GetRuResource, (onj) => Properties.Count() != 0);
+            //EnResourceCommand = new DelegateCommand<string>(GetEnResource, (onj) => Properties.Count() != 0);
 
             AddPanelCommand = new NotifyCommand<MainViewModel>(this, new string[0], AddPanel, (m) => true);
-            GetUtMenuPageViewCommand = new SimlpleCommand(() => PageViews = _context.ut_MenuPageView.ToList(), null);
+            GetUtMenuPageViewCommand = new SimlpleCommand(() =>
+            {
+                PageViews = _context.ut_MenuPageView.ToList();
+                MenuGroupViews = _dal.GetMenuTree();
+
+            }, null);
             GetGlobalRoles = new SimlpleCommand(() => GlobalRoles = _context.ut_Roles.ToList(), null);
             SelectedRole = new ObservableCollection<ut_Roles>();
             SelectedRole.CollectionChanged += (s, e) => GetScriptCommand.RaiseCanExecuteChanged();
@@ -86,6 +100,9 @@ namespace Atom
             Properties = new ObservableCollection<WebPageBaseViewModel>();
             _rootPanel = new RootPanel(Properties);
             Properties.Add(_rootPanel);
+
+            RuResourceCommand = new GetResourceCommand(this);
+            EnResourceCommand = RuResourceCommand;
         }
         public SimlpleCommand GetGlobalRoles { get; set; }
         public SimlpleCommand GetUtMenuPageViewCommand { get; set; }
@@ -96,8 +113,8 @@ namespace Atom
         public DelegateCommand<string> SaveCommand { get; set; }
         public DelegateCommand<string> LoadCommand { get; set; }
         public DelegateCommand<string> EditPropertyCommand { get; set; }
-        public DelegateCommand<string> RuResourceCommand { get; set; }
-        public DelegateCommand<string> EnResourceCommand { get; set; }
+        public ICommand RuResourceCommand { get; set; }
+        public ICommand EnResourceCommand { get; set; }
         public ICommand AddPanelCommand { get; private set; }
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -158,8 +175,8 @@ namespace Atom
                 _properties = value;
                 OnPropertyChanged();
                 GetScriptCommand.RaiseCanExecuteChanged();
-                EnResourceCommand.RaiseCanExecuteChanged();
-                RuResourceCommand.RaiseCanExecuteChanged();
+                //EnResourceCommand.RaiseCanExecuteChanged();
+               // RuResourceCommand.RaiseCanExecuteChanged();
             }
         }
 
@@ -191,7 +208,7 @@ namespace Atom
         private void GetRuResource(string obj)
         {
             string result = "";
-            foreach (ModalViewModel modalViewModel in Properties)
+            foreach (WebPageBaseViewModel modalViewModel in Properties)
             {
                 result += string.Format("<data name=\"{0}\" xml:space=\"preserve\">\n", modalViewModel.FieldInDb);
                 result += string.Format("<value>{0}</value>\n</data>\n", modalViewModel.RuDescription);
@@ -201,7 +218,7 @@ namespace Atom
         private void GetEnResource(string obj)
         {
             string result = "";
-            foreach (ModalViewModel modalViewModel in Properties)
+            foreach (WebPageBaseViewModel modalViewModel in Properties)
             {
                 result += string.Format("<data name=\"{0}\" xml:space=\"preserve\">\n", modalViewModel.FieldInDb);
                 result += string.Format("<value>{0}</value>\n</data>\n", modalViewModel.EnDescription);
@@ -251,8 +268,6 @@ namespace Atom
                 {
                     MessageBox.Show(exception.Message, "Ошибка");
                 }
-
-
             }
         }
         private void AddProperty(string obj)
@@ -290,8 +305,19 @@ namespace Atom
         private void GetScript(string obj)
         {
             ScriptConstructorHelper helper = new ScriptConstructorHelper();
-            helper.Constructor(Properties, false, (int)CurrentMenuPageView.idmenupage, SelectedRole.Select(i=>i.pkid));
+            helper.Constructor(Properties, false, (int)CurrentMenuPageView.Id, SelectedRole.Select(i => i.pkid));
             Script = helper.ToString();
+        }
+
+        public IEnumerable<MenuTree> MenuGroupViews
+        {
+            get { return _menuGroupViews; }
+            set
+            {
+                if (value == _menuGroupViews) return;
+                _menuGroupViews = value;
+                OnPropertyChanged();
+            }
         }
 
         public IEnumerable<ut_MenuPageView> PageViews
@@ -352,22 +378,42 @@ namespace Atom
             }
         }
 
-
-        public ut_MenuPageView CurrentMenuPageView
+        /// <summary>
+        /// Выбранная страница
+        /// </summary>
+        public MenuTree CurrentMenuPageView
         {
             set
             {
                 if (value == _currentMenuPageView) return;
                 _currentMenuPageView = value;
                 OnPropertyChanged();
+                if (_currentMenuPageView != null && !_currentMenuPageView.IsGroup)
+                    MenuFields = _context.ut_MenuField.Where(i => i.idpage == _currentMenuPageView.Id).ToList();
+                else
+                    MenuFields = null;
                 if (_currentMenuPageView != null)
                 {
-                    MenuFields = _context.ut_MenuField.Where(i => i.idpage == _currentMenuPageView.idmenupage).ToList();
+                    RolesForPage = _currentMenuPageView.IsGroup ? _dal.GetRoleForGroup(_currentMenuPageView.Id) : _dal.GetRoleForPage(_currentMenuPageView.PageId);
                 }
                 GetScriptCommand.RaiseCanExecuteChanged();
             }
             get { return _currentMenuPageView; }
         }
+        /// <summary>
+        /// Роли для выбранной страницы
+        /// </summary>
+        public IEnumerable<Role> RolesForPage
+        {
+            get { return _rolesForPage; }
+            set
+            {
+                if (value == _rolesForPage) return;
+                _rolesForPage = value;
+                OnPropertyChanged();
+            }
+        }
+
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
