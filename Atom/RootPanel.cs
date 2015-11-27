@@ -23,5 +23,10 @@ namespace Atom
         public RootPanel(ObservableCollection<WebPageBaseViewModel> parentCollection) : base(parentCollection)
         {
         }
+
+        public override string ToString()
+        {
+            return "RootPanel";
+        }
     }
 }

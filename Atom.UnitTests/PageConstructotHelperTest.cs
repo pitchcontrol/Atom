@@ -108,5 +108,16 @@ namespace Atom.UnitTests
             string result = "<%--Комент--%>\n<gp:ValidatingTextBox ID=\"lb1\" runat=\"server\" sqlType=\"Int\" SkinID=\"ViewModeSkin\" Caption=\"\" DataBoundField=\"field1\" EnableDate=\"true\" HistType=\"HISTORY_TYPE_UL\"/>\n";
             Assert.AreEqual(result, _helper.ToString());
         }
+        [Test]
+        public void NamespaceTest()
+        {
+            _helper.ResourceNamespace = "RefBook";
+            _rootPanel.Children.Add(new ModalViewModel(_rootPanel.Children) { Type = "int", FieldInDb = "field1", RuDescription = "Комент", ControlIdView = "lb1" });
+            _rootPanel.Children.Add(new ModalViewModel(_rootPanel.Children) { Type = "int", FieldInDb = "field2", RuDescription = "Комент", ControlIdView = "lb2" });
+            _helper.Construct(_rootPanel.Children, false);
+            string result = "<%--Комент--%>\n<gp:ValidatingLabel ID=\"lb1\" runat=\"server\" SkinID=\"ViewModeSkin\" Caption=\"<%$ Resources: RefBook, lb1 %>\" DataBoundField=\"field1\" EnableDate=\"true\" HistType=\"HISTORY_TYPE_UL\"/>\n";
+            result += "<%--Комент--%>\n<gp:ValidatingLabel ID=\"lb2\" runat=\"server\" SkinID=\"ViewModeSkin\" Caption=\"<%$ Resources: RefBook, lb2 %>\" DataBoundField=\"field2\" EnableDate=\"true\" HistType=\"HISTORY_TYPE_UL\"/>\n";
+            Assert.AreEqual(result, _helper.ToString());
+        }
     }
 }

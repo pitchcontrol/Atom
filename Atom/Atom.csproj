@@ -100,6 +100,7 @@
     <Compile Include="Behavior\MultiSelectorBehaviours.cs" />
     <Compile Include="Behavior\TwoListSynchronizer.cs" />
     <Compile Include="Commands\GetResourceCommand.cs" />
+    <Compile Include="Commands\StoryObjectCommand.cs" />
     <Compile Include="DelegateCommand.cs" />
     <Compile Include="MainViewModel.cs" />
     <Compile Include="ModalView.xaml.cs">

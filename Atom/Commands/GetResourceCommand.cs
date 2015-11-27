@@ -7,7 +7,10 @@ using System.Windows.Input;
 
 namespace Atom.Commands
 {
-    public class GetResourceCommand:ICommand
+    /// <summary>
+    /// Команда формирует тэги для ресурсов
+    /// </summary>
+    public class GetResourceCommand : ICommand
     {
         private readonly MainViewModel _model;
 
@@ -28,24 +31,27 @@ namespace Atom.Commands
 
         public void Execute(object parameter)
         {
-            string result = "";
-            if (parameter.ToString() == "ru")
+            StringBuilder sbr = new StringBuilder();
+            StringBuilder sbe = new StringBuilder();
+            bool isEdit = parameter.ToString() == "True";
+            WebPageBaseViewModel rootModel = _model.Properties.FirstOrDefault();
+            Constructor(sbr, sbe, rootModel.Children, isEdit);
+            _model.ResuorseTextRu = sbr.ToString();
+            _model.ResuorseTextEn = sbe.ToString();
+        }
+
+        private void Constructor(StringBuilder sbr, StringBuilder sbe, IEnumerable<WebPageBaseViewModel> collection, bool isEdit)
+        {
+            foreach (WebPageBaseViewModel modalViewModel in collection)
             {
-                foreach (WebPageBaseViewModel modalViewModel in _model.Properties)
-                {
-                    result += string.Format("<data name=\"{0}\" xml:space=\"preserve\">\n", modalViewModel.FieldInDb);
-                    result += string.Format("<value>{0}</value>\n</data>\n", modalViewModel.RuDescription);
-                }
+                sbr.AppendFormat("<data name=\"{0}\" xml:space=\"preserve\">\n", isEdit ? modalViewModel.ControlIdEdit : modalViewModel.ControlIdView);
+                sbr.AppendFormat("<value>{0}</value>\n</data>\n", modalViewModel.RuDescription);
+
+                sbe.AppendFormat("<data name=\"{0}\" xml:space=\"preserve\">\n", isEdit ? modalViewModel.ControlIdEdit : modalViewModel.ControlIdView);
+                sbe.AppendFormat("<value>{0}</value>\n</data>\n", modalViewModel.EnDescription);
+
+                Constructor(sbr, sbe, modalViewModel.Children, isEdit);
             }
-            else
-            {
-                foreach (WebPageBaseViewModel modalViewModel in _model.Properties)
-                {
-                    result += string.Format("<data name=\"{0}\" xml:space=\"preserve\">\n", modalViewModel.FieldInDb);
-                    result += string.Format("<value>{0}</value>\n</data>\n", modalViewModel.RuDescription);
-                }
-            }
-            _model.ResuorseText = result;
         }
 
         public event EventHandler CanExecuteChanged;

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -14,7 +13,6 @@ using Atom.Services;
 using Atom.ViewModels;
 using Microsoft.Win32;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 
 namespace Atom
 {
@@ -33,13 +31,15 @@ namespace Atom
         private ut_MenuField _currentMenuField;
         private string _script;
         private string _pageText;
-        private string _resuorseText;
+        private string _resuorseTextRu;
+        private string _resuorseTextEn;
         private WebPageBaseViewModel _currentProperty;
         private ObservableCollection<ut_Roles> _selectedRole;
         private readonly RootPanel _rootPanel;
         private ObservableCollection<WebPageBaseViewModel> _properties;
         private IEnumerable<MenuTree> _menuGroupViews;
         private IEnumerable<Role> _rolesForPage;
+        private string _resourceNameSpace;
 
         public string Page
         {
@@ -77,13 +77,7 @@ namespace Atom
             AddPropertyCommand = new DelegateCommand<string>(AddProperty, null);
             ViewPageCommand = new DelegateCommand<string>(GetViewPage, null);
             EditPageCommand = new DelegateCommand<string>(GetEditPage, null);
-            SaveCommand = new DelegateCommand<string>(SaveObj, null);
-            LoadCommand = new DelegateCommand<string>(LoadObj, null);
             EditPropertyCommand = new DelegateCommand<string>(EditProperty, (obj) => CurrentProperty != null);
-
-            
-            //RuResourceCommand = new DelegateCommand<string>(GetRuResource, (onj) => Properties.Count() != 0);
-            //EnResourceCommand = new DelegateCommand<string>(GetEnResource, (onj) => Properties.Count() != 0);
 
             AddPanelCommand = new NotifyCommand<MainViewModel>(this, new string[0], AddPanel, (m) => true);
             GetUtMenuPageViewCommand = new SimlpleCommand(() =>
@@ -103,6 +97,8 @@ namespace Atom
 
             RuResourceCommand = new GetResourceCommand(this);
             EnResourceCommand = RuResourceCommand;
+
+            SaveCommand = LoadCommand = new StoryObjectCommand(this);
         }
         public SimlpleCommand GetGlobalRoles { get; set; }
         public SimlpleCommand GetUtMenuPageViewCommand { get; set; }
@@ -110,8 +106,8 @@ namespace Atom
         public DelegateCommand<string> AddPropertyCommand { get; set; }
         public DelegateCommand<string> ViewPageCommand { get; set; }
         public DelegateCommand<string> EditPageCommand { get; set; }
-        public DelegateCommand<string> SaveCommand { get; set; }
-        public DelegateCommand<string> LoadCommand { get; set; }
+        public ICommand SaveCommand { get; set; }
+        public ICommand LoadCommand { get; set; }
         public DelegateCommand<string> EditPropertyCommand { get; set; }
         public ICommand RuResourceCommand { get; set; }
         public ICommand EnResourceCommand { get; set; }
@@ -152,14 +148,29 @@ namespace Atom
                 GetScriptCommand.RaiseCanExecuteChanged();
             }
         }
-
-        public string ResuorseText
+        /// <summary>
+        /// Ресурсы на русском
+        /// </summary>
+        public string ResuorseTextRu
         {
-            get { return _resuorseText; }
+            get { return _resuorseTextRu; }
             set
             {
-                if (value == _resuorseText) return;
-                _resuorseText = value;
+                if (value == _resuorseTextRu) return;
+                _resuorseTextRu = value;
+                OnPropertyChanged();
+            }
+        }
+        /// <summary>
+        /// Ресурсы на англ.
+        /// </summary>
+        public string ResuorseTextEn
+        {
+            get { return _resuorseTextEn; }
+            set
+            {
+                if (value == _resuorseTextEn) return;
+                _resuorseTextEn = value;
                 OnPropertyChanged();
             }
         }
@@ -176,7 +187,7 @@ namespace Atom
                 OnPropertyChanged();
                 GetScriptCommand.RaiseCanExecuteChanged();
                 //EnResourceCommand.RaiseCanExecuteChanged();
-               // RuResourceCommand.RaiseCanExecuteChanged();
+                // RuResourceCommand.RaiseCanExecuteChanged();
             }
         }
 
@@ -202,30 +213,6 @@ namespace Atom
         }
 
         /// <summary>
-        /// Получить XML ресурса
-        /// </summary>
-        /// <param name="obj"></param>
-        private void GetRuResource(string obj)
-        {
-            string result = "";
-            foreach (WebPageBaseViewModel modalViewModel in Properties)
-            {
-                result += string.Format("<data name=\"{0}\" xml:space=\"preserve\">\n", modalViewModel.FieldInDb);
-                result += string.Format("<value>{0}</value>\n</data>\n", modalViewModel.RuDescription);
-            }
-            ResuorseText = result;
-        }
-        private void GetEnResource(string obj)
-        {
-            string result = "";
-            foreach (WebPageBaseViewModel modalViewModel in Properties)
-            {
-                result += string.Format("<data name=\"{0}\" xml:space=\"preserve\">\n", modalViewModel.FieldInDb);
-                result += string.Format("<value>{0}</value>\n</data>\n", modalViewModel.EnDescription);
-            }
-            ResuorseText = result;
-        }
-        /// <summary>
         /// Получить страницу View
         /// </summary>
         /// <param name="obj"></param>
@@ -236,40 +223,6 @@ namespace Atom
             PageText = helper.ToString();
         }
 
-        private void SaveObj(string obj)
-        {
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Filter = "json (*.json)|*.json";
-            if (saveFileDialog.ShowDialog() == true)
-            {
-                string json = JsonConvert.SerializeObject(Properties, Formatting.Indented, new JsonSerializerSettings
-                                {
-                                    TypeNameHandling = TypeNameHandling.Objects
-                                });
-                File.WriteAllText(saveFileDialog.FileName, json);
-            }
-        }
-
-        private void LoadObj(string obj)
-        {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "json (*.json)|*.json";
-            if (openFileDialog.ShowDialog() == true)
-            {
-                try
-                {
-                    string json = File.ReadAllText(openFileDialog.FileName);
-                    Properties = JsonConvert.DeserializeObject<ObservableCollection<WebPageBaseViewModel>>(json, new JsonSerializerSettings
-                    {
-                        TypeNameHandling = TypeNameHandling.Objects
-                    });
-                }
-                catch (Exception exception)
-                {
-                    MessageBox.Show(exception.Message, "Ошибка");
-                }
-            }
-        }
         private void AddProperty(string obj)
         {
             ModalView window = new ModalView();
@@ -360,6 +313,18 @@ namespace Atom
                 if (value == _rolesStr) return;
                 _rolesStr = value;
                 OnPropertyChanged();
+            }
+        }
+
+        public string ResourceNameSpace
+        {
+            get { return _resourceNameSpace; }
+            set
+            {
+                if (value == _resourceNameSpace) return;
+                _resourceNameSpace = value;
+                OnPropertyChanged();
+                _resourceNameSpace = value;
             }
         }
 
