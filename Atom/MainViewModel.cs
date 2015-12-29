@@ -35,12 +35,17 @@ namespace Atom
         private string _resuorseTextEn;
         private WebPageBaseViewModel _currentProperty;
         private ObservableCollection<ut_Roles> _selectedRole;
-        private readonly RootPanel _rootPanel;
+        private RootPanel _rootPanel;
         private ObservableCollection<WebPageBaseViewModel> _properties;
         private IEnumerable<MenuTree> _menuGroupViews;
         private IEnumerable<Role> _rolesForPage;
         private string _resourceNameSpace;
 
+        public RootPanel RootPanel
+        {
+            get { return _rootPanel; }
+            set { _rootPanel = value; }
+        }
         public string Page
         {
             get { return _page; }
@@ -77,6 +82,7 @@ namespace Atom
             AddPropertyCommand = new DelegateCommand<string>(AddProperty, null);
             ViewPageCommand = new DelegateCommand<string>(GetViewPage, null);
             EditPageCommand = new DelegateCommand<string>(GetEditPage, null);
+            GetGridScriptCommand = new DelegateCommand<string>(GetGrid, null);
             EditPropertyCommand = new DelegateCommand<string>(EditProperty, (obj) => CurrentProperty != null);
 
             AddPanelCommand = new NotifyCommand<MainViewModel>(this, new string[0], AddPanel, (m) => true);
@@ -112,6 +118,7 @@ namespace Atom
         public ICommand RuResourceCommand { get; set; }
         public ICommand EnResourceCommand { get; set; }
         public ICommand AddPanelCommand { get; private set; }
+        public DelegateCommand<string> GetGridScriptCommand { get; private set; }
         public event PropertyChangedEventHandler PropertyChanged;
 
         public string Script
@@ -231,6 +238,7 @@ namespace Atom
             if (window.ShowDialog() == true)
             {
                 _rootPanel.Children.Add(model);
+                OnPropertyChanged("Properties");
             }
         }
         private void AddPanel(MainViewModel model)
@@ -241,10 +249,17 @@ namespace Atom
             if (window.ShowDialog() == true)
             {
                 _rootPanel.Children.Add(panel);
+                OnPropertyChanged("Properties");
             }
 
         }
 
+        private void GetGrid(string obj)
+        {
+            GridConstructorHelper helper = new GridConstructorHelper();
+            helper.Construct(Properties);
+            PageText = helper.ToString();
+        }
         private void GetEditPage(string obj)
         {
             PageConstructotHelper helper = new PageConstructotHelper();
@@ -314,6 +329,11 @@ namespace Atom
                 _rolesStr = value;
                 OnPropertyChanged();
             }
+        }
+
+        public string DataBase
+        {
+            get { return ConnectionService.GetConnectionString(); }
         }
 
         public string ResourceNameSpace

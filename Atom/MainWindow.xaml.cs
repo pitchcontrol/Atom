@@ -23,6 +23,7 @@ namespace Atom
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = new MainViewModel();
         }
     }
 }

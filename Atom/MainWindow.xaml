@@ -7,144 +7,149 @@
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:behavior="clr-namespace:Atom.Behavior"
         mc:Ignorable="d"
-        Title="MainWindow" Height="550" Width="825" >
-    <Window.Resources>
-        <local:MainViewModel x:Key="Model" />
-    </Window.Resources>
-    <TabControl DataContext="{Binding Source={StaticResource ResourceKey=Model}}">
-        <TabItem Header="Поля в базе">
-            <Grid >
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="1*"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="1*"/>
-                </Grid.RowDefinitions>
-                <!--<DataGrid  Margin="10,38,10,0" ItemsSource="{Binding PageViews}" SelectedItem="{Binding CurrentMenuPageView}"/>-->
-                <TreeView ItemsSource="{Binding MenuGroupViews}" Margin="10,38,352,0" >
-                    <TreeView.ItemTemplate>
-                        <HierarchicalDataTemplate ItemsSource="{Binding Children}">
-                            <StackPanel Orientation="Horizontal">
-                                <Image Source="{Binding Image}"/>
-                                <TextBlock Text="{Binding NameRu}"/>
-                            </StackPanel>
-                        </HierarchicalDataTemplate>
-                    </TreeView.ItemTemplate>
-                    <i:Interaction.Behaviors>
-                        <behavior:BindableSelectedItemBehavior SelectedItem="{Binding CurrentMenuPageView,Mode=OneWayToSource}" />
-                    </i:Interaction.Behaviors>
-                </TreeView>
-                <TextBox  HorizontalAlignment="Left" Height="23" Margin="232,9,0,0" TextWrapping="Wrap" Text="{Binding Mode=OneWayToSource, Path=Page, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="120" />
-                <Label Content="Роли: " Margin="0,7,135,0" VerticalAlignment="Top" RenderTransformOrigin="0.553,-0.192" HorizontalAlignment="Right" Width="43"/>
-                <TextBox Height="23" Margin="0,7,10,0" TextWrapping="Wrap" Text="{Binding RolesStr}" VerticalAlignment="Top" IsReadOnly="True" HorizontalAlignment="Right" Width="120"/>
-                <GridSplitter HorizontalAlignment="Stretch"  VerticalAlignment="Center" Height="5" Grid.Row="1" Margin="10,0" />
-                <DataGrid ItemsSource="{Binding MenuFields}" Grid.Row="2" SelectedItem="{Binding CurrentMenuField}" Margin="10,0,10,10" />
-                <Label Content="Страница (idmenupage)" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="1.105,0.5" Margin="90,7,0,0"/>
-                <Button Content="Загрузить" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="75" Command="{Binding GetUtMenuPageViewCommand}"/>
-                <Label Content="Url" HorizontalAlignment="Right" Margin="0,35,322,0" VerticalAlignment="Top"/>
-                <TextBlock Margin="0,40,10,0" TextWrapping="Wrap" Text="{Binding CurrentMenuPageView.Url}" VerticalAlignment="Top" HorizontalAlignment="Right" Width="307"/>
-                <DataGrid Margin="0,97,10,0" HorizontalAlignment="Right" Width="337" ItemsSource="{Binding RolesForPage}"/>
-                <Label Content="Роли для страницы" HorizontalAlignment="Right" Margin="0,66,231,0" VerticalAlignment="Top"/>
+        Title="MainWindow" Height="580" Width="825">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="503*" />
+            <RowDefinition Height="22*" />
+        </Grid.RowDefinitions>
+        <TabControl>
+            <TabItem Header="Поля в базе">
+                <Grid >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="1*"/>
+                    </Grid.RowDefinitions>
+                    <!--<DataGrid  Margin="10,38,10,0" ItemsSource="{Binding PageViews}" SelectedItem="{Binding CurrentMenuPageView}"/>-->
+                    <TreeView ItemsSource="{Binding MenuGroupViews}" Margin="10,38,352,0" >
+                        <TreeView.ItemTemplate>
+                            <HierarchicalDataTemplate ItemsSource="{Binding Children}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="{Binding Image}"/>
+                                    <TextBlock Text="{Binding NameRu}"/>
+                                </StackPanel>
+                            </HierarchicalDataTemplate>
+                        </TreeView.ItemTemplate>
+                        <i:Interaction.Behaviors>
+                            <behavior:BindableSelectedItemBehavior SelectedItem="{Binding CurrentMenuPageView, Mode=OneWayToSource}" />
+                        </i:Interaction.Behaviors>
+                    </TreeView>
+                    <TextBox  HorizontalAlignment="Left" Height="23" Margin="232,9,0,0" TextWrapping="Wrap" Text="{Binding Page, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="120" />
+                    <Label Content="Роли: " Margin="0,7,135,0" VerticalAlignment="Top" RenderTransformOrigin="0.553,-0.192" HorizontalAlignment="Right" Width="43"/>
+                    <TextBox Height="23" Margin="0,7,10,0" TextWrapping="Wrap" Text="{Binding RolesStr}" VerticalAlignment="Top" IsReadOnly="True" HorizontalAlignment="Right" Width="120"/>
+                    <GridSplitter HorizontalAlignment="Stretch"  VerticalAlignment="Center" Height="5" Grid.Row="1" Margin="10,0" />
+                    <DataGrid ItemsSource="{Binding MenuFields}" Grid.Row="2" SelectedItem="{Binding CurrentMenuField}" Margin="10,0,10,10" />
+                    <Label Content="Страница (idmenupage)" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="1.105,0.5" Margin="90,7,0,0"/>
+                    <Button Content="Загрузить" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="75" Command="{Binding GetUtMenuPageViewCommand}"/>
+                    <Label Content="Url" HorizontalAlignment="Right" Margin="0,35,322,0" VerticalAlignment="Top"/>
+                    <TextBlock Margin="0,40,10,0" TextWrapping="Wrap" Text="{Binding CurrentMenuPageView.Url}" VerticalAlignment="Top" HorizontalAlignment="Right" Width="307"/>
+                    <!--<DataGrid Margin="0,97,10,0" HorizontalAlignment="Right" Width="337" ItemsSource="{Binding RolesForPage}"/>-->
+                    <ListBox Margin="0,97,10,0" HorizontalAlignment="Right" Width="337" ItemsSource="{Binding RolesForPage}" Grid.IsSharedSizeScope="True"/>
+                    <Label Content="Роли для страницы" HorizontalAlignment="Right" Margin="0,66,231,0" VerticalAlignment="Top"/>
 
-            </Grid>
-        </TabItem>
-        <TabItem Header="Добавляемые поля">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="37*"/>
-                    <RowDefinition Height="235*"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="216*"/>
-                </Grid.RowDefinitions>
-                <Button  Content="Добавить" Margin="0,10,90,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="75" Command="{Binding AddPropertyCommand}" Height="22"/>
-                <!--<DataGrid Margin="10,0" Grid.Row="1" ItemsSource="{Binding Properties}" SelectedItem="{Binding CurrentProperty}"/>-->
-                <TreeView ItemsSource="{Binding Properties}" Grid.Row="1" Margin="10,0">
-                    <TreeView.ItemTemplate>
-                        <HierarchicalDataTemplate ItemsSource="{Binding Children}">
-                            <StackPanel Orientation="Horizontal">
-                                <Image Source="{Binding Image}"/>
-                                <TextBlock Text="{Binding FieldInDb}"/>
-                                <i:Interaction.Behaviors>
-                                    <behavior:FrameworkElementDragBehavior/>
-                                    <behavior:FrameworkElementDropBehavior/>
-                                </i:Interaction.Behaviors>
-                            </StackPanel>
-                        </HierarchicalDataTemplate>
-                    </TreeView.ItemTemplate>
-                    <i:Interaction.Behaviors>
-                        <behavior:BindableSelectedItemBehavior SelectedItem="{Binding CurrentProperty,Mode=OneWayToSource}" />
-                    </i:Interaction.Behaviors>
-                </TreeView>
-                <Button Content="View" Margin="0,10,170,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="75" Command="{Binding ViewPageCommand}" Height="22"/>
-                <RichTextBox Margin="10,0,10,10" Grid.Row="3">
-                    <FlowDocument>
-                        <Paragraph>
-                            <Run Text="{Binding PageText}"/>
-                        </Paragraph>
-                    </FlowDocument>
-                </RichTextBox>
-                <Button Content="Edit" HorizontalAlignment="Right" Margin="0,10,250,0" VerticalAlignment="Top" Width="75" Command="{Binding EditPageCommand}" Height="22"/>
-                <Button HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="25" Command="{Binding SaveCommand}" CommandParameter="False" Height="22">
-                    <Image Source="/Images/Save.gif" Width="20" Height="20" />
-                </Button>
-                <Button HorizontalAlignment="Left" Margin="40,10,0,0" VerticalAlignment="Top" Width="23" Command="{Binding LoadCommand}" CommandParameter="True" Height="22" >
-                    <Image Source="/Images/FileOpen.png" />
-                </Button>
-                <Button Content="Редактировать" HorizontalAlignment="Right" Margin="0,10,330,0" VerticalAlignment="Top" Width="75" Command="{Binding EditPropertyCommand}" Height="22"/>
-                <GridSplitter HorizontalAlignment="Stretch" Height="5" Grid.Row="2"  VerticalAlignment="Center" Margin="10,0" />
-                <Button Content="Панел" Margin="0,10,10,0" VerticalAlignment="Top" Command="{Binding AddPanelCommand}" HorizontalAlignment="Right" Width="75"/>
-                <Label Content="Ресурсы" HorizontalAlignment="Left" Margin="68,10,0,0" VerticalAlignment="Top"/>
-                <TextBox HorizontalAlignment="Left" Height="23" Margin="128,10,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="269"/>
-            </Grid>
-        </TabItem>
-        <TabItem Header="Скрипт для базы">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="219*"/>
-                    <RowDefinition Height="269*"/>
-                </Grid.RowDefinitions>
-                <Button  Content="Скрипт" Margin="0,10,10,0" VerticalAlignment="Top" Command="{Binding GetScriptCommand}" HorizontalAlignment="Right" Width="75" Height="22"/>
-                <RichTextBox Margin="10,0,10,10" Grid.Row="1">
-                    <FlowDocument>
-                        <Paragraph>
-                            <Run Text="{Binding Script}"/>
-                        </Paragraph>
-                    </FlowDocument>
-                </RichTextBox>
-                <Label Content="Роли:" HorizontalAlignment="Left" Margin="10,6,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.237,-0.192" Height="26" Width="40"/>
-                <Button Content="Загрузить" HorizontalAlignment="Left" Margin="333,6,0,0" VerticalAlignment="Top" Width="75" Command="{Binding GetGlobalRoles}" Height="22"/>
-                <ListBox HorizontalAlignment="Left" Margin="10,32,0,10" Width="398" ItemsSource="{Binding GlobalRoles}" 
-                         SelectionMode="Extended"
-                    behavior:MultiSelectorBehaviours.SynchronizedSelectedItems="{Binding Path=SelectedRole}"/>
-            </Grid>
-        </TabItem>
-        <TabItem Header="Ресурсы">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="42*"/>
-                    <RowDefinition Height="207*"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="233*"/>
-                </Grid.RowDefinitions>
-                <Button Content="Edit" HorizontalAlignment="Right" Margin="0,10,10,0" VerticalAlignment="Top" Width="75" Command="{Binding RuResourceCommand}" CommandParameter="True" Height="22"/>
-                <RichTextBox Margin="10,0" Grid.Row="1">
-                    <FlowDocument>
-                        <Paragraph>
-                            <Run Text="{Binding ResuorseTextRu}"/>
-                        </Paragraph>
-                    </FlowDocument>
-                </RichTextBox>
-                <Button Grid.Row="0" Content="View" HorizontalAlignment="Right" Margin="0,10,88,0" VerticalAlignment="Top" Width="75" Command="{Binding EnResourceCommand}" CommandParameter="False" Height="22"/>
-                <Label Content="Код для файла ресурсов" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="26" Width="144"/>
-                <RichTextBox Margin="10,0,10,10" Grid.Row="3">
-                    <FlowDocument>
-                        <Paragraph>
-                            <Run Text="{Binding ResuorseTextEn}"/>
-                        </Paragraph>
-                    </FlowDocument>
-                </RichTextBox>
-                <GridSplitter HorizontalAlignment="Stretch" Height="5"  Grid.Row="2" Margin="10,0" VerticalAlignment="Center" />
-
-            </Grid>
-        </TabItem>
-    </TabControl>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Добавляемые поля">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="75*"/>
+                        <RowDefinition Height="198*"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="217*"/>
+                    </Grid.RowDefinitions>
+                    <Button  Content="Добавить" Margin="0,10,90,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="75" Command="{Binding AddPropertyCommand}" Height="22"/>
+                    <!--<DataGrid Margin="10,0" Grid.Row="1" ItemsSource="{Binding Properties}" SelectedItem="{Binding CurrentProperty}"/>-->
+                    <TreeView ItemsSource="{Binding Properties}" Grid.Row="1" Margin="10,0">
+                        <TreeView.ItemTemplate>
+                            <HierarchicalDataTemplate ItemsSource="{Binding Children}">
+                                <StackPanel Orientation="Horizontal">
+                                    <i:Interaction.Behaviors>
+                                        <behavior:FrameworkElementDragBehavior/>
+                                        <behavior:FrameworkElementDropBehavior/>
+                                    </i:Interaction.Behaviors>
+                                    <Image Source="{Binding Image}"/>
+                                    <TextBlock Text="{Binding FieldInDb}"/>
+                                </StackPanel>
+                            </HierarchicalDataTemplate>
+                        </TreeView.ItemTemplate>
+                        <i:Interaction.Behaviors>
+                            <behavior:BindableSelectedItemBehavior SelectedItem="{Binding CurrentProperty, Mode=OneWayToSource}" />
+                        </i:Interaction.Behaviors>
+                    </TreeView>
+                    <Button Content="View" Margin="0,10,170,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="75" Command="{Binding ViewPageCommand}" Height="22"/>
+                    <RichTextBox Margin="10,0,10,10" Grid.Row="3">
+                        <FlowDocument>
+                            <Paragraph>
+                                <Run Text="{Binding PageText}"/>
+                            </Paragraph>
+                        </FlowDocument>
+                    </RichTextBox>
+                    <Button Content="Edit" HorizontalAlignment="Right" Margin="0,10,250,0" VerticalAlignment="Top" Width="75" Command="{Binding EditPageCommand}" Height="22"/>
+                    <Button HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="25" Command="{Binding SaveCommand}" CommandParameter="False" Height="22">
+                        <Image Source="/Images/Save.gif" Width="20" Height="20" />
+                    </Button>
+                    <Button HorizontalAlignment="Left" Margin="40,10,0,0" VerticalAlignment="Top" Width="23" Command="{Binding LoadCommand}" CommandParameter="True" Height="22" >
+                        <Image Source="/Images/FileOpen.png" />
+                    </Button>
+                    <Button Content="Редактировать" HorizontalAlignment="Right" Margin="0,10,330,0" VerticalAlignment="Top" Width="75" Command="{Binding EditPropertyCommand}" Height="22"/>
+                    <GridSplitter HorizontalAlignment="Stretch" Height="5" Grid.Row="2"  VerticalAlignment="Center" Margin="10,0" />
+                    <Button Content="Панел" Margin="0,10,10,0" VerticalAlignment="Top" Command="{Binding AddPanelCommand}" HorizontalAlignment="Right" Width="75" Height="22"/>
+                    <Label Content="Ресурсы" HorizontalAlignment="Left" Margin="10,37,0,0" VerticalAlignment="Top" Height="26" Width="55"/>
+                    <TextBox HorizontalAlignment="Left" Height="23" Margin="70,37,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="269"/>
+                    <Button Content="Грид" Margin="0,37,10,0" VerticalAlignment="Top" Command="{Binding GetGridScriptCommand}" HorizontalAlignment="Right" Width="75" Height="22"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Скрипт для базы">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="219*"/>
+                        <RowDefinition Height="269*"/>
+                    </Grid.RowDefinitions>
+                    <Button  Content="Скрипт" Margin="0,10,10,0" VerticalAlignment="Top" Command="{Binding GetScriptCommand}" HorizontalAlignment="Right" Width="75" Height="22"/>
+                    <RichTextBox Margin="10,0,10,10" Grid.Row="1">
+                        <FlowDocument>
+                            <Paragraph>
+                                <Run Text="{Binding Script}"/>
+                            </Paragraph>
+                        </FlowDocument>
+                    </RichTextBox>
+                    <Label Content="Роли:" HorizontalAlignment="Left" Margin="10,6,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.237,-0.192" Height="26" Width="40"/>
+                    <Button Content="Загрузить" HorizontalAlignment="Left" Margin="333,6,0,0" VerticalAlignment="Top" Width="75" Command="{Binding GetGlobalRoles}" Height="22"/>
+                    <ListBox HorizontalAlignment="Left" Margin="10,32,0,10" Width="398" ItemsSource="{Binding GlobalRoles}" 
+						SelectionMode="Extended"
+						behavior:MultiSelectorBehaviours.SynchronizedSelectedItems="{Binding SelectedRole}"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Ресурсы">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="42*"/>
+                        <RowDefinition Height="207*"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="233*"/>
+                    </Grid.RowDefinitions>
+                    <Button Content="Edit" HorizontalAlignment="Right" Margin="0,10,10,0" VerticalAlignment="Top" Width="75" Command="{Binding RuResourceCommand}" CommandParameter="True" Height="22"/>
+                    <RichTextBox Margin="10,0" Grid.Row="1">
+                        <FlowDocument>
+                            <Paragraph>
+                                <Run Text="{Binding ResuorseTextRu}"/>
+                            </Paragraph>
+                        </FlowDocument>
+                    </RichTextBox>
+                    <Button Grid.Row="0" Content="View" HorizontalAlignment="Right" Margin="0,10,88,0" VerticalAlignment="Top" Width="75" Command="{Binding EnResourceCommand}" CommandParameter="False" Height="22"/>
+                    <Label Content="Код для файла ресурсов" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="26" Width="144"/>
+                    <RichTextBox Margin="10,0,10,10" Grid.Row="3">
+                        <FlowDocument>
+                            <Paragraph>
+                                <Run Text="{Binding ResuorseTextEn}"/>
+                            </Paragraph>
+                        </FlowDocument>
+                    </RichTextBox>
+                    <GridSplitter HorizontalAlignment="Stretch" Height="5"  Grid.Row="2" Margin="10,0" VerticalAlignment="Center" />
+                </Grid>
+            </TabItem>
+        </TabControl>
+        <TextBlock Grid.Row="1" Text="{Binding DataBase}" Margin="10,0"></TextBlock>
+    </Grid>
 </Window>

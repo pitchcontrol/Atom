@@ -20,6 +20,8 @@ namespace Atom
             ParentCollection = parentCollection;
             Children = new ObservableCollection<WebPageBaseViewModel>();
             IsEditable = true;
+            //Лень заполнять
+            _enDescription = "Some text";
         }
 
         /// <summary>

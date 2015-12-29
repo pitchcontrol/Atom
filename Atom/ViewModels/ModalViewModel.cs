@@ -11,9 +11,10 @@ namespace Atom.ViewModels
     {
         private string _tableName;
 
-        public ModalViewModel(ObservableCollection<WebPageBaseViewModel> parent) : base(parent)
+        public ModalViewModel(ObservableCollection<WebPageBaseViewModel> parent)
+            : base(parent)
         {
-            Types = new[] { "int", "decimal", "bit", "varchar", "file", "dictionary" };
+            Types = new[] { "int", "decimal", "bit", "varchar", "file", "dictionary", "hyperlink", "datetime", "date", "time" };
             Validate();
         }
         [JsonIgnore]

@@ -12,13 +12,19 @@ namespace Atom.Services
 {
     public static class ConnectionService
     {
-        public static SqlConnection GetConnection()
+        public static string GetConnectionString()
         {
             string value = ConfigurationManager.AppSettings["appPath"];
 
-            XDocument document = XDocument.Load(value??@"D:\SAM\Sources\SAM-NET40\SAM Web\Web.config");
+            XDocument document = XDocument.Load(value ?? @"D:\SAM\Sources\SAM-NET40\SAM Web\Web.config");
             string result = document.XPathSelectElement("//connectionStrings/add[@name = 'SAM_CS']").Attribute("connectionString").Value;
-            return new SqlConnection(result);
+            return result;
+        }
+
+        public static SqlConnection GetConnection()
+        {
+            string connection = GetConnectionString();
+            return new SqlConnection(connection);
         }
     }
 }

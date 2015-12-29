@@ -54,6 +54,7 @@
   <ItemGroup>
     <Compile Include="DragDropTest.cs" />
     <Compile Include="GetResourceCommandTest.cs" />
+    <Compile Include="GridConstructorHelperTest.cs" />
     <Compile Include="PageConstructotHelperTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ScriptConstructorHelperTest.cs" />

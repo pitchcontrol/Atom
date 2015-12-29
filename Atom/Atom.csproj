@@ -130,6 +130,7 @@
     </Compile>
     <Compile Include="Services\ConnectionService.cs" />
     <Compile Include="Services\Dal.cs" />
+    <Compile Include="Services\GridConstructorHelper.cs" />
     <Compile Include="Services\PageConstructotHelper.cs" />
     <Compile Include="Services\ScriptConstructorHelper.cs" />
     <Compile Include="ut_MenuField.cs">

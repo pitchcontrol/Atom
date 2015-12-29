@@ -10,19 +10,20 @@ namespace Atom.Services
         /// Расположени ресурсов
         /// </summary>
         public string ResourceNamespace { get; set; }
-        
+
         public void Construct(IEnumerable<WebPageBaseViewModel> collection, bool isEdit)
         {
             foreach (WebPageBaseViewModel modalViewModel in collection)
             {
                 if (isEdit && !modalViewModel.IsEditable)
                     continue;
+                string caption = string.Format("<%$ Resources: {0}, {1} %>", ResourceNamespace, modalViewModel.ControlIdView);
                 if (modalViewModel is Panel)
                 {
                     _stringBuilder.AppendFormat("<%--{0}--%>\n", modalViewModel.RuDescription);
                     _stringBuilder.AppendFormat(
-                        "<gp:CollapsePanel ID=\"{0}\" runat=\"server\" Caption=\"\" SkinID=\"CollapsePanel\">\n",
-                        isEdit ? modalViewModel.ControlIdEdit : modalViewModel.ControlIdView);
+                        "<gp:CollapsePanel ID=\"{0}\" runat=\"server\" Caption=\"{1}\" SkinID=\"CollapsePanel\">\n",
+                        isEdit ? modalViewModel.ControlIdEdit : modalViewModel.ControlIdView, caption);
                 }
                 else
                 {
@@ -72,6 +73,16 @@ namespace Atom.Services
                         modalViewModel.ControlIdView,
                         modalViewModel.FieldInDb, caption);
                     break;
+                case "time":
+                    _stringBuilder.AppendFormat("<gp:ValidatingLabel ID=\"{0}\" runat=\"server\" SkinID=\"ViewModeSkin\" Caption=\"{2}\" DataBoundField=\"{1}\" EnableDate=\"true\" HistType=\"HISTORY_TYPE_UL\" Format=\"HH:mm:ss\"/>\n",
+                        modalViewModel.ControlIdView,
+                        modalViewModel.FieldInDb, caption);
+                    break;
+                case "date":
+                    _stringBuilder.AppendFormat("<gp:ValidatingLabel ID=\"{0}\" runat=\"server\" SkinID=\"ViewModeSkin\" Caption=\"{2}\" DataBoundField=\"{1}\" EnableDate=\"true\" HistType=\"HISTORY_TYPE_UL\" Format=\"MM.dd.yyyy\"/>\n",
+                        modalViewModel.ControlIdView,
+                        modalViewModel.FieldInDb, caption);
+                    break;
             }
         }
         /// <summary>
@@ -87,7 +98,7 @@ namespace Atom.Services
                 case "datetime":
                     _stringBuilder.AppendFormat("<gp:ValidatingJsCalendar ID=\"{0}\" runat=\"server\" SkinID=\"ViewModeSkin\" Caption=\"{2}\" DataBoundField=\"{1}\" EnableDate=\"true\" HistType=\"HISTORY_TYPE_UL\" ImageUrl=\"~/Images/week_small.gif\"  ValidType=\"FORM_ERROR_TYPE_DATE\" />\n",
                         modalViewModel.ControlIdView,
-                        modalViewModel.FieldInDb,caption);
+                        modalViewModel.FieldInDb, caption);
                     break;
                 case "int":
                     _stringBuilder.AppendFormat("<gp:ValidatingTextBox ID=\"{0}\" runat=\"server\" sqlType=\"Int\" SkinID=\"ViewModeSkin\" Caption=\"{2}\" DataBoundField=\"{1}\" EnableDate=\"true\" HistType=\"HISTORY_TYPE_UL\"/>\n",

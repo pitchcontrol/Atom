@@ -19,9 +19,9 @@ namespace Atom.Commands
         public StoryObjectCommand(MainViewModel model)
         {
             _model = model;
-            _model.Properties.CollectionChanged += (s, e) =>
+            _model.PropertyChanged += (s, e) =>
             {
-                if (CanExecuteChanged != null)
+                if (CanExecuteChanged != null && e.PropertyName == "Properties")
                     CanExecuteChanged(this, e);
             };
         }
@@ -51,7 +51,11 @@ namespace Atom.Commands
 
                         _model.Properties.Clear();
                         foreach (WebPageBaseViewModel webPageBaseViewModel in pr)
+                        {
+                            if (webPageBaseViewModel is RootPanel)
+                                _model.RootPanel = (RootPanel) webPageBaseViewModel;
                             _model.Properties.Add(webPageBaseViewModel);
+                        }
                     }
                     catch (Exception exception)
                     {

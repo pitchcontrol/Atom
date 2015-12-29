@@ -1,7 +1,8 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:atom="clr-namespace:Atom"
-                    xmlns:viewModels="clr-namespace:Atom.ViewModels">
+                    xmlns:viewModels="clr-namespace:Atom.ViewModels"
+                    xmlns:models="clr-namespace:Atom.Models">
 
     <DataTemplate DataType="{x:Type viewModels:ModalViewModel}">
         <Grid>
@@ -41,5 +42,15 @@
             <TextBlock Text="{Binding nams, StringFormat='\{0\}: '}"/>
             <TextBlock Text="{Binding nam}"/>
         </StackPanel>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type models:Role}">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="4*" SharedSizeGroup="NameColumn"/>
+                <ColumnDefinition Width="*" SharedSizeGroup="VisibilityColumn"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="{Binding Name}" Grid.Column="0"/>
+            <TextBlock Text="{Binding Visibility, StringFormat=' \{0\}'}" Grid.Column="1" />
+        </Grid>
     </DataTemplate>
 </ResourceDictionary>
