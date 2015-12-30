@@ -40,6 +40,7 @@ namespace Atom
         private IEnumerable<MenuTree> _menuGroupViews;
         private IEnumerable<Role> _rolesForPage;
         private string _resourceNameSpace;
+        private string _resourceFilePath;
 
         public RootPanel RootPanel
         {
@@ -103,7 +104,7 @@ namespace Atom
 
             RuResourceCommand = new GetResourceCommand(this);
             EnResourceCommand = RuResourceCommand;
-
+            GetResourceFileCommand = new GetResourceFileCommand(this);
             SaveCommand = LoadCommand = new StoryObjectCommand(this);
         }
         public SimlpleCommand GetGlobalRoles { get; set; }
@@ -116,6 +117,7 @@ namespace Atom
         public ICommand LoadCommand { get; set; }
         public DelegateCommand<string> EditPropertyCommand { get; set; }
         public ICommand RuResourceCommand { get; set; }
+        public ICommand GetResourceFileCommand { get; set; }
         public ICommand EnResourceCommand { get; set; }
         public ICommand AddPanelCommand { get; private set; }
         public DelegateCommand<string> GetGridScriptCommand { get; private set; }
@@ -395,6 +397,19 @@ namespace Atom
             {
                 if (value == _rolesForPage) return;
                 _rolesForPage = value;
+                OnPropertyChanged();
+            }
+        }
+        /// <summary>
+        /// Путь к файлу ресурсов
+        /// </summary>
+        public string ResourceFilePath
+        {
+            get { return _resourceFilePath; }
+            set
+            {
+                if (value == _resourceFilePath) return;
+                _resourceFilePath = value;
                 OnPropertyChanged();
             }
         }
