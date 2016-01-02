@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Atom.Models;
 using Atom.ViewModels;
 using NUnit.Framework;
 
@@ -17,23 +18,23 @@ namespace Atom.UnitTests
         {
             ObservableCollection<WebPageBaseViewModel> properties = new ObservableCollection<WebPageBaseViewModel>();
             RootPanel rootPanel = new RootPanel(properties);
-            Panel panel = new Panel(rootPanel.Children) { ControlIdView = "clId1", RuDescription = "Комент" };
-            rootPanel.Children.Add(panel);
-            ModalViewModel control = new ModalViewModel(panel.Children)
+            PanelViewModel panelViewModel = new PanelViewModel(rootPanel.Children) { ControlIdView = "clId1", RuDescription = "Комент" };
+            rootPanel.Children.Add(panelViewModel);
+            ModalViewModel control = new ModalViewModel(panelViewModel.Children)
             {
                 Type = "varchar",
                 FieldInDb = "field2",
                 RuDescription = "Комент",
                 ControlIdView = "lb2"
             };
-            panel.Children.Add(control);
+            panelViewModel.Children.Add(control);
 
-            Assert.AreEqual(1, panel.Children.Count);
+            Assert.AreEqual(1, panelViewModel.Children.Count);
             Assert.AreEqual(1, rootPanel.Children.Count);
             //Перебрасываем контрол
             rootPanel.Drop(control);
             //В панели больше нет детей
-            Assert.AreEqual(0,panel.Children.Count);
+            Assert.AreEqual(0,panelViewModel.Children.Count);
             Assert.AreEqual(2, rootPanel.Children.Count);
             Assert.AreEqual(control.ParentCollection, rootPanel.Children);
         }
@@ -50,15 +51,15 @@ namespace Atom.UnitTests
                 ControlIdView = "lb2"
             };
             rootPanel.Children.Add(control);
-            Panel panel = new Panel(rootPanel.Children) { ControlIdView = "clId1", RuDescription = "Комент" };
-            rootPanel.Children.Add(panel);
+            PanelViewModel panelViewModel = new PanelViewModel(rootPanel.Children) { ControlIdView = "clId1", RuDescription = "Комент" };
+            rootPanel.Children.Add(panelViewModel);
             Assert.AreEqual(2, rootPanel.Children.Count);
-            Assert.AreEqual(0, panel.Children.Count);
+            Assert.AreEqual(0, panelViewModel.Children.Count);
             //Перебрасываем контрол
-            panel.Drop(control);
-            Assert.AreEqual(1, panel.Children.Count);
+            panelViewModel.Drop(control);
+            Assert.AreEqual(1, panelViewModel.Children.Count);
             Assert.AreEqual(1, rootPanel.Children.Count);
-            Assert.AreEqual(control.ParentCollection, panel.Children);
+            Assert.AreEqual(control.ParentCollection, panelViewModel.Children);
         }
     }
 }

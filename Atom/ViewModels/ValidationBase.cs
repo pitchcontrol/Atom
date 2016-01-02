@@ -1,17 +1,16 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
+using Atom.Annotations;
 using Newtonsoft.Json;
 
-namespace Atom
+namespace Atom.ViewModels
 {
-    public class ValidationBase : INotifyDataErrorInfo
+    public class ValidationBase : INotifyDataErrorInfo, INotifyPropertyChanged
     {
         private readonly Dictionary<string, List<string>> _errors = new Dictionary<string, List<string>>();
         public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
@@ -38,6 +37,8 @@ namespace Atom
         {
             if (ErrorsChanged != null)
                 ErrorsChanged(this, new DataErrorsChangedEventArgs(propertyName));
+
+            OnPropertyChanged("IsValid");
         }
 
         public void ValidateProperty(object value, [CallerMemberName] string propertyName = null)
@@ -87,6 +88,14 @@ namespace Atom
                 _errors.Add(prop.Key, messages);
                 OnErrorsChanged(prop.Key);
             }
+        }
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
         }
     }  
 }

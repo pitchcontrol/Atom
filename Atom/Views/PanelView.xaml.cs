@@ -13,17 +13,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Atom
+namespace Atom.Views
 {
     /// <summary>
-    /// Логика взаимодействия для MainWindow.xaml
+    /// Логика взаимодействия для PanelViewModel.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class PanelView : UserControl
     {
-        public MainWindow()
+        public PanelView()
         {
             InitializeComponent();
-            DataContext = new MainViewModel();
         }
     }
 }

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Atom.Commands;
+using Atom.Models;
 using Atom.Services;
 using Atom.ViewModels;
 using NUnit.Framework;
@@ -16,14 +17,14 @@ namespace Atom.UnitTests
     {
         RootPanel _rootPanel;
         private GetResourceCommand _command;
-        private MainViewModel _model;
+        private ShellViewModel _model;
         [SetUp]
         public void Init()
         {
             ObservableCollection<WebPageBaseViewModel> properties = new ObservableCollection<WebPageBaseViewModel>();
             _rootPanel = new RootPanel(properties);
             properties.Add(_rootPanel);
-            _model = new MainViewModel();
+            _model = new ShellViewModel();
             _model.Properties.Clear();
             foreach (WebPageBaseViewModel webPageBaseViewModel in properties)
             {
@@ -37,11 +38,11 @@ namespace Atom.UnitTests
         public void SimpleTest()
         {
             _rootPanel.Children.Add(new ModalViewModel(_rootPanel.Children) { Type = "int", FieldInDb = "field1", RuDescription = "Комент", EnDescription = "Comment", ControlIdView = "lb1" });
-            Panel panel = new Panel(_rootPanel.Children) { ControlIdView = "clId1", RuDescription = "Комент", EnDescription = "Comment"};
-            _rootPanel.Children.Add(panel);
+            PanelViewModel panelViewModel = new PanelViewModel(_rootPanel.Children) { ControlIdView = "clId1", RuDescription = "Комент", EnDescription = "Comment"};
+            _rootPanel.Children.Add(panelViewModel);
             //Вторая панель вложена в первую
-            Panel panel2 = new Panel(panel.Children) { ControlIdView = "clId2", RuDescription = "Комент", EnDescription = "Comment" };
-            panel.Children.Add(panel2);
+            PanelViewModel panel2 = new PanelViewModel(panelViewModel.Children) { ControlIdView = "clId2", RuDescription = "Комент", EnDescription = "Comment" };
+            panelViewModel.Children.Add(panel2);
             panel2.Children.Add(new ModalViewModel(_rootPanel.Children) { Type = "varchar", FieldInDb = "field2", RuDescription = "Комент", EnDescription = "Comment", ControlIdView = "lb2" });
             _command.Execute("False");
 
@@ -54,7 +55,7 @@ namespace Atom.UnitTests
             result += "<data name=\"lb2\" xml:space=\"preserve\">\n";
             result += "<value>Комент</value>\n</data>\n";
 
-            Assert.AreEqual(result,_model.ResuorseTextRu);
+            Assert.AreEqual(result,"");
         }
     }
 }

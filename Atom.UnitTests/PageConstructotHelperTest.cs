@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Atom.Models;
 using Atom.Services;
 using Atom.ViewModels;
 using NUnit.Framework;
@@ -41,7 +42,7 @@ namespace Atom.UnitTests
         [Test(Description = "Отображаем пустую панель")]
         public void SimplePanel()
         {
-            _rootPanel.Children.Add(new Panel(_rootPanel.Children) { ControlIdView = "clId1", RuDescription = "Комент" });
+            _rootPanel.Children.Add(new PanelViewModel(_rootPanel.Children) { ControlIdView = "clId1", RuDescription = "Комент" });
             _helper.Construct(_rootPanel.Children, false);
             string result = "<%--Комент--%>\n<gp:CollapsePanel ID=\"clId1\" runat=\"server\" Caption=\"<%$ Resources: , clId1 %>\" SkinID=\"CollapsePanel\">\n</gp:CollapsePanel>\n";
             Assert.AreEqual(result, _helper.ToString());
@@ -64,9 +65,9 @@ namespace Atom.UnitTests
         public void ComplexTest1()
         {
             _rootPanel.Children.Add(new ModalViewModel(_rootPanel.Children) { Type = "int", FieldInDb = "field1", RuDescription = "Комент", ControlIdView = "lb1" });
-            Panel panel = new Panel(_rootPanel.Children) { ControlIdView = "clId1", RuDescription = "Комент" };
-            _rootPanel.Children.Add(panel);
-            panel.Children.Add(new ModalViewModel(_rootPanel.Children) { Type = "varchar", FieldInDb = "field2", RuDescription = "Комент", ControlIdView = "lb2" });
+            PanelViewModel panelViewModel = new PanelViewModel(_rootPanel.Children) { ControlIdView = "clId1", RuDescription = "Комент" };
+            _rootPanel.Children.Add(panelViewModel);
+            panelViewModel.Children.Add(new ModalViewModel(_rootPanel.Children) { Type = "varchar", FieldInDb = "field2", RuDescription = "Комент", ControlIdView = "lb2" });
             string result = "<%--Комент--%>\n<gp:ValidatingLabel ID=\"lb1\" runat=\"server\" SkinID=\"ViewModeSkin\" Caption=\"<%$ Resources: , lb1 %>\" DataBoundField=\"field1\" EnableDate=\"true\" HistType=\"HISTORY_TYPE_UL\"/>\n";
             result +=
                 "<%--Комент--%>\n<gp:CollapsePanel ID=\"clId1\" runat=\"server\" Caption=\"<%$ Resources: , clId1 %>\" SkinID=\"CollapsePanel\">\n";
@@ -81,11 +82,11 @@ namespace Atom.UnitTests
         public void ComplexTest2()
         {
             _rootPanel.Children.Add(new ModalViewModel(_rootPanel.Children) { Type = "int", FieldInDb = "field1", RuDescription = "Комент", ControlIdView = "lb1" });
-            Panel panel = new Panel(_rootPanel.Children) { ControlIdView = "clId1", RuDescription = "Комент" };
-            _rootPanel.Children.Add(panel);
+            PanelViewModel panelViewModel = new PanelViewModel(_rootPanel.Children) { ControlIdView = "clId1", RuDescription = "Комент" };
+            _rootPanel.Children.Add(panelViewModel);
             //Вторая панель вложена в первую
-            Panel panel2 = new Panel(panel.Children) { ControlIdView = "clId2", RuDescription = "Комент" };
-            panel.Children.Add(panel2);
+            PanelViewModel panel2 = new PanelViewModel(panelViewModel.Children) { ControlIdView = "clId2", RuDescription = "Комент" };
+            panelViewModel.Children.Add(panel2);
             panel2.Children.Add(new ModalViewModel(_rootPanel.Children) { Type = "varchar", FieldInDb = "field2", RuDescription = "Комент", ControlIdView = "lb2" });
 
             string result = "<%--Комент--%>\n<gp:ValidatingLabel ID=\"lb1\" runat=\"server\" SkinID=\"ViewModeSkin\" Caption=\"<%$ Resources: , lb1 %>\" DataBoundField=\"field1\" EnableDate=\"true\" HistType=\"HISTORY_TYPE_UL\"/>\n";
@@ -117,6 +118,33 @@ namespace Atom.UnitTests
             _helper.Construct(_rootPanel.Children, false);
             string result = "<%--Комент--%>\n<gp:ValidatingLabel ID=\"lb1\" runat=\"server\" SkinID=\"ViewModeSkin\" Caption=\"<%$ Resources: RefBook, lb1 %>\" DataBoundField=\"field1\" EnableDate=\"true\" HistType=\"HISTORY_TYPE_UL\"/>\n";
             result += "<%--Комент--%>\n<gp:ValidatingLabel ID=\"lb2\" runat=\"server\" SkinID=\"ViewModeSkin\" Caption=\"<%$ Resources: RefBook, lb2 %>\" DataBoundField=\"field2\" EnableDate=\"true\" HistType=\"HISTORY_TYPE_UL\"/>\n";
+            Assert.AreEqual(result, _helper.ToString());
+        }
+        [Test(Description = "Панель в ней грид")]
+        public void ComplexTest3()
+        {
+            _helper.ResourceNamespace = "RefBook";
+            PanelViewModel panelViewModel = new PanelViewModel(_rootPanel.Children) { ControlIdView = "clId1", RuDescription = "Комент" };
+            _rootPanel.Children.Add(panelViewModel);
+            GridViewModel grid = new GridViewModel(panelViewModel.Children);
+
+            panelViewModel.Children.Add(grid);
+            grid.Children.Add(new ModalViewModel(grid.Children) { Type = "int", FieldInDb = "field1", RuDescription = "Комент", ControlIdView = "lb1" });
+            _helper.Construct(_rootPanel.Children, false);
+            string result =
+                "<%--Комент--%>\n<gp:CollapsePanel ID=\"clId1\" runat=\"server\" Caption=\"<%$ Resources: RefBook, clId1 %>\" SkinID=\"CollapsePanel\">\n";
+            result += "<%----%>\n";
+            result += "<gp:GpGridView ID=\"gvObject\" Height=\"100%\" runat=\"server\" PageSize=\"10\" ShowWhenEmpty=\"False\" SkinID=\"gpGridView\" DataKeyNames=\"id\" PagerSettings-Visible=\"true\">\n";
+            result += "<Columns>\n";
+            result += "<%--Комент--%>\n";
+            result += "<asp:TemplateField HeaderText=\"<%$ Resources: RefBook, field1 %>\" SortExpression=\"field1\" AccessibleHeaderText=\"field1\">\n";
+            result += "<ItemTemplate>\n";
+            result += "<asp:Label ID=\"lb1\" runat=\"server\"><%# Eval(\"field1\")%></asp:Label>\n";
+            result += "</ItemTemplate>\n";
+            result += "</asp:TemplateField>\n";
+            result += "</Columns>\n";
+            result += "</gp:GpGridView>\n";
+            result += "</gp:CollapsePanel>\n";
             Assert.AreEqual(result, _helper.ToString());
         }
     }

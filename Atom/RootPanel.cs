@@ -12,7 +12,7 @@ namespace Atom
     {
         public override bool IsDragable { get { return false; } }
         public override bool IsDropable { get { return true; } }
-        public string FieldInDb
+        public override string FieldInDb
         {
             get { return "Корень"; }
         }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Resources;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -12,9 +13,9 @@ namespace Atom.Commands
     /// </summary>
     public class GetResourceCommand : ICommand
     {
-        private readonly MainViewModel _model;
+        private readonly ShellViewModel _model;
 
-        public GetResourceCommand(MainViewModel model)
+        public GetResourceCommand(ShellViewModel model)
         {
             _model = model;
             _model.Properties.CollectionChanged += (s, e) =>
@@ -36,8 +37,8 @@ namespace Atom.Commands
             bool isEdit = parameter.ToString() == "True";
             WebPageBaseViewModel rootModel = _model.Properties.FirstOrDefault();
             Constructor(sbr, sbe, rootModel.Children, isEdit);
-            _model.ResuorseTextRu = sbr.ToString();
-            _model.ResuorseTextEn = sbe.ToString();
+            //_model.ResuorseTextRu = sbr.ToString();
+            //_model.ResuorseTextEn = sbe.ToString();
         }
 
         private void Constructor(StringBuilder sbr, StringBuilder sbe, IEnumerable<WebPageBaseViewModel> collection, bool isEdit)
@@ -52,6 +53,8 @@ namespace Atom.Commands
 
                 Constructor(sbr, sbe, modalViewModel.Children, isEdit);
             }
+           
+            //ResXResourceWriter resXResource = new ResXResourceWriter();
         }
 
         public event EventHandler CanExecuteChanged;

@@ -43,6 +43,14 @@
       <HintPath>..\packages\Infrastructure.Dapper.1.0.13\lib\ByndyuSoft.Infrastructure.Dapper.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Caliburn.Micro, Version=2.0.2.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Caliburn.Micro.Core.2.0.2\lib\net45\Caliburn.Micro.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Caliburn.Micro.Platform, Version=2.0.2.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Caliburn.Micro.2.0.2\lib\net45\Caliburn.Micro.Platform.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Dapper, Version=1.12.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Dapper.1.12.1\lib\net40\Dapper.dll</HintPath>
       <Private>True</Private>
@@ -73,6 +81,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -92,6 +101,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AppBootstrapper.cs" />
     <Compile Include="Behavior\BindableSelectedItemBehavior.cs" />
     <Compile Include="Behavior\FrameworkElementAdorner.cs" />
     <Compile Include="Behavior\FrameworkElementDragBehavior.cs" />
@@ -102,73 +112,40 @@
     <Compile Include="Commands\GetResourceCommand.cs" />
     <Compile Include="Commands\GetResourceFileCommand.cs" />
     <Compile Include="Commands\StoryObjectCommand.cs" />
+    <Compile Include="Converters\IsNotNullConverter.cs" />
     <Compile Include="DelegateCommand.cs" />
-    <Compile Include="MainViewModel.cs" />
+    <Compile Include="Helpers.cs" />
+    <Compile Include="IShell.cs" />
+    <Compile Include="ShellView.xaml.cs">
+      <DependentUpon>ShellView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ShellViewModel.cs" />
     <Compile Include="ModalView.xaml.cs">
       <DependentUpon>ModalView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Models\MenuGroupView.cs" />
     <Compile Include="Models\MenuTree.cs" />
     <Compile Include="Models\RolePage.cs" />
     <Compile Include="NotifyCommand.cs" />
-    <Compile Include="Panel.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="RootPanel.cs" />
-    <Compile Include="Schema.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Schema.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Schema.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Schema.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Schema.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Schema.edmx</DependentUpon>
-    </Compile>
     <Compile Include="Services\ConnectionService.cs" />
     <Compile Include="Services\Dal.cs" />
     <Compile Include="Services\GridConstructorHelper.cs" />
     <Compile Include="Services\PageConstructotHelper.cs" />
     <Compile Include="Services\ScriptConstructorHelper.cs" />
-    <Compile Include="ut_MenuField.cs">
-      <DependentUpon>Schema.tt</DependentUpon>
-    </Compile>
-    <Compile Include="ut_MenuGroupView.cs">
-      <DependentUpon>Schema.tt</DependentUpon>
-    </Compile>
-    <Compile Include="ut_MenuPageView.cs">
-      <DependentUpon>Schema.tt</DependentUpon>
-    </Compile>
-    <Compile Include="ut_RoleField.cs">
-      <DependentUpon>Schema.tt</DependentUpon>
-    </Compile>
-    <Compile Include="ut_RolePage.cs">
-      <DependentUpon>Schema.tt</DependentUpon>
-    </Compile>
-    <Compile Include="ut_Roles.cs">
-      <DependentUpon>Schema.tt</DependentUpon>
-    </Compile>
-    <Compile Include="ValidationBase.cs" />
+    <Compile Include="ViewModels\GridViewModel.cs" />
+    <Compile Include="ViewModels\MassiveSetViewModel.cs" />
     <Compile Include="ViewModels\ModalViewModel.cs" />
+    <Compile Include="ViewModels\PanelViewModel.cs" />
+    <Compile Include="ViewModels\RolesViewModel.cs" />
+    <Compile Include="ViewModels\ValidationBase.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
-    <Compile Include="WebPageBaseViewModel.cs" />
-    <Compile Include="Window1.xaml.cs">
-      <DependentUpon>Window1.xaml</DependentUpon>
+    <Compile Include="Views\PanelView.xaml.cs">
+      <DependentUpon>PanelView.xaml</DependentUpon>
     </Compile>
-    <Page Include="MainWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
+    <Compile Include="WebPageBaseViewModel.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Page Include="ModalView.xaml">
@@ -179,7 +156,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Window1.xaml">
+    <Page Include="ShellView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PanelView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -208,13 +189,6 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
-    <EntityDeploy Include="Schema.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>Schema.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <None Include="Schema.edmx.diagram">
-      <DependentUpon>Schema.edmx</DependentUpon>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -225,16 +199,12 @@
     <Resource Include="Images\mainMenuFolderGray.gif" />
     <Resource Include="Images\FileOpen.png" />
     <Resource Include="Images\Save.gif" />
-    <Content Include="Schema.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>Schema.edmx</DependentUpon>
-      <LastGenOutput>Schema.Context.cs</LastGenOutput>
-    </Content>
-    <Content Include="Schema.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>Schema.edmx</DependentUpon>
-      <LastGenOutput>Schema.cs</LastGenOutput>
-    </Content>
+    <Resource Include="Images\Add.png" />
+    <Resource Include="Images\Delete.png" />
+    <Resource Include="Images\Person.png" />
+    <Resource Include="Images\FormView.png" />
+    <Resource Include="Images\fullList.png" />
+    <Resource Include="Images\reverse_an_entry.gif" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

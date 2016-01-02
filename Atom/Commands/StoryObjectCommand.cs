@@ -14,9 +14,9 @@ namespace Atom.Commands
 {
     public class StoryObjectCommand : ICommand
     {
-        private readonly MainViewModel _model;
+        private readonly ShellViewModel _model;
 
-        public StoryObjectCommand(MainViewModel model)
+        public StoryObjectCommand(ShellViewModel model)
         {
             _model = model;
             _model.PropertyChanged += (s, e) =>

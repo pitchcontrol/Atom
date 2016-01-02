@@ -75,6 +75,19 @@ namespace Atom.Services
                 roles = dbConnection.Query<Role>(new QueryObject(sql, new { @page = page }));
             }
             return roles;
+        }
+
+        public IEnumerable<Role> GetGlobalRoles()
+        {
+            string sql =
+                "select ut_Roles.pkid Id,ut_Roles.nam Name from ut_Roles";
+            IEnumerable<Role> roles;
+            using (IDbConnection dbConnection = ConnectionService.GetConnection())
+            {
+                dbConnection.Open();
+                roles = dbConnection.Query<Role>(new QueryObject(sql));
+            }
+            return roles;
         } 
     }
 }

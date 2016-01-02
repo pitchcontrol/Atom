@@ -1,0 +1,33 @@
+﻿<UserControl x:Class="Atom.Views.PanelView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Atom.Views"
+             xmlns:viewModels="clr-namespace:Atom.ViewModels"
+             xmlns:atom="clr-namespace:Atom"
+             xmlns:cal="http://www.caliburnproject.org"
+             mc:Ignorable="d" 
+              d:DataContext="{d:DesignInstance Type=viewModels:PanelViewModel, IsDesignTimeCreatable=False}"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Label Content="ID контрола (View)" HorizontalAlignment="Left" Margin="10,32,0,0" VerticalAlignment="Top" Grid.RowSpan="2"/>
+        <TextBox Height="23" Margin="162,2.844,10,0" TextWrapping="Wrap" Text="{Binding ControlIdView,NotifyOnValidationError=True,ValidatesOnNotifyDataErrors=True}" VerticalAlignment="Top" Grid.Row="1"/>
+        <Label Content="Поле в базе" HorizontalAlignment="Left" Margin="10,6,0,0" VerticalAlignment="Top"/>
+        <TextBox Height="23" Margin="162,10,10,0" TextWrapping="Wrap" Text="{Binding FieldInDb,NotifyOnValidationError=True,ValidatesOnNotifyDataErrors=True}" VerticalAlignment="Top"/>
+        <Label Content="RU" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.132,-0.5" Grid.Row="3"/>
+        <TextBox Height="72" Margin="162,4,10,0" TextWrapping="Wrap" Text="{Binding RuDescription,NotifyOnValidationError=True,ValidatesOnNotifyDataErrors=True}" VerticalAlignment="Top" Grid.Row="3"/>
+        <Label Content="EN" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top" Width="40" Grid.Row="4"/>
+        <TextBox Height="72" Margin="162,3,10,0" TextWrapping="Wrap" Text="{Binding EnDescription,NotifyOnValidationError=True,ValidatesOnNotifyDataErrors=True}" VerticalAlignment="Top" Grid.Row="4"/>
+        <Label Content="ID контрола (Edit)" HorizontalAlignment="Left" Margin="10,24,0,0" VerticalAlignment="Top" Grid.Row="1" Grid.RowSpan="2"/>
+        <TextBox Height="22" Margin="162,4,10,0" TextWrapping="Wrap" Text="{Binding ControlIdEdit,NotifyOnValidationError=True,ValidatesOnNotifyDataErrors=True}" VerticalAlignment="Top" Grid.Row="2"/>
+    </Grid>
+</UserControl>

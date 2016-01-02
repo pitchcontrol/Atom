@@ -15,11 +15,11 @@ using System.Windows.Shapes;
 namespace Atom
 {
     /// <summary>
-    /// Interaction logic for Window1.xaml
+    /// Логика взаимодействия для ShellView.xaml
     /// </summary>
-    public partial class Window1 : Window
+    public partial class ShellView : Window
     {
-        public Window1()
+        public ShellView()
         {
             InitializeComponent();
         }

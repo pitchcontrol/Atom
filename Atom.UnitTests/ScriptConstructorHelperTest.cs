@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Atom.Models;
 using Atom.Services;
 using Atom.ViewModels;
 using NUnit.Framework;
@@ -27,29 +28,29 @@ namespace Atom.UnitTests
         public void SimpleViewTest()
         {
             _rootPanel.Children.Add(new ModalViewModel(_rootPanel.Children) { Type = "int", FieldInDb = "field1", RuDescription = "Комент", ControlIdView = "lb1" });
-            Panel panel = new Panel(_rootPanel.Children) { RuDescription = "Комент", FieldInDb = "Id1" };
-            _rootPanel.Children.Add(panel);
-            panel.Children.Add(new ModalViewModel(_rootPanel.Children) { Type = "varchar", FieldInDb = "field2", RuDescription = "Комент", ControlIdView = "lb2" });
-
+            PanelViewModel panelViewModel = new PanelViewModel(_rootPanel.Children) { RuDescription = "Комент", FieldInDb = "Id1" };
+            _rootPanel.Children.Add(panelViewModel);
+            panelViewModel.Children.Add(new ModalViewModel(_rootPanel.Children) { Type = "varchar", FieldInDb = "field2", RuDescription = "Комент", ControlIdView = "lb2" });
+            _helper.Visability = 1;
             string result = "DECLARE @id int;\n";
             //field1
             result += "--field1\n";
             result +=
-                "INSERT INTO [ut_MenuField] (idpage,fld, idparent, fldbd, tabbd, isNotEdited, nam) VALUES (100, 'lb1', null, 'field1', null, 0, 'ru-RU:Комент;en-EN:;');\n";
+                "INSERT INTO [ut_MenuField] (idpage,fld, idparent, fldbd, tabbd, isNotEdited, nam) VALUES (100, 'lb1', null, 'field1', null, 0, 'ru-RU:Комент;en-EN:Some text;');\n";
             result += "set @id  = scope_identity();\n";
             result += "insert into [ut_RoleField] (idrole, idfld,visability)\nvalues\n";
             result += "(3,@id,1)\n";
             //clId1
             result += "--Id1\n";
             result +=
-                "INSERT INTO [ut_MenuField] (idpage,fld, idparent, fldbd, tabbd, isNotEdited, nam) VALUES (100, 'cpId1', null, 'Id1', null, 0, 'ru-RU:Комент;en-EN:;');\n";
+                "INSERT INTO [ut_MenuField] (idpage,fld, idparent, fldbd, tabbd, isNotEdited, nam) VALUES (100, 'cpId1', null, 'Id1', null, 0, 'ru-RU:Комент;en-EN:Some text;');\n";
             result += "set @id  = scope_identity();\n";
             result += "insert into [ut_RoleField] (idrole, idfld,visability)\nvalues\n";
             result += "(3,@id,1)\n";
             //field2
             result += "--field2\n";
             result +=
-                "INSERT INTO [ut_MenuField] (idpage,fld, idparent, fldbd, tabbd, isNotEdited, nam) VALUES (100, 'lb2', null, 'field2', null, 0, 'ru-RU:Комент;en-EN:;');\n";
+                "INSERT INTO [ut_MenuField] (idpage,fld, idparent, fldbd, tabbd, isNotEdited, nam) VALUES (100, 'lb2', null, 'field2', null, 0, 'ru-RU:Комент;en-EN:Some text;');\n";
             result += "set @id  = scope_identity();\n";
             result += "insert into [ut_RoleField] (idrole, idfld,visability)\nvalues\n";
             result += "(3,@id,1)\n";
@@ -65,7 +66,7 @@ namespace Atom.UnitTests
             //field1
             result += "--field1\n";
             result +=
-                "INSERT INTO [ut_MenuField] (idpage,fld, idparent, fldbd, tabbd, isNotEdited, nam) VALUES (100, 'lb1', null, 'field1', null, 0, 'ru-RU:Комент;en-EN:;');\n";
+                "INSERT INTO [ut_MenuField] (idpage,fld, idparent, fldbd, tabbd, isNotEdited, nam) VALUES (100, 'lb1', null, 'field1', null, 0, 'ru-RU:Комент;en-EN:Some text;');\n";
             result += "set @id  = scope_identity();\n";
             result += "insert into [ut_RoleField] (idrole, idfld,visability)\nvalues\n";
             result += "(3,@id,3),\n";

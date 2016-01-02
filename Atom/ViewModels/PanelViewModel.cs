@@ -1,16 +1,14 @@
-﻿using System;
 using System.Collections.ObjectModel;
-using Atom.Behavior;
-using Newtonsoft.Json;
 
-namespace Atom
+namespace Atom.ViewModels
 {
-    public class Panel : WebPageBaseViewModel
+    public class PanelViewModel : WebPageBaseViewModel
     {
-        public Panel(ObservableCollection<WebPageBaseViewModel> parentCollection) : base(parentCollection)
+
+        public PanelViewModel(ObservableCollection<WebPageBaseViewModel> parentCollection) : base(parentCollection)
         {
+            Validate();
         }
-        
         public override string Type
         {
             get { return "panel"; }
@@ -23,7 +21,7 @@ namespace Atom
         public override bool IsDropable { get { return true; } }
         public override string ToString()
         {
-            return string.Format("Panel: {0}", FieldInDb);
+            return string.Format("PanelViewModel: {0}", FieldInDb);
         }
     }
 }

@@ -108,9 +108,11 @@ namespace Atom
             }
         }
 
-
+        /// <summary>
+        /// Поля в базе а также имя ресурса
+        /// </summary>
         [Required]
-        public string FieldInDb
+        public virtual string FieldInDb
         {
             get { return _fieldInDb; }
             set
@@ -168,6 +170,8 @@ namespace Atom
                     view = "vlbl";
                     break;
                 case "datetime":
+                case "date":
+                case "time":
                     edit = "vtcl";
                     view = "vlbl";
                     break;

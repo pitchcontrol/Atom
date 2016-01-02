@@ -12,8 +12,8 @@ namespace Atom.Commands
 {
     public class GetResourceFileCommand : ICommand
     {
-        private MainViewModel _model;
-        public GetResourceFileCommand(MainViewModel model)
+        private ShellViewModel _model;
+        public GetResourceFileCommand(ShellViewModel model)
         {
             _model = model;
             _model.Properties.CollectionChanged += (s, e) =>
