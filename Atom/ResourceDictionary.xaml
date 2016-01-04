@@ -76,15 +76,27 @@
                 </behavior:MultiSelectorBehaviours.SynchronizedSelectedItems>
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                      <StackPanel>
-                          <TextBlock Text="{Binding FieldInDb}"/>
-                      </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="{Binding FieldInDb}"/>
+                        </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
             <TextBlock Margin="0,8.02,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Таблица" HorizontalAlignment="Left" Width="104.415" VerticalAlignment="Top"/>
             <TextBox Margin="114.998,7.02,86.917,0" Grid.Row="1" TextWrapping="Wrap" Text="{Binding TableName}" VerticalAlignment="Top" Width="Auto"/>
             <Button cal:Message.Attach="Set()" Content="Применить" HorizontalAlignment="Right" Margin="0,5,0,0" Grid.Row="1" VerticalAlignment="Top" Width="75" Height="22"/>
+        </Grid>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type viewModels:DocumentViewModel}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <TextBlock TextWrapping="Wrap" Text="{Binding TableCount, StringFormat=Количество таблиц в документе: \{0\}}" Height="Auto" HorizontalAlignment="Left"/>
+            <TextBlock Grid.Row="0" Text="Номер таблицы: " HorizontalAlignment="Right" Margin="0,0,20,0"/>
+            <TextBox Grid.Row="0" Text="{Binding CurrentTable, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Right" />
+            <ListBox x:Name="listBox" Margin="0,5" Height="Auto" VerticalAlignment="Stretch" Grid.Row="1" ItemsSource="{Binding Headers}" DisplayMemberPath="Value" SelectedValuePath="Key"/>
         </Grid>
     </DataTemplate>
 </ResourceDictionary>

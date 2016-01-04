@@ -58,6 +58,10 @@ namespace Atom.ViewModels
             }
         }
 
+        protected void SetError(string propertyName, string error)
+        {
+            
+        }
         public void Validate()
         {
             lock (_lock)

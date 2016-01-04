@@ -1,3 +1,5 @@
+using Atom.Services;
+
 namespace Atom {
     using System;
     using System.Collections.Generic;
@@ -16,6 +18,7 @@ namespace Atom {
             container.Singleton<IWindowManager, WindowManager>();
             container.Singleton<IEventAggregator, EventAggregator>();
             container.PerRequest<IShell, ShellViewModel>();
+            container.Singleton<Dal>();
         }
 
         protected override object GetInstance(Type service, string key) {

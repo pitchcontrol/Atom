@@ -24,8 +24,7 @@ namespace Atom
 {
     public class ShellViewModel : INotifyPropertyChanged, IShell
     {
-        readonly Dal _dal = new Dal();
-
+        readonly Dal _dal;
         private string _page;
         private MenuTree _currentMenuPageView;
         private string _rolesStr;
@@ -64,11 +63,16 @@ namespace Atom
                 }
             }
         }
+
+        public ShellViewModel()
+        {
+        }
         /// <summary>
         /// Конструктор
         /// </summary>
-        public ShellViewModel()
+        public ShellViewModel(Dal dal)
         {
+            _dal = dal;
             Properties = new ObservableCollection<WebPageBaseViewModel>();
             _rootPanel = new RootPanel(Properties);
             Properties.Add(_rootPanel);
@@ -205,7 +209,7 @@ namespace Atom
         public void SetAll()
         {
             MassiveSetViewModel model = new MassiveSetViewModel(Properties);
-            ModalView window = new ModalView {DataContext = model};
+            ModalView window = new ModalView { DataContext = model };
             if (window.ShowDialog() == true)
             {
             }
@@ -362,7 +366,7 @@ namespace Atom
                 OnPropertyChanged();
             }
         }
-        
+
         /// <summary>
         /// Выбранная страница
         /// </summary>
@@ -381,7 +385,7 @@ namespace Atom
                 if (_currentMenuPageView != null)
                 {
                     RolesForPage = _currentMenuPageView.IsGroup ? _dal.GetRoleForGroup(_currentMenuPageView.Id) : _dal.GetRoleForPage(_currentMenuPageView.PageId);
-                    RolesStr = string.Join(", ",RolesForPage.Select(i=>i.Id));
+                    RolesStr = string.Join(", ", RolesForPage.Select(i => i.Id));
                 }
             }
             get { return _currentMenuPageView; }
@@ -425,6 +429,26 @@ namespace Atom
                 OnPropertyChanged();
             }
         }
+        /// <summary>
+        /// Загрузить из ворда
+        /// </summary>
+        public void LoadFromDocument()
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.Title = "Загрузить ТЗ";
+            dialog.Filter= "resx(*.docx) | *.docx";
+            if (dialog.ShowDialog() == true)
+            {
+                DocumentViewModel model = new DocumentViewModel();
+                model.Load(dialog.FileName);
+                ModalView view = new ModalView {DataContext = model};
+                if (view.ShowDialog() == true)
+                {
+                    var descriptions = model.GetDescriptions();
+                }
+            }
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

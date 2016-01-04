@@ -134,6 +134,16 @@ namespace Atom.Services
                             modalViewModel.ControlIdView,
                             modalViewModel.FieldInDb);
                         break;
+                    case "date":
+                        _stringBuilder.AppendFormat("<asp:Label ID=\"{0}\" runat=\"server\"><%# Eval(\"{1}\",\"MM.dd.yyyy\")%></asp:Label>\n",
+                            modalViewModel.ControlIdView,
+                            modalViewModel.FieldInDb);
+                        break;
+                    case "time":
+                        _stringBuilder.AppendFormat("<asp:Label ID=\"{0}\" runat=\"server\"><%# Eval(\"{1}\",\"HH:mm:ss\")%></asp:Label>\n",
+                            modalViewModel.ControlIdView,
+                            modalViewModel.FieldInDb);
+                        break;
                 }
                 _stringBuilder.AppendFormat("</ItemTemplate>\n");
                 _stringBuilder.AppendFormat("</asp:TemplateField>\n");
@@ -149,6 +159,8 @@ namespace Atom.Services
             string caption = string.Format("<%$ Resources: {0}, {1} %>", ResourceNamespace, modalViewModel.ControlIdEdit);
             switch (modalViewModel.Type)
             {
+                case "time":
+                case "date":
                 case "datetime":
                     _stringBuilder.AppendFormat("<gp:ValidatingJsCalendar ID=\"{0}\" runat=\"server\" SkinID=\"ViewModeSkin\" Caption=\"{2}\" DataBoundField=\"{1}\" EnableDate=\"true\" HistType=\"HISTORY_TYPE_UL\" ImageUrl=\"~/Images/week_small.gif\"  ValidType=\"FORM_ERROR_TYPE_DATE\" />\n",
                         modalViewModel.ControlIdView,
