@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Atom"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
         xmlns:behavior="clr-namespace:Atom.Behavior"
         xmlns:viewModels="clr-namespace:Atom.ViewModels"
         xmlns:models="clr-namespace:Atom.Models"
@@ -34,9 +35,14 @@
         <GridSplitter Grid.Column="1" Grid.RowSpan="2"  VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="5"/>
         <GridSplitter Grid.Column="4" Grid.Row="0" Grid.RowSpan="2"  VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="5"/>
         <TreeView x:Name="Properties" Grid.Column="0" Grid.Row="1">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="MouseDoubleClick">
+                    <ei:CallMethodAction MethodName="EditProperty" TargetObject="{Binding Mode=OneWay}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
             <TreeView.ItemTemplate >
-                <HierarchicalDataTemplate ItemsSource="{Binding Children}" DataType="{x:Type local:WebPageBaseViewModel}">
-                    <StackPanel Orientation="Horizontal">
+                <HierarchicalDataTemplate ItemsSource="{Binding Children}" DataType="{x:Type local:WebPageBaseViewModel}" >
+                    <StackPanel Orientation="Horizontal" >
                         <i:Interaction.Behaviors>
                             <behavior:FrameworkElementDragBehavior/>
                             <behavior:FrameworkElementDropBehavior/>
@@ -48,6 +54,7 @@
                                     <Binding Path="FieldInDb" />
                                     <Binding Path="TableName" />
                                     <Binding Path="RuDescription" />
+                                    <Binding Path="Type" />
                                 </MultiBinding>
                             </TextBlock.Text>
                         </TextBlock>

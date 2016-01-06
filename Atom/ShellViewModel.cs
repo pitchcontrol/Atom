@@ -182,6 +182,8 @@ namespace Atom
         }
         public void EditProperty()
         {
+            if (CurrentProperty == null || CurrentProperty is RootPanel)
+                return;
             ModalView window = new ModalView();
             window.DataContext = CurrentProperty;
             if (window.ShowDialog() == true)
@@ -436,15 +438,30 @@ namespace Atom
         {
             OpenFileDialog dialog = new OpenFileDialog();
             dialog.Title = "Загрузить ТЗ";
-            dialog.Filter= "resx(*.docx) | *.docx";
+            dialog.Filter = "resx(*.docx) | *.docx";
             if (dialog.ShowDialog() == true)
             {
                 DocumentViewModel model = new DocumentViewModel();
                 model.Load(dialog.FileName);
-                ModalView view = new ModalView {DataContext = model};
+                ModalView view = new ModalView { DataContext = model };
                 if (view.ShowDialog() == true)
                 {
-                    var descriptions = model.GetDescriptions();
+                    //var descriptions = model.GetDescriptions();
+                    //descriptions.ForEach((i, c) =>
+                    //{
+                    //    ModalViewModel field = new ModalViewModel(_rootPanel.Children) { FieldInDb = "fields" + c, RuDescription = i };
+                    //    _rootPanel.Children.Add(field);
+                    //});
+                    //var groups = model.GetGroupNames();
+                    //groups.ForEach((i, c) =>
+                    //{
+                    //    PanelViewModel panel = new PanelViewModel(_rootPanel.Children) { FieldInDb = "fields" + c, RuDescription = i };
+                    //    _rootPanel.Children.Add(panel);
+                    //});
+
+                    model.Build(Properties);
+
+                    OnPropertyChanged(nameof(CanWriteResourses));
                 }
             }
         }

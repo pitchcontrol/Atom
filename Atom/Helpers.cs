@@ -19,8 +19,13 @@ namespace Atom
             foreach (T item in source)
                 action(item);
         }
-
-        public static IEnumerable<TR> Select<T,TE, TR>(this TE source, Func<T, int, TR> funct) where TE:IEnumerable<T>
+        public static void ForEach<T>(this IEnumerable<T> source, Action<T, int> action)
+        {
+            int count = 0;
+            foreach (T item in source)
+                action(item, count++);
+        }
+        public static IEnumerable<TR> Select<T, TE, TR>(this TE source, Func<T, int, TR> funct) where TE : IEnumerable<T>
         {
             int count = 0;
             foreach (T item in source)
@@ -28,6 +33,6 @@ namespace Atom
                 yield return funct(item, count);
                 count++;
             }
-        } 
+        }
     }
 }

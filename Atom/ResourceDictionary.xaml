@@ -5,6 +5,7 @@
                     xmlns:models="clr-namespace:Atom.Models" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                     xmlns:cal="http://www.caliburnproject.org"
                     xmlns:behavior="clr-namespace:Atom.Behavior"
+                    xmlns:converters="clr-namespace:Atom.Converters"
                     mc:Ignorable="d">
 
     <DataTemplate DataType="{x:Type viewModels:ModalViewModel}">
@@ -89,14 +90,28 @@
     </DataTemplate>
     <DataTemplate DataType="{x:Type viewModels:DocumentViewModel}">
         <Grid>
+            <Grid.Resources>
+                <converters:IsNotNullConverter x:Key="IsNotNullConverter"/>
+            </Grid.Resources>
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <TextBlock TextWrapping="Wrap" Text="{Binding TableCount, StringFormat=Количество таблиц в документе: \{0\}}" Height="Auto" HorizontalAlignment="Left"/>
             <TextBlock Grid.Row="0" Text="Номер таблицы: " HorizontalAlignment="Right" Margin="0,0,20,0"/>
             <TextBox Grid.Row="0" Text="{Binding CurrentTable, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Right" />
-            <ListBox x:Name="listBox" Margin="0,5" Height="Auto" VerticalAlignment="Stretch" Grid.Row="1" ItemsSource="{Binding Headers}" DisplayMemberPath="Value" SelectedValuePath="Key"/>
+            <ListBox x:Name="listBox" Margin="0,5" Height="Auto" VerticalAlignment="Stretch" Grid.Row="1" ItemsSource="{Binding Headers}" 
+                     SelectedItem="{Binding SelectedField}"
+                     DisplayMemberPath="Value" SelectedValuePath="Key"/>
+            <TextBlock Grid.Row="2" Text="{Binding DescriptionField.Value, StringFormat='Описание поля: \{0\}'}" Height="Auto" HorizontalAlignment="Left" Margin="0,0,20,0"/>
+            <Button Grid.Row="2" HorizontalAlignment="Right" Content="Выбрать" cal:Message.Attach="SetDescription()" IsEnabled="{Binding SelectedField, Converter={StaticResource IsNotNullConverter}}"/>
+            <TextBlock Grid.Row="3" Text="{Binding GroupName.Value, StringFormat='Описание группы полей: \{0\}'}" Height="Auto" HorizontalAlignment="Left" Margin="0,0,20,0"/>
+            <Button Grid.Row="3" HorizontalAlignment="Right" Content="Выбрать" cal:Message.Attach="SetGroupName()" IsEnabled="{Binding SelectedField, Converter={StaticResource IsNotNullConverter}}"/>
+            <TextBlock Grid.Row="4" Text="{Binding TypeField.Value, StringFormat='Описание типа данных: \{0\}'}" Height="Auto" HorizontalAlignment="Left" Margin="0,0,20,0"/>
+            <Button Grid.Row="4" HorizontalAlignment="Right" Content="Выбрать" cal:Message.Attach="SetType()" IsEnabled="{Binding SelectedField, Converter={StaticResource IsNotNullConverter}}"/>
         </Grid>
     </DataTemplate>
 </ResourceDictionary>

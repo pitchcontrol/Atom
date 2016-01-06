@@ -13,9 +13,13 @@ namespace Atom.Converters
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            if (values[1] == DependencyProperty.UnsetValue)
+            if ((string) values[3] == "RootPanel" /*DependencyProperty.UnsetValue*/)
             {
                 return values[0];
+            }
+            if ((string)values[3] == "panel" /*DependencyProperty.UnsetValue*/)
+            {
+                return string.Format("[{0}] [{2}]", values);
             }
             return string.Format("[{0}] [{1}].[{2}]", values);
         }

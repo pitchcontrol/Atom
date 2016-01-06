@@ -42,6 +42,17 @@ namespace Atom.UnitTests
             Assert.AreEqual("Дата проведения", descriptions.ElementAt(1));
         }
         [Test]
+        public void GetGroupNameTest()
+        {
+            _model.CurrentTable = 0;
+            _model.GroupName = _model.Headers.ElementAt(3);
+            var groups = _model.GetGroupNames();
+            int count = groups.Count();
+            Assert.AreEqual(7, count);
+            Assert.AreEqual("Акционеры/участники/члены КОУ", groups.ElementAt(0));
+            Assert.AreEqual("Приглашенные", groups.ElementAt(1));
+        }
+        [Test]
         public void ValidateTest()
         {
             _model.CurrentTable = 10;

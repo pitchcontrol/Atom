@@ -24,6 +24,8 @@ namespace Atom
         {
         }
 
+        public override string Type { get { return "RootPanel"; } }
+
         public override string ToString()
         {
             return "RootPanel";
