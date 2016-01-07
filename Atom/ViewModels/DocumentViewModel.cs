@@ -21,6 +21,7 @@ namespace Atom.ViewModels
         public DocumentViewModel()
         {
             _currentTable = -1;
+            Validate();
         }
         /// <summary>
         /// Выбранное поле
@@ -91,6 +92,20 @@ namespace Atom.ViewModels
                 OnPropertyChanged();
             }
         }
+        /// <summary>
+        /// Фиктивная колекция для выбора
+        /// </summary>
+        public IEnumerable<KeyValuePair<int, string>> ComboboxTables
+        {
+            get { return _comboboxTables; }
+            set
+            {
+                if (value.Equals(_comboboxTables)) return;
+                _comboboxTables = value;
+                OnPropertyChanged();
+            }
+        }
+
         [MaxValue("TableCount")]
         /// <summary>
         /// Выбранная таблица
@@ -103,8 +118,37 @@ namespace Atom.ViewModels
                 if (value == _currentTable) return;
                 _currentTable = value;
                 OnPropertyChanged();
-                Validate();
+                ValidateProperty(value);
                 SelectTable();
+            }
+        }
+        /// <summary>
+        /// Выбранна валидная таблица
+        /// </summary>
+        public bool TableSelcted
+        {
+            get { return _tableSelcted; }
+            set
+            {
+                if (value == _tableSelcted) return;
+                _tableSelcted = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Базовая таблица
+        /// </summary>
+        [Required]
+        public string BaseTable
+        {
+            get { return _baseTable; }
+            set
+            {
+                if (value == _baseTable) return;
+                _baseTable = value;
+                OnPropertyChanged();
+                ValidateProperty(value);
             }
         }
 
@@ -127,6 +171,9 @@ namespace Atom.ViewModels
         private KeyValuePair<int, string> _groupName;
         private KeyValuePair<int, string> _selectedField;
         private KeyValuePair<int, string> _typeField;
+        private string _baseTable;
+        private bool _tableSelcted;
+        private IEnumerable<KeyValuePair<int, string>> _comboboxTables;
 
 
         public void SetDescription()
@@ -153,6 +200,7 @@ namespace Atom.ViewModels
             {
                 _tables = document.MainDocumentPart.Document.Body.Elements<Table>();
                 TableCount = _tables.Count();
+                ComboboxTables = _tables.Select((i, c) => new KeyValuePair<int, string>(c, "Table №" + c));
             }
 
         }
@@ -161,8 +209,12 @@ namespace Atom.ViewModels
         /// </summary>
         private void SelectTable()
         {
-            if (!IsValid)
+            if (!IsPropertyValid(nameof(CurrentTable)))
+            {
+                TableSelcted = false;
                 return;
+            }
+            TableSelcted = true;
             Table table = _tables.ElementAt(CurrentTable);
             IEnumerable<TableRow> rows = table.Elements<TableRow>();
             Headers = rows.First().Elements<TableCell>().Select((i, c) => new KeyValuePair<int, string>(c, i.InnerText));
@@ -211,7 +263,7 @@ namespace Atom.ViewModels
             RootPanel root = (RootPanel)properties.First();
             description.ForEach((i, c) =>
             {
-                PanelViewModel model = new PanelViewModel(root.Children) {FieldInDb = "panel" + c, RuDescription = i};
+                PanelViewModel model = new PanelViewModel(root.Children) { FieldInDb = "panel" + c, RuDescription = i };
                 root.Children.Add(model);
             });
             Table table = _tables.ElementAt(CurrentTable);
@@ -223,26 +275,31 @@ namespace Atom.ViewModels
             int count = 0;
             foreach (DocProperty field in fields)
             {
+                ModalViewModel model;
                 if (string.IsNullOrEmpty(field.Parent))
                 {
-                    ModalViewModel model = new ModalViewModel(root.Children) {FieldInDb ="field" + count.ToString(), RuDescription = field.Description };
-                    root.Children.Add(model);                  
+                    model = new ModalViewModel(root.Children);
+                    root.Children.Add(model);
                 }
                 else
                 {
                     //Поиск панели
-                    var tmp = root.Children.FirstOrDefault(i => i.RuDescription == field.Description);
+                    var tmp = root.Children.FirstOrDefault(i => i.RuDescription == field.Parent && i.Type == "panel");
                     if (tmp == null)
                     {
-                        ModalViewModel model = new ModalViewModel(root.Children) { FieldInDb = "field" + count.ToString(), RuDescription = field.Description };
+                        model = new ModalViewModel(root.Children);
                         root.Children.Add(model);
                     }
                     else
                     {
-                        ModalViewModel model = new ModalViewModel(tmp.Children) { FieldInDb = "field" + count.ToString(), RuDescription = field.Description };
+                        model = new ModalViewModel(tmp.Children);
                         tmp.Children.Add(model);
                     }
                 }
+                model.FieldInDb = "field" + count.ToString();
+                model.RuDescription = field.Description;
+                model.Type = field.GetRightType();
+                model.TableName = BaseTable;
                 count++;
             }
         }

@@ -24,6 +24,10 @@ namespace Atom.Validation
             PropertyInfo pi = validationContext.ObjectType.GetProperty(_propertyName);
             int maxValue = (int)pi.GetValue(validationContext.ObjectInstance);
             int currentValue = (int)value;
+            if (currentValue < 0)
+            {
+                return new ValidationResult(_errorMessage ?? "Не может быть меньше 0", new[] { validationContext.MemberName });
+            }
             if (currentValue > maxValue - 1)
             {
                 return new ValidationResult(_errorMessage ?? "Не может быть больше", new[] { validationContext.MemberName });

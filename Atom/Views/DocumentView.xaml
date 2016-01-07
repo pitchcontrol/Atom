@@ -1,0 +1,70 @@
+﻿<Window x:Class="Atom.Views.DocumentView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Atom.Views"
+        xmlns:avalonWizard="http://schemas.pavel.fedarovich.com/winfx/2010/xaml/presentation"
+        xmlns:converters="clr-namespace:Atom.Converters"
+        xmlns:cal="http://www.caliburnproject.org"
+        xmlns:atom="clr-namespace:Atom"
+        xmlns:viewModels="clr-namespace:Atom.ViewModels"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance Type=viewModels:DocumentViewModel, IsDesignTimeCreatable=False}"
+        Title="Загрузка ТЗ" Height="600" Width="600">
+    <Grid>
+        <avalonWizard:Wizard  avalonWizard:Designer.PageIndex="0" 
+                              NextButtonContent="Далее" 
+                              WizardStyle="Auto" 
+                              FinishButtonContent="Готово"
+                              CancelButtonContent="Отмена" Cancelled="Wizard_OnCancelled" Finished="Wizard_OnFinished">
+            <avalonWizard:WizardPage AllowNext="{Binding TableSelcted}" Header="Выбор таблицы">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <!--<TextBlock TextWrapping="Wrap" Text="{Binding TableCount, StringFormat=Количество таблиц в документе: \{0\}}" Height="Auto" HorizontalAlignment="Left" Margin="5,0,0,0"/>-->
+                    <TextBlock Grid.Row="0" Text="Номер таблицы: " Margin="10,10,0,-10" HorizontalAlignment="Left" Width="93"/>
+                    <!--<TextBox Grid.Row="0" Text="{Binding CurrentTable, UpdateSourceTrigger=PropertyChanged}" Margin="575,-1,5,1" />-->
+                    <ComboBox Margin="0,10,10,-10" HorizontalAlignment="Right" Width="306" SelectedValue="{Binding CurrentTable}" 
+                              SelectedValuePath="Key"
+                              DisplayMemberPath="Value"
+                              ItemsSource="{Binding ComboboxTables}"/>
+                </Grid>
+            </avalonWizard:WizardPage>
+            <avalonWizard:WizardPage Header="Привязка колонок">
+                <Grid>
+                    <Grid.Resources>
+                        <converters:IsNotNullConverter x:Key="IsNotNullConverter"/>
+                    </Grid.Resources>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <ListBox Margin="5,5" Height="Auto" VerticalAlignment="Stretch" Grid.Row="0" ItemsSource="{Binding Headers}" 
+                     SelectedItem="{Binding SelectedField}"
+                     DisplayMemberPath="Value" SelectedValuePath="Key"/>
+                    <TextBlock Grid.Row="1" Text="{Binding DescriptionField.Value, StringFormat='Описание поля: \{0\}'}" Height="Auto" HorizontalAlignment="Left" Margin="5,5,20,0"/>
+                    <Button Grid.Row="1" HorizontalAlignment="Right" Content="Выбрать" cal:Message.Attach="SetDescription()" IsEnabled="{Binding SelectedField, Converter={StaticResource IsNotNullConverter}}" Margin="0,5,5,0"/>
+                    <TextBlock Grid.Row="2" Text="{Binding GroupName.Value, StringFormat='Описание группы полей: \{0\}'}" Height="Auto" HorizontalAlignment="Left" Margin="5,5,20,0"/>
+                    <Button Grid.Row="2" HorizontalAlignment="Right" Content="Выбрать" cal:Message.Attach="SetGroupName()" IsEnabled="{Binding SelectedField, Converter={StaticResource IsNotNullConverter}}" Margin="0,5,5,0"/>
+                    <TextBlock Grid.Row="3" Text="{Binding TypeField.Value, StringFormat='Описание типа данных: \{0\}'}" Height="Auto" HorizontalAlignment="Left" Margin="5,5,20,0"/>
+                    <Button Grid.Row="3" HorizontalAlignment="Right" Content="Выбрать" cal:Message.Attach="SetType()" IsEnabled="{Binding SelectedField, Converter={StaticResource IsNotNullConverter}}" Margin="0,5,5,0"/>
+                </Grid>
+            </avalonWizard:WizardPage>
+            <avalonWizard:WizardPage AllowNext="{Binding IsValid}" Header="Выбор основной таблицы для страницы">
+                <Grid >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Height="Auto" HorizontalAlignment="Left"  Text="Основная таблица: " Margin="10,0,0,0"/>
+                    <TextBox  Text="{Binding BaseTable, UpdateSourceTrigger=PropertyChanged}" Margin="123,0,10,0" />
+                </Grid>
+            </avalonWizard:WizardPage>
+            <avalonWizard:WizardPage Header="Готово">
+            </avalonWizard:WizardPage>
+        </avalonWizard:Wizard>
+    </Grid>
+</Window>

@@ -6,6 +6,7 @@
                     xmlns:cal="http://www.caliburnproject.org"
                     xmlns:behavior="clr-namespace:Atom.Behavior"
                     xmlns:converters="clr-namespace:Atom.Converters"
+                    xmlns:avalonWizard="http://schemas.pavel.fedarovich.com/winfx/2010/xaml/presentation"
                     mc:Ignorable="d">
 
     <DataTemplate DataType="{x:Type viewModels:ModalViewModel}">
@@ -47,10 +48,12 @@
             <TextBox Height="23" Margin="162,38,10,0" TextWrapping="Wrap" Text="{Binding ControlIdView, NotifyOnValidationError=True, ValidatesOnNotifyDataErrors=True}" VerticalAlignment="Top"/>
             <Label Content="Поле в базе" HorizontalAlignment="Left" Margin="10,15,0,0" VerticalAlignment="Top"/>
             <TextBox Height="23" Margin="162,10,10,0" TextWrapping="Wrap" Text="{Binding FieldInDb, NotifyOnValidationError=True, ValidatesOnNotifyDataErrors=True}" VerticalAlignment="Top"/>
-            <Label Content="RU" HorizontalAlignment="Left" Margin="10,94,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.132,-0.5"/>
-            <TextBox Height="72" Margin="162,94,10,0" TextWrapping="Wrap" Text="{Binding RuDescription, NotifyOnValidationError=True, ValidatesOnNotifyDataErrors=True}" VerticalAlignment="Top"/>
-            <Label Content="EN" HorizontalAlignment="Left" Margin="10,171,0,0" VerticalAlignment="Top" Width="40"/>
-            <TextBox Height="45" Margin="162,171,10,0" TextWrapping="Wrap" Text="{Binding EnDescription, NotifyOnValidationError=True, ValidatesOnNotifyDataErrors=True}" VerticalAlignment="Top"/>
+            <Label Content="Таблица" HorizontalAlignment="Left" Margin="10,94,0,0" VerticalAlignment="Top"/>
+            <TextBox Height="23" Margin="162,91.96,10,0" TextWrapping="Wrap" Text="{Binding TableName, NotifyOnValidationError=True}" VerticalAlignment="Top"/>
+            <Label Content="RU" HorizontalAlignment="Left" Margin="10,119.96,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.132,-0.5"/>
+            <TextBox Height="72" Margin="162,119.96,10,0" TextWrapping="Wrap" Text="{Binding RuDescription, NotifyOnValidationError=True, ValidatesOnNotifyDataErrors=True}" VerticalAlignment="Top"/>
+            <Label Content="EN" HorizontalAlignment="Left" Margin="10,196.96,0,-6.92" VerticalAlignment="Top" Width="40"/>
+            <TextBox Height="45" Margin="162,196.96,10,-25.96" TextWrapping="Wrap" Text="{Binding EnDescription, NotifyOnValidationError=True, ValidatesOnNotifyDataErrors=True}" VerticalAlignment="Top"/>
             <Label Content="ID контрола (Edit)" HorizontalAlignment="Left" Margin="10,63,0,0" VerticalAlignment="Top"/>
             <TextBox Height="23" Margin="162,66,10,0" TextWrapping="Wrap" Text="{Binding ControlIdEdit, NotifyOnValidationError=True, ValidatesOnNotifyDataErrors=True}" VerticalAlignment="Top"/>
         </Grid>
@@ -71,14 +74,26 @@
                 <RowDefinition Height="213*"/>
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
+            <Grid.Resources>
+                <converters:ControlNameConverter x:Key="ControlNameConverter"/>
+            </Grid.Resources>
             <ListBox ItemsSource="{Binding Properties}" HorizontalAlignment="Stretch" Margin="0" Grid.RowSpan="1" Width="Auto"  SelectionMode="Extended">
                 <behavior:MultiSelectorBehaviours.SynchronizedSelectedItems>
                     <Binding Path="SelectedModels" />
                 </behavior:MultiSelectorBehaviours.SynchronizedSelectedItems>
                 <ListBox.ItemTemplate>
-                    <DataTemplate>
+                    <DataTemplate DataType="{x:Type viewModels:ModalViewModel}">
                         <StackPanel>
-                            <TextBlock Text="{Binding FieldInDb}"/>
+                            <TextBlock>
+                                <TextBlock.Text>
+                                    <MultiBinding Converter="{StaticResource ControlNameConverter}">
+                                        <Binding Path="FieldInDb" />
+                                        <Binding Path="TableName" />
+                                        <Binding Path="RuDescription" />
+                                        <Binding Path="Type" />
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
                         </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
@@ -89,29 +104,41 @@
         </Grid>
     </DataTemplate>
     <DataTemplate DataType="{x:Type viewModels:DocumentViewModel}">
-        <Grid>
-            <Grid.Resources>
-                <converters:IsNotNullConverter x:Key="IsNotNullConverter"/>
-            </Grid.Resources>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
-            <TextBlock TextWrapping="Wrap" Text="{Binding TableCount, StringFormat=Количество таблиц в документе: \{0\}}" Height="Auto" HorizontalAlignment="Left"/>
-            <TextBlock Grid.Row="0" Text="Номер таблицы: " HorizontalAlignment="Right" Margin="0,0,20,0"/>
-            <TextBox Grid.Row="0" Text="{Binding CurrentTable, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Right" />
-            <ListBox x:Name="listBox" Margin="0,5" Height="Auto" VerticalAlignment="Stretch" Grid.Row="1" ItemsSource="{Binding Headers}" 
+        <avalonWizard:Wizard  avalonWizard:Designer.PageIndex="0" NextButtonContent="Далее" WizardStyle="Auto">
+            <avalonWizard:WizardPage>
+                <Grid>
+                    <Grid.Resources>
+                        <converters:IsNotNullConverter x:Key="IsNotNullConverter"/>
+                    </Grid.Resources>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock TextWrapping="Wrap" Text="{Binding TableCount, StringFormat=Количество таблиц в документе: \{0\}}" Height="Auto" HorizontalAlignment="Left"/>
+                    <TextBlock Grid.Row="0" Text="Номер таблицы: " HorizontalAlignment="Right" Margin="0,0,20,0"/>
+                    <TextBox Grid.Row="0" Text="{Binding CurrentTable, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Right" />
+                    <ListBox x:Name="listBox" Margin="0,5" Height="Auto" VerticalAlignment="Stretch" Grid.Row="1" ItemsSource="{Binding Headers}" 
                      SelectedItem="{Binding SelectedField}"
                      DisplayMemberPath="Value" SelectedValuePath="Key"/>
-            <TextBlock Grid.Row="2" Text="{Binding DescriptionField.Value, StringFormat='Описание поля: \{0\}'}" Height="Auto" HorizontalAlignment="Left" Margin="0,0,20,0"/>
-            <Button Grid.Row="2" HorizontalAlignment="Right" Content="Выбрать" cal:Message.Attach="SetDescription()" IsEnabled="{Binding SelectedField, Converter={StaticResource IsNotNullConverter}}"/>
-            <TextBlock Grid.Row="3" Text="{Binding GroupName.Value, StringFormat='Описание группы полей: \{0\}'}" Height="Auto" HorizontalAlignment="Left" Margin="0,0,20,0"/>
-            <Button Grid.Row="3" HorizontalAlignment="Right" Content="Выбрать" cal:Message.Attach="SetGroupName()" IsEnabled="{Binding SelectedField, Converter={StaticResource IsNotNullConverter}}"/>
-            <TextBlock Grid.Row="4" Text="{Binding TypeField.Value, StringFormat='Описание типа данных: \{0\}'}" Height="Auto" HorizontalAlignment="Left" Margin="0,0,20,0"/>
-            <Button Grid.Row="4" HorizontalAlignment="Right" Content="Выбрать" cal:Message.Attach="SetType()" IsEnabled="{Binding SelectedField, Converter={StaticResource IsNotNullConverter}}"/>
-        </Grid>
+                    <TextBlock Grid.Row="2" Text="{Binding DescriptionField.Value, StringFormat='Описание поля: \{0\}'}" Height="Auto" HorizontalAlignment="Left" Margin="0,0,20,0"/>
+                    <Button Grid.Row="2" HorizontalAlignment="Right" Content="Выбрать" cal:Message.Attach="SetDescription()" IsEnabled="{Binding SelectedField, Converter={StaticResource IsNotNullConverter}}"/>
+                    <TextBlock Grid.Row="3" Text="{Binding GroupName.Value, StringFormat='Описание группы полей: \{0\}'}" Height="Auto" HorizontalAlignment="Left" Margin="0,0,20,0"/>
+                    <Button Grid.Row="3" HorizontalAlignment="Right" Content="Выбрать" cal:Message.Attach="SetGroupName()" IsEnabled="{Binding SelectedField, Converter={StaticResource IsNotNullConverter}}"/>
+                    <TextBlock Grid.Row="4" Text="{Binding TypeField.Value, StringFormat='Описание типа данных: \{0\}'}" Height="Auto" HorizontalAlignment="Left" Margin="0,0,20,0"/>
+                    <Button Grid.Row="4" HorizontalAlignment="Right" Content="Выбрать" cal:Message.Attach="SetType()" IsEnabled="{Binding SelectedField, Converter={StaticResource IsNotNullConverter}}"/>
+                    
+                </Grid>
+            </avalonWizard:WizardPage>
+            <avalonWizard:WizardPage>
+                <Grid>
+                    <TextBlock Height="Auto" HorizontalAlignment="Left" Margin="0,0,60,0" Text="Основная таблица: "/>
+                    <TextBox HorizontalAlignment="Right" Text="{Binding BaseTable}" Width="150"/>
+                </Grid>
+            </avalonWizard:WizardPage>
+        </avalonWizard:Wizard>
+        
     </DataTemplate>
 </ResourceDictionary>

@@ -39,6 +39,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AvalonWizard, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\AvalonWizard.1.2.0\lib\net40\AvalonWizard.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="ByndyuSoft.Infrastructure.Dapper, Version=1.0.13.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Infrastructure.Dapper.1.0.13\lib\ByndyuSoft.Infrastructure.Dapper.dll</HintPath>
       <Private>True</Private>
@@ -150,6 +154,9 @@
     <Compile Include="ViewModels\RolesViewModel.cs" />
     <Compile Include="ViewModels\ValidationBase.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
+    <Compile Include="Views\DocumentView.xaml.cs">
+      <DependentUpon>DocumentView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\PanelView.xaml.cs">
       <DependentUpon>PanelView.xaml</DependentUpon>
     </Compile>
@@ -167,6 +174,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ShellView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DocumentView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

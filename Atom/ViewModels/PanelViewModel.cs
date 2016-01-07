@@ -23,5 +23,25 @@ namespace Atom.ViewModels
         {
             return string.Format("PanelViewModel: {0}", FieldInDb);
         }
+        /// <summary>
+        /// Создать и добавить поле
+        /// </summary>
+        /// <returns></returns>
+        public ModalViewModel CreateField()
+        {
+            ModalViewModel obj = new ModalViewModel(Children);
+            Children.Add(obj);
+            return obj;
+        }
+        /// <summary>
+        /// Создать и добавить грид
+        /// </summary>
+        /// <returns></returns>
+        public GridViewModel CreateGrid()
+        {
+            GridViewModel obj = new GridViewModel(Children);
+            Children.Add(obj);
+            return obj;
+        }
     }
 }

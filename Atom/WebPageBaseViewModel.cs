@@ -188,6 +188,10 @@ namespace Atom
                     view = "cp";
                     edit = "cp";
                     break;
+                case "hyperlink":
+                    view = "hpl";
+                    edit = "hpl";
+                    break;
             }
             ControlIdView = view + FieldInDb;
             ControlIdEdit = edit + FieldInDb;
@@ -201,7 +205,7 @@ namespace Atom
         }
         public override string ToString()
         {
-            return string.Format("{0}: {1}", Type, FieldInDb);
+            return $"{Type}: {FieldInDb}";
         }
     }
 }

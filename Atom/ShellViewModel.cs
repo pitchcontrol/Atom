@@ -4,19 +4,16 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Configuration;
-using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Resources;
 using System.Runtime.CompilerServices;
 using System.Windows;
-using System.Windows.Input;
 using Atom.Annotations;
-using Atom.Commands;
 using Atom.Models;
 using Atom.Services;
 using Atom.ViewModels;
-using Caliburn.Micro;
+using Atom.Views;
 using Microsoft.Win32;
 using Newtonsoft.Json;
 
@@ -171,6 +168,7 @@ namespace Atom
                 _currentProperty = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(CanEditProperty));
+                OnPropertyChanged(nameof(CanTurnGrid));
             }
         }
         /// <summary>
@@ -368,7 +366,36 @@ namespace Atom
                 OnPropertyChanged();
             }
         }
-
+        /// <summary>
+        /// Преобразовать в грид
+        /// </summary>
+        public bool CanTurnGrid
+        {
+            get { return CurrentProperty != null && CurrentProperty.Type == "panel"; }
+        }
+        public void TurnGrid()
+        {
+            //Определяем положения в родительской коллекции
+            var oldProperty = CurrentProperty;
+            var parent = oldProperty.ParentCollection;
+            int index = parent.IndexOf(CurrentProperty);
+            //Удаляем панель
+            parent.RemoveAt(index);
+            GridViewModel model = new GridViewModel(parent)
+            {
+                FieldInDb = oldProperty.FieldInDb,
+                RuDescription = oldProperty.RuDescription,
+                EnDescription = oldProperty.EnDescription
+            };
+            parent.Insert(index, model);
+            oldProperty.Children.ForEach(i =>
+            {
+                i.ParentCollection = model.Children;
+                model.Children.Add(i);
+            });
+            oldProperty.Children.Clear();
+            CurrentProperty = model;
+        }
         /// <summary>
         /// Выбранная страница
         /// </summary>
@@ -443,7 +470,7 @@ namespace Atom
             {
                 DocumentViewModel model = new DocumentViewModel();
                 model.Load(dialog.FileName);
-                ModalView view = new ModalView { DataContext = model };
+                DocumentView view = new DocumentView { DataContext = model };
                 if (view.ShowDialog() == true)
                 {
                     //var descriptions = model.GetDescriptions();
@@ -462,6 +489,7 @@ namespace Atom
                     model.Build(Properties);
 
                     OnPropertyChanged(nameof(CanWriteResourses));
+                    Info += "[Инфо]:Загруженно ТЗ";
                 }
             }
         }

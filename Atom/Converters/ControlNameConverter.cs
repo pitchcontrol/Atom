@@ -13,7 +13,7 @@ namespace Atom.Converters
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            if ((string) values[3] == "RootPanel" /*DependencyProperty.UnsetValue*/)
+            if ((string)values[3] == "RootPanel" /*DependencyProperty.UnsetValue*/)
             {
                 return values[0];
             }

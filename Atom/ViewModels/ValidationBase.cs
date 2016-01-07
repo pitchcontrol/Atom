@@ -33,12 +33,16 @@ namespace Atom.ViewModels
                 return _errors.SelectMany(err => err.Value.ToList());
         }
 
+        public bool IsPropertyValid(string propertyName)
+        {
+            return !_errors.ContainsKey(propertyName);
+        }
         public void OnErrorsChanged(string propertyName)
         {
             if (ErrorsChanged != null)
                 ErrorsChanged(this, new DataErrorsChangedEventArgs(propertyName));
 
-            OnPropertyChanged("IsValid");
+            OnPropertyChanged(nameof(IsValid));
         }
 
         public void ValidateProperty(object value, [CallerMemberName] string propertyName = null)

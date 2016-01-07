@@ -119,6 +119,14 @@
                 Background="White">
             <Image Source="/Images/fullList.png" />
         </Button>
+        <Button x:Name="TurnGrid" Grid.Column="2" Height="22" Width="23" HorizontalAlignment="Left" Margin="122,10,0,0" Grid.Row="1" VerticalAlignment="Top" 
+                ToolTip="Панель в грид"
+                Background="White">
+            <StackPanel Orientation="Horizontal">
+                <Image Source="/Images/mainMenuFolderGray.gif" Height="10"/>
+                <Image Source="/Images/fullList.png"  Height="10"/>
+            </StackPanel>
+        </Button >
         <TextBlock Text="{Binding ResourceNameSpace, Mode=OneWay, StringFormat='Пространсто имен ресурсов: \{0\}'}" Grid.Column="2" Margin="10,37,10,0" Grid.Row="1" VerticalAlignment="Top"/>
         <TreeView x:Name="MenuGroupViews" Grid.Column="5" Grid.Row="1">
             <TreeView.ItemTemplate>

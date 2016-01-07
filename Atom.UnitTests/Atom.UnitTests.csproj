@@ -71,6 +71,7 @@
     </Compile>
     <Compile Include="ResourceTests.cs" />
     <Compile Include="ScriptConstructorHelperTest.cs" />
+    <Compile Include="ShellViewModelTest.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
