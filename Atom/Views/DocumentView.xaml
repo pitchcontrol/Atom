@@ -9,15 +9,21 @@
         xmlns:cal="http://www.caliburnproject.org"
         xmlns:atom="clr-namespace:Atom"
         xmlns:viewModels="clr-namespace:Atom.ViewModels"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+        xmlns:behavior="clr-namespace:Atom.Behavior"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=viewModels:DocumentViewModel, IsDesignTimeCreatable=False}"
         Title="Загрузка ТЗ" Height="600" Width="600">
     <Grid>
-        <avalonWizard:Wizard  avalonWizard:Designer.PageIndex="0" 
+        <avalonWizard:Wizard  avalonWizard:Designer.PageIndex="2"
                               NextButtonContent="Далее" 
                               WizardStyle="Auto" 
                               FinishButtonContent="Готово"
                               CancelButtonContent="Отмена" Cancelled="Wizard_OnCancelled" Finished="Wizard_OnFinished">
+            <i:Interaction.Behaviors>
+                <behavior:CurrentIndexBehavior CurrentPageIndex="{Binding CurentPageIndex, Mode=OneWayToSource}"/>
+            </i:Interaction.Behaviors>
             <avalonWizard:WizardPage AllowNext="{Binding TableSelcted}" Header="Выбор таблицы">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -54,7 +60,25 @@
                     <Button Grid.Row="3" HorizontalAlignment="Right" Content="Выбрать" cal:Message.Attach="SetType()" IsEnabled="{Binding SelectedField, Converter={StaticResource IsNotNullConverter}}" Margin="0,5,5,0"/>
                 </Grid>
             </avalonWizard:WizardPage>
-            <avalonWizard:WizardPage AllowNext="{Binding IsValid}" Header="Выбор основной таблицы для страницы">
+            <avalonWizard:WizardPage Header="Выбор гридов на странице" AllowNext="{Binding GridConvertValid}">
+                <ListBox ItemsSource="{Binding Grids}" Grid.IsSharedSizeScope="True" Margin="10,0">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate DataType="{x:Type viewModels:GridConvertViewModel}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="col1"/>
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="col2"/>
+                                    <ColumnDefinition Width="200"  SharedSizeGroup="col3"/>
+                                </Grid.ColumnDefinitions>
+                                <CheckBox x:Name="checkBox" IsChecked="{Binding IsGrid}" Margin="0,0,5,0" />
+                                <TextBlock Text="{Binding Description}" Margin="0,0,5,0" Grid.Column="1"/>
+                                <TextBox Text="{Binding TableName}" Grid.Column="2" IsEnabled="{Binding IsChecked, ElementName=checkBox}"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </avalonWizard:WizardPage>
+            <avalonWizard:WizardPage AllowNext="{Binding IsValid}" Header="Выбор основной таблицы для страницы" >
                 <Grid >
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>

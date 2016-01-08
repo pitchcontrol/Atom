@@ -165,6 +165,33 @@ namespace Atom.ViewModels
                 OnPropertyChanged();
             }
         }
+        /// <summary>
+        /// Текущая страница
+        /// </summary>
+        public int CurentPageIndex
+        {
+            get { return _curentPageIndex; }
+            set
+            {
+                if (value == _curentPageIndex) return;
+                _curentPageIndex = value;
+                OnPropertyChanged();
+                PageCahnge(value);
+            }
+        }
+        /// <summary>
+        /// Выбор гридов
+        /// </summary>
+        public List<GridConvertViewModel> Grids
+        {
+            get { return _grids; }
+            set
+            {
+                if (Equals(value, _grids)) return;
+                _grids = value;
+                OnPropertyChanged();
+            }
+        }
 
         private IEnumerable<Table> _tables;
         private IEnumerable<KeyValuePair<int, string>> _headers;
@@ -174,6 +201,8 @@ namespace Atom.ViewModels
         private string _baseTable;
         private bool _tableSelcted;
         private IEnumerable<KeyValuePair<int, string>> _comboboxTables;
+        private int _curentPageIndex;
+        private List<GridConvertViewModel> _grids;
 
 
         public void SetDescription()
@@ -221,6 +250,33 @@ namespace Atom.ViewModels
             TrySelect();
         }
         /// <summary>
+        /// Валидность выставления гридов
+        /// </summary>
+        public bool GridConvertValid
+        {
+            get { return Grids.All(i => i.IsValid); }
+        }
+        /// <summary>
+        /// Смена страницы
+        /// </summary>
+        /// <param name="page"></param>
+        private void PageCahnge(int page)
+        {
+            //Выбираем гриды
+            if (page == 2)
+            {
+                Grids?.ForEach(i => i.ErrorsChanged -= I_ErrorsChanged);
+                Grids = GetGroupNames().Select(i => new GridConvertViewModel(i)).ToList();
+                Grids?.ForEach(i => i.ErrorsChanged += I_ErrorsChanged);
+            }
+
+        }
+
+        private void I_ErrorsChanged(object sender, System.ComponentModel.DataErrorsChangedEventArgs e)
+        {
+            OnPropertyChanged(nameof(GridConvertValid));
+        }
+        /// <summary>
         /// Попробуем выставить поля
         /// </summary>
         private void TrySelect()
@@ -261,10 +317,23 @@ namespace Atom.ViewModels
         {
             var description = GetGroupNames();
             RootPanel root = (RootPanel)properties.First();
+            var grids = Grids.Where(i => i.IsGrid);
             description.ForEach((i, c) =>
             {
-                PanelViewModel model = new PanelViewModel(root.Children) { FieldInDb = "panel" + c, RuDescription = i };
-                root.Children.Add(model);
+                var grid = grids.FirstOrDefault(j => j.Description == i);
+                if (grid != null)
+                {
+                    GridViewModel model = new GridViewModel(root.Children);
+                    model.FieldInDb = "grid" + c;
+                    model.RuDescription = i;
+                    model.TableName = grid.TableName;
+                    root.Children.Add(model);
+                }
+                else
+                {
+                    PanelViewModel model = new PanelViewModel(root.Children) { FieldInDb = "panel" + c, RuDescription = i };
+                    root.Children.Add(model);
+                } 
             });
             Table table = _tables.ElementAt(CurrentTable);
             //Загрузка полей
@@ -284,7 +353,7 @@ namespace Atom.ViewModels
                 else
                 {
                     //Поиск панели
-                    var tmp = root.Children.FirstOrDefault(i => i.RuDescription == field.Parent && i.Type == "panel");
+                    var tmp = root.Children.FirstOrDefault(i => i.RuDescription == field.Parent && i.Type == "panel" || i.Type =="grid");
                     if (tmp == null)
                     {
                         model = new ModalViewModel(root.Children);
@@ -294,12 +363,13 @@ namespace Atom.ViewModels
                     {
                         model = new ModalViewModel(tmp.Children);
                         tmp.Children.Add(model);
+                        model.TableName = (tmp as GridViewModel)?.TableName;
                     }
                 }
                 model.FieldInDb = "field" + count.ToString();
                 model.RuDescription = field.Description;
                 model.Type = field.GetRightType();
-                model.TableName = BaseTable;
+                model.TableName = model.TableName??BaseTable;
                 count++;
             }
         }

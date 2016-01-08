@@ -112,6 +112,7 @@
     </ApplicationDefinition>
     <Compile Include="AppBootstrapper.cs" />
     <Compile Include="Behavior\BindableSelectedItemBehavior.cs" />
+    <Compile Include="Behavior\CurrentIndexBehavior.cs" />
     <Compile Include="Behavior\FrameworkElementAdorner.cs" />
     <Compile Include="Behavior\FrameworkElementDragBehavior.cs" />
     <Compile Include="Behavior\FrameworkElementDropBehavior.cs" />
@@ -145,8 +146,10 @@
     <Compile Include="Services\GridConstructorHelper.cs" />
     <Compile Include="Services\PageConstructotHelper.cs" />
     <Compile Include="Services\ScriptConstructorHelper.cs" />
+    <Compile Include="Validation\IfRequared.cs" />
     <Compile Include="Validation\MaxValueAttribute.cs" />
     <Compile Include="ViewModels\DocumentViewModel.cs" />
+    <Compile Include="ViewModels\GridConvertViewModel.cs" />
     <Compile Include="ViewModels\GridViewModel.cs" />
     <Compile Include="ViewModels\MassiveSetViewModel.cs" />
     <Compile Include="ViewModels\ModalViewModel.cs" />
