@@ -10,8 +10,10 @@ namespace Atom.ViewModels
 {
     public class GridViewModel: WebPageBaseViewModel
     {
-        public GridViewModel(ObservableCollection<WebPageBaseViewModel> parentCollection) : base(parentCollection)
+        public GridViewModel(WebPageBaseViewModel parent)
         {
+            Parent = parent;
+            ParentCollection = parent.Children;
             Validate();
         }
         public override string Type
@@ -38,6 +40,9 @@ namespace Atom.ViewModels
                 OnPropertyChanged();
             }
         }
+
+        public override WebPageBaseViewModel Parent { get; }
+
         public override bool IsDragable { get { return true; } }
         public override bool IsDropable { get { return true; } }
         public override string ToString()

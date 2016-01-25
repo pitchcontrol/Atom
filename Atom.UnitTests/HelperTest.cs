@@ -24,11 +24,11 @@ namespace Atom.UnitTests
         [Test]
         public void FlattenTest()
         {
-            PanelViewModel panel1 = new PanelViewModel(_rootPanel.Children);
+            PanelViewModel panel1 = new PanelViewModel(_rootPanel);
             _rootPanel.Children.Add(panel1);
-            PanelViewModel panel2 = new PanelViewModel(panel1.Children);
+            PanelViewModel panel2 = new PanelViewModel(panel1);
             panel1.Children.Add(panel2);
-            PanelViewModel panel3 = new PanelViewModel(panel2.Children);
+            PanelViewModel panel3 = new PanelViewModel(panel2);
             panel2.Children.Add(panel3);
             var count =_rootPanel.Children.Flatten(i => i.Children).Count();
             Assert.AreEqual(3,count);

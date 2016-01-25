@@ -21,9 +21,9 @@ namespace Atom.UnitTests
         [Test]
         public void TurnGridTest()
         {
-            PanelViewModel panelViewModel = new PanelViewModel(_model.RootPanel.Children) { RuDescription = "Комент", FieldInDb = "Id1" };
+            PanelViewModel panelViewModel = new PanelViewModel(_model.RootPanel) { RuDescription = "Комент", FieldInDb = "Id1" };
             _model.RootPanel.Children.Add(panelViewModel);
-            ModalViewModel panel1 = new ModalViewModel(panelViewModel.Children)
+            ModalViewModel panel1 = new ModalViewModel(panelViewModel)
             {
                 Type = "varchar",
                 FieldInDb = "field2",
@@ -31,7 +31,7 @@ namespace Atom.UnitTests
                 ControlIdView = "lb2"
             };
             panelViewModel.Children.Add(panel1);
-            ModalViewModel panel2 = new ModalViewModel(panelViewModel.Children)
+            ModalViewModel panel2 = new ModalViewModel(panelViewModel)
             {
                 Type = "varchar",
                 FieldInDb = "field3",

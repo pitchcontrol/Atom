@@ -122,6 +122,7 @@
     <Compile Include="Commands\GetResourceCommand.cs" />
     <Compile Include="Commands\GetResourceFileCommand.cs" />
     <Compile Include="Commands\StoryObjectCommand.cs" />
+    <Compile Include="Constant\ControlTypes.cs" />
     <Compile Include="Converters\ControlNameConverter.cs" />
     <Compile Include="Converters\FilePathConverter.cs" />
     <Compile Include="Converters\IsNotNullConverter.cs" />
@@ -129,6 +130,7 @@
     <Compile Include="Helpers.cs" />
     <Compile Include="IShell.cs" />
     <Compile Include="Models\DocProperty.cs" />
+    <Compile Include="Services\TableConstructorHelper.cs" />
     <Compile Include="ShellView.xaml.cs">
       <DependentUpon>ShellView.xaml</DependentUpon>
     </Compile>

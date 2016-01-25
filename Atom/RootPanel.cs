@@ -8,8 +8,9 @@ using Atom.Behavior;
 
 namespace Atom
 {
-    public class RootPanel: WebPageBaseViewModel
+    public class RootPanel : WebPageBaseViewModel
     {
+        public override WebPageBaseViewModel Parent => null;
         public override bool IsDragable { get { return false; } }
         public override bool IsDropable { get { return true; } }
         public override string FieldInDb
@@ -20,8 +21,9 @@ namespace Atom
         {
             get { return @"/Images/Organization.png"; }
         }
-        public RootPanel(ObservableCollection<WebPageBaseViewModel> parentCollection) : base(parentCollection)
+        public RootPanel(ObservableCollection<WebPageBaseViewModel> parentCollection)
         {
+            ParentCollection = parentCollection;
         }
 
         public override string Type { get { return "RootPanel"; } }

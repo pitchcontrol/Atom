@@ -36,7 +36,7 @@ namespace Atom.UnitTests
         [Test]
         public void AddNewKeyTest()
         {
-            PanelViewModel panelViewModel = new PanelViewModel(_model.RootPanel.Children) { RuDescription = "Комент", FieldInDb = "Id1" };
+            PanelViewModel panelViewModel = new PanelViewModel(_model.RootPanel) { RuDescription = "Комент", FieldInDb = "Id1" };
             _model.RootPanel.Children.Add(panelViewModel);
             //Добавляем ключь, должны добавится в оба словаря
             _model.WriteResourses();
@@ -56,7 +56,7 @@ namespace Atom.UnitTests
         [Test]
         public void AddDoubleKey()
         {
-            PanelViewModel panelViewModel = new PanelViewModel(_model.RootPanel.Children) { RuDescription = "Комент", FieldInDb = "Key1" };
+            PanelViewModel panelViewModel = new PanelViewModel(_model.RootPanel) { RuDescription = "Комент", FieldInDb = "Key1" };
             _model.RootPanel.Children.Add(panelViewModel);
             //Добавляем ключь, должны добавится в оба словаря
             _model.WriteResourses();
@@ -74,15 +74,15 @@ namespace Atom.UnitTests
         [Test]
         public void AddRecursiveKey()
         {
-            PanelViewModel panel1 = new PanelViewModel(_model.RootPanel.Children);
+            PanelViewModel panel1 = new PanelViewModel(_model.RootPanel);
             panel1.FieldInDb = "fl1";
             _model.RootPanel.Children.Add(panel1);
 
-            PanelViewModel panel2 = new PanelViewModel(panel1.Children);
+            PanelViewModel panel2 = new PanelViewModel(panel1);
             panel2.FieldInDb = "fl2";
             panel1.Children.Add(panel2);
 
-            PanelViewModel panel3 = new PanelViewModel(panel2.Children);
+            PanelViewModel panel3 = new PanelViewModel(panel2);
             panel3.FieldInDb = "fl3";
             panel2.Children.Add(panel3);
             //Добавляем ключь, должны добавится в оба словаря

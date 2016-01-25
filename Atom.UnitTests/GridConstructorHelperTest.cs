@@ -26,9 +26,9 @@ namespace Atom.UnitTests
         [Test]
         public void SimpleTest()
         {
-            _rootPanel.Children.Add(new ModalViewModel(_rootPanel.Children) { Type = "int", FieldInDb = "field1", RuDescription = "Комент", ControlIdView = "lb1" });
-            _rootPanel.Children.Add(new ModalViewModel(_rootPanel.Children) { Type = "bit", FieldInDb = "field2", RuDescription = "Комент", ControlIdView = "lb2" });
-            _rootPanel.Children.Add(new ModalViewModel(_rootPanel.Children) { Type = "file", FieldInDb = "field3", RuDescription = "Комент", ControlIdView = "lb3" });
+            _rootPanel.Children.Add(new ModalViewModel(_rootPanel) { Type = "int", FieldInDb = "field1", RuDescription = "Комент", ControlIdView = "lb1" });
+            _rootPanel.Children.Add(new ModalViewModel(_rootPanel) { Type = "bit", FieldInDb = "field2", RuDescription = "Комент", ControlIdView = "lb2" });
+            _rootPanel.Children.Add(new ModalViewModel(_rootPanel) { Type = "file", FieldInDb = "field3", RuDescription = "Комент", ControlIdView = "lb3" });
             
             _helper.ResourceNamespace = "RefBook";
             _helper.Construct(_rootPanel.Children);

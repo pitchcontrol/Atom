@@ -289,7 +289,7 @@ namespace Atom
         public void AddProperty()
         {
             ModalView window = new ModalView();
-            ModalViewModel model = new ModalViewModel(_rootPanel.Children);
+            ModalViewModel model = new ModalViewModel(_rootPanel);
             window.DataContext = model;
             if (window.ShowDialog() == true)
             {
@@ -304,7 +304,7 @@ namespace Atom
         public void AddPanel()
         {
             ModalView window = new ModalView();
-            PanelViewModel panelViewModel = new PanelViewModel(_rootPanel.Children);
+            PanelViewModel panelViewModel = new PanelViewModel(_rootPanel);
             window.DataContext = panelViewModel;
             if (window.ShowDialog() == true)
             {
@@ -317,7 +317,7 @@ namespace Atom
         public void AddGrid()
         {
             ModalView window = new ModalView();
-            GridViewModel panelViewModel = new GridViewModel(_rootPanel.Children);
+            GridViewModel panelViewModel = new GridViewModel(_rootPanel);
             window.DataContext = panelViewModel;
             if (window.ShowDialog() == true)
             {
@@ -381,7 +381,7 @@ namespace Atom
             int index = parent.IndexOf(CurrentProperty);
             //Удаляем панель
             parent.RemoveAt(index);
-            GridViewModel model = new GridViewModel(parent)
+            GridViewModel model = new GridViewModel(oldProperty.Parent)
             {
                 FieldInDb = oldProperty.FieldInDb,
                 RuDescription = oldProperty.RuDescription,

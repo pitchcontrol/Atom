@@ -18,9 +18,9 @@ namespace Atom.UnitTests
         {
             ObservableCollection<WebPageBaseViewModel> properties = new ObservableCollection<WebPageBaseViewModel>();
             RootPanel rootPanel = new RootPanel(properties);
-            PanelViewModel panelViewModel = new PanelViewModel(rootPanel.Children) { ControlIdView = "clId1", RuDescription = "Комент" };
+            PanelViewModel panelViewModel = new PanelViewModel(rootPanel) { ControlIdView = "clId1", RuDescription = "Комент" };
             rootPanel.Children.Add(panelViewModel);
-            ModalViewModel control = new ModalViewModel(panelViewModel.Children)
+            ModalViewModel control = new ModalViewModel(panelViewModel)
             {
                 Type = "varchar",
                 FieldInDb = "field2",
@@ -43,7 +43,7 @@ namespace Atom.UnitTests
         {
             ObservableCollection<WebPageBaseViewModel> properties = new ObservableCollection<WebPageBaseViewModel>();
             RootPanel rootPanel = new RootPanel(properties);
-            ModalViewModel control = new ModalViewModel(rootPanel.Children)
+            ModalViewModel control = new ModalViewModel(rootPanel)
             {
                 Type = "varchar",
                 FieldInDb = "field2",
@@ -51,7 +51,7 @@ namespace Atom.UnitTests
                 ControlIdView = "lb2"
             };
             rootPanel.Children.Add(control);
-            PanelViewModel panelViewModel = new PanelViewModel(rootPanel.Children) { ControlIdView = "clId1", RuDescription = "Комент" };
+            PanelViewModel panelViewModel = new PanelViewModel(rootPanel) { ControlIdView = "clId1", RuDescription = "Комент" };
             rootPanel.Children.Add(panelViewModel);
             Assert.AreEqual(2, rootPanel.Children.Count);
             Assert.AreEqual(0, panelViewModel.Children.Count);

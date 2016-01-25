@@ -4,9 +4,11 @@ namespace Atom.ViewModels
 {
     public class PanelViewModel : WebPageBaseViewModel
     {
-
-        public PanelViewModel(ObservableCollection<WebPageBaseViewModel> parentCollection) : base(parentCollection)
+        public override WebPageBaseViewModel Parent { get; }
+        public PanelViewModel(WebPageBaseViewModel parent)
         {
+            Parent = parent;
+            ParentCollection = parent.Children;
             Validate();
         }
         public override string Type
@@ -29,7 +31,7 @@ namespace Atom.ViewModels
         /// <returns></returns>
         public ModalViewModel CreateField()
         {
-            ModalViewModel obj = new ModalViewModel(Children);
+            ModalViewModel obj = new ModalViewModel(this);
             Children.Add(obj);
             return obj;
         }
@@ -39,7 +41,7 @@ namespace Atom.ViewModels
         /// <returns></returns>
         public GridViewModel CreateGrid()
         {
-            GridViewModel obj = new GridViewModel(Children);
+            GridViewModel obj = new GridViewModel(this);
             Children.Add(obj);
             return obj;
         }

@@ -323,7 +323,7 @@ namespace Atom.ViewModels
                 var grid = grids.FirstOrDefault(j => j.Description == i);
                 if (grid != null)
                 {
-                    GridViewModel model = new GridViewModel(root.Children);
+                    GridViewModel model = new GridViewModel(root);
                     model.FieldInDb = "grid" + c;
                     model.RuDescription = i;
                     model.TableName = grid.TableName;
@@ -331,7 +331,7 @@ namespace Atom.ViewModels
                 }
                 else
                 {
-                    PanelViewModel model = new PanelViewModel(root.Children) { FieldInDb = "panel" + c, RuDescription = i };
+                    PanelViewModel model = new PanelViewModel(root) { FieldInDb = "panel" + c, RuDescription = i };
                     root.Children.Add(model);
                 } 
             });
@@ -347,7 +347,7 @@ namespace Atom.ViewModels
                 ModalViewModel model;
                 if (string.IsNullOrEmpty(field.Parent))
                 {
-                    model = new ModalViewModel(root.Children);
+                    model = new ModalViewModel(root);
                     root.Children.Add(model);
                 }
                 else
@@ -356,12 +356,12 @@ namespace Atom.ViewModels
                     var tmp = root.Children.FirstOrDefault(i => i.RuDescription == field.Parent && i.Type == "panel" || i.Type =="grid");
                     if (tmp == null)
                     {
-                        model = new ModalViewModel(root.Children);
+                        model = new ModalViewModel(root);
                         root.Children.Add(model);
                     }
                     else
                     {
-                        model = new ModalViewModel(tmp.Children);
+                        model = new ModalViewModel(tmp);
                         tmp.Children.Add(model);
                         model.TableName = (tmp as GridViewModel)?.TableName;
                     }

@@ -27,10 +27,10 @@ namespace Atom.UnitTests
         [Test]
         public void SimpleViewTest()
         {
-            _rootPanel.Children.Add(new ModalViewModel(_rootPanel.Children) { Type = "int", FieldInDb = "field1", RuDescription = "Комент", ControlIdView = "lb1" });
-            PanelViewModel panelViewModel = new PanelViewModel(_rootPanel.Children) { RuDescription = "Комент", FieldInDb = "Id1" };
+            _rootPanel.Children.Add(new ModalViewModel(_rootPanel) { Type = "int", FieldInDb = "field1", RuDescription = "Комент", ControlIdView = "lb1" });
+            PanelViewModel panelViewModel = new PanelViewModel(_rootPanel) { RuDescription = "Комент", FieldInDb = "Id1" };
             _rootPanel.Children.Add(panelViewModel);
-            panelViewModel.Children.Add(new ModalViewModel(_rootPanel.Children) { Type = "varchar", FieldInDb = "field2", RuDescription = "Комент", ControlIdView = "lb2" });
+            panelViewModel.Children.Add(new ModalViewModel(_rootPanel) { Type = "varchar", FieldInDb = "field2", RuDescription = "Комент", ControlIdView = "lb2" });
             _helper.Visability = 1;
             string result = "DECLARE @id int;\n";
             //field1
@@ -60,7 +60,7 @@ namespace Atom.UnitTests
         [Test(Description = "Тестируем несколько ролей")]
         public void MultiRoleTest()
         {
-            _rootPanel.Children.Add(new ModalViewModel(_rootPanel.Children) { Type = "int", FieldInDb = "field1", RuDescription = "Комент", ControlIdView = "lb1" });
+            _rootPanel.Children.Add(new ModalViewModel(_rootPanel) { Type = "int", FieldInDb = "field1", RuDescription = "Комент", ControlIdView = "lb1" });
             _helper.Constructor(_rootPanel.Children, false, 100, new int[] { 3, 8, 15 });
             string result = "DECLARE @id int;\n";
             //field1

@@ -11,14 +11,14 @@ namespace Atom.ViewModels
     {
         private string _tableName;
 
-        public ModalViewModel(ObservableCollection<WebPageBaseViewModel> parent)
-            : base(parent)
+        public ModalViewModel(WebPageBaseViewModel parent)
         {
-            Types = new[] { "int", "decimal", "bit", "varchar", "file", "dictionary", "hyperlink", "datetime", "date", "time" };
+            Parent = parent;
+            //Types = new[] { "int", "decimal", "bit", "varchar", "file", "dictionary", "hyperlink", "datetime", "date", "time" };
             Validate();
         }
-        [JsonIgnore]
-        public IEnumerable<string> Types { get; set; }
+        //[JsonIgnore]
+        //public IEnumerable<string> Types { get; set; }
 
 
         public string TableName
@@ -33,7 +33,7 @@ namespace Atom.ViewModels
             }
         }
 
-
+        public override WebPageBaseViewModel Parent { get; }
         public override bool IsDragable { get { return true; } }
         public override bool IsDropable { get { return false; } }
     }

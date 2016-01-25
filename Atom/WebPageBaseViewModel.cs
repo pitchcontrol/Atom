@@ -16,14 +16,15 @@ namespace Atom
         [JsonIgnore]
         public ObservableCollection<WebPageBaseViewModel> ParentCollection { get; set; }
 
-        public WebPageBaseViewModel(ObservableCollection<WebPageBaseViewModel> parentCollection)
+        public WebPageBaseViewModel()
         {
-            ParentCollection = parentCollection;
             Children = new ObservableCollection<WebPageBaseViewModel>();
             IsEditable = true;
             //Лень заполнять
             _enDescription = "Some text";
         }
+        [JsonIgnore]
+        public abstract WebPageBaseViewModel Parent { get; }
 
         /// <summary>
         /// Можно таскать

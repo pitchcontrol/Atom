@@ -37,13 +37,13 @@ namespace Atom.UnitTests
         [Test]
         public void SimpleTest()
         {
-            _rootPanel.Children.Add(new ModalViewModel(_rootPanel.Children) { Type = "int", FieldInDb = "field1", RuDescription = "Комент", EnDescription = "Comment", ControlIdView = "lb1" });
-            PanelViewModel panelViewModel = new PanelViewModel(_rootPanel.Children) { ControlIdView = "clId1", RuDescription = "Комент", EnDescription = "Comment"};
+            _rootPanel.Children.Add(new ModalViewModel(_rootPanel) { Type = "int", FieldInDb = "field1", RuDescription = "Комент", EnDescription = "Comment", ControlIdView = "lb1" });
+            PanelViewModel panelViewModel = new PanelViewModel(_rootPanel) { ControlIdView = "clId1", RuDescription = "Комент", EnDescription = "Comment"};
             _rootPanel.Children.Add(panelViewModel);
             //Вторая панель вложена в первую
-            PanelViewModel panel2 = new PanelViewModel(panelViewModel.Children) { ControlIdView = "clId2", RuDescription = "Комент", EnDescription = "Comment" };
+            PanelViewModel panel2 = new PanelViewModel(panelViewModel) { ControlIdView = "clId2", RuDescription = "Комент", EnDescription = "Comment" };
             panelViewModel.Children.Add(panel2);
-            panel2.Children.Add(new ModalViewModel(_rootPanel.Children) { Type = "varchar", FieldInDb = "field2", RuDescription = "Комент", EnDescription = "Comment", ControlIdView = "lb2" });
+            panel2.Children.Add(new ModalViewModel(_rootPanel) { Type = "varchar", FieldInDb = "field2", RuDescription = "Комент", EnDescription = "Comment", ControlIdView = "lb2" });
             _command.Execute("False");
 
             string result = "<data name=\"lb1\" xml:space=\"preserve\">\n";

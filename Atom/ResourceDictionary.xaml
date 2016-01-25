@@ -7,12 +7,13 @@
                     xmlns:behavior="clr-namespace:Atom.Behavior"
                     xmlns:converters="clr-namespace:Atom.Converters"
                     xmlns:avalonWizard="http://schemas.pavel.fedarovich.com/winfx/2010/xaml/presentation"
+                    xmlns:constant="clr-namespace:Atom.Constant"
                     mc:Ignorable="d">
 
     <DataTemplate DataType="{x:Type viewModels:ModalViewModel}">
         <Grid>
             <Label Content="Тип" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
-            <ComboBox Margin="162,10,10,0" VerticalAlignment="Top" SelectedItem="{Binding Type, NotifyOnValidationError=True, ValidatesOnNotifyDataErrors=True}" ItemsSource="{Binding Types}" />
+            <ComboBox Margin="162,10,10,0" VerticalAlignment="Top" SelectedItem="{Binding Type, NotifyOnValidationError=True, ValidatesOnNotifyDataErrors=True}" ItemsSource="{x:Static constant:ControlTypes.Types}" />
             <Label Content="ID контрола (View)" HorizontalAlignment="Left" Margin="10,73,0,0" VerticalAlignment="Top"/>
             <TextBox Height="23" Margin="162,73,10,0" TextWrapping="Wrap" Text="{Binding ControlIdView, NotifyOnValidationError=True, ValidatesOnNotifyDataErrors=True}" VerticalAlignment="Top"/>
             <Label Content="Поле в базе" HorizontalAlignment="Left" Margin="10,43,0,0" VerticalAlignment="Top"/>
