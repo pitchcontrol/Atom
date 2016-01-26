@@ -123,6 +123,7 @@
     <Compile Include="Commands\GetResourceFileCommand.cs" />
     <Compile Include="Commands\StoryObjectCommand.cs" />
     <Compile Include="Constant\ControlTypes.cs" />
+    <Compile Include="Constant\DictionaryTypes.cs" />
     <Compile Include="Converters\ControlNameConverter.cs" />
     <Compile Include="Converters\FilePathConverter.cs" />
     <Compile Include="Converters\IsNotNullConverter.cs" />
@@ -150,6 +151,7 @@
     <Compile Include="Services\ScriptConstructorHelper.cs" />
     <Compile Include="Validation\IfRequared.cs" />
     <Compile Include="Validation\MaxValueAttribute.cs" />
+    <Compile Include="Validation\TriggerRequired.cs" />
     <Compile Include="ViewModels\DocumentViewModel.cs" />
     <Compile Include="ViewModels\GridConvertViewModel.cs" />
     <Compile Include="ViewModels\GridViewModel.cs" />

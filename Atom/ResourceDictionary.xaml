@@ -11,22 +11,51 @@
                     mc:Ignorable="d">
 
     <DataTemplate DataType="{x:Type viewModels:ModalViewModel}">
-        <Grid>
+        <Grid d:DesignHeight="400" d:DesignWidth="400" >
             <Label Content="Тип" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
             <ComboBox Margin="162,10,10,0" VerticalAlignment="Top" SelectedItem="{Binding Type, NotifyOnValidationError=True, ValidatesOnNotifyDataErrors=True}" ItemsSource="{x:Static constant:ControlTypes.Types}" />
-            <Label Content="ID контрола (View)" HorizontalAlignment="Left" Margin="10,73,0,0" VerticalAlignment="Top"/>
-            <TextBox Height="23" Margin="162,73,10,0" TextWrapping="Wrap" Text="{Binding ControlIdView, NotifyOnValidationError=True, ValidatesOnNotifyDataErrors=True}" VerticalAlignment="Top"/>
-            <Label Content="Поле в базе" HorizontalAlignment="Left" Margin="10,43,0,0" VerticalAlignment="Top"/>
-            <TextBox Height="23" Margin="162,40,10,0" TextWrapping="Wrap" Text="{Binding FieldInDb, NotifyOnValidationError=True, ValidatesOnNotifyDataErrors=True}" VerticalAlignment="Top"/>
-            <Label Content="Таблица" HorizontalAlignment="Left" Margin="10,139,0,0" VerticalAlignment="Top"/>
-            <TextBox Height="23" Margin="162,139,10,0" TextWrapping="Wrap" Text="{Binding TableName, NotifyOnValidationError=True, ValidatesOnNotifyDataErrors=True}" VerticalAlignment="Top" RenderTransformOrigin="0.1,-0.13"/>
-            <Label Content="RU" HorizontalAlignment="Left" Margin="10,165,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.132,-0.5"/>
-            <TextBox Height="72" Margin="162,170,10,0" TextWrapping="Wrap" Text="{Binding RuDescription, NotifyOnValidationError=True, ValidatesOnNotifyDataErrors=True}" VerticalAlignment="Top"/>
-            <Label Content="EN" HorizontalAlignment="Left" Margin="10,247,0,0" VerticalAlignment="Top" Width="40"/>
-            <TextBox Height="45" Margin="162,247,10,0" TextWrapping="Wrap" Text="{Binding EnDescription, NotifyOnValidationError=True, ValidatesOnNotifyDataErrors=True}" VerticalAlignment="Top"/>
-            <Label Content="ID контрола (Edit)" HorizontalAlignment="Left" Margin="10,104,0,0" VerticalAlignment="Top"/>
-            <TextBox Height="23" Margin="162,104,10,0" TextWrapping="Wrap" Text="{Binding ControlIdEdit, NotifyOnValidationError=True, ValidatesOnNotifyDataErrors=True}" VerticalAlignment="Top"/>
-            <CheckBox Content="Редактируемое" HorizontalAlignment="Left" Margin="162,297,0,0" VerticalAlignment="Top" IsChecked="{Binding IsEditable}" />
+            <Label Content="ID контрола (View)" HorizontalAlignment="Stretch" Margin="10,118.96,77.913,0" VerticalAlignment="Top" d:LayoutOverrides="Width"/>
+            <TextBox Height="23" Margin="162,118.96,10,0" TextWrapping="Wrap" Text="{Binding ControlIdView, NotifyOnValidationError=True, ValidatesOnNotifyDataErrors=True}" VerticalAlignment="Top"/>
+            <Label Content="Поле в базе" HorizontalAlignment="Left" Margin="10,88.92,0,0" VerticalAlignment="Top"/>
+            <TextBox Height="23" Margin="162,90.96,10,0" TextWrapping="Wrap" Text="{Binding FieldInDb, NotifyOnValidationError=True, ValidatesOnNotifyDataErrors=True}" VerticalAlignment="Top"/>
+            <Label Content="Таблица" HorizontalAlignment="Left" Margin="10,174.96,0,0" VerticalAlignment="Top"/>
+            <TextBox Height="23" Margin="162,174.96,10,0"  Text="{Binding TableName, NotifyOnValidationError=True, ValidatesOnNotifyDataErrors=True}" VerticalAlignment="Top" />
+            <Label Content="RU" HorizontalAlignment="Left" Margin="10,205.92,0,0" VerticalAlignment="Top"/>
+            <TextBox Height="72" Margin="162,202.96,10,0" TextWrapping="Wrap" Text="{Binding RuDescription, NotifyOnValidationError=True, ValidatesOnNotifyDataErrors=True}" VerticalAlignment="Top"/>
+            <Label Content="EN" HorizontalAlignment="Left" Margin="10,279.96,0,-14.823" VerticalAlignment="Top" Width="40"/>
+            <TextBox Height="45" Margin="162,279.96,10,-33.863" TextWrapping="Wrap" Text="{Binding EnDescription, NotifyOnValidationError=True, ValidatesOnNotifyDataErrors=True}" VerticalAlignment="Top"/>
+            <Label Content="ID контрола (Edit)" HorizontalAlignment="Stretch" Margin="10,146.96,83.113,0" VerticalAlignment="Top" d:LayoutOverrides="Width"/>
+            <TextBox Height="23" Margin="162,146.96,10,0" TextWrapping="Wrap" Text="{Binding ControlIdEdit, NotifyOnValidationError=True, ValidatesOnNotifyDataErrors=True}" VerticalAlignment="Top"/>
+            <CheckBox Content="Редактируемое" HorizontalAlignment="Stretch" Margin="162,329.96,133.628,0" VerticalAlignment="Top" IsChecked="{Binding IsEditable}" d:LayoutOverrides="Width" />
+            <Label Content="Тип словаря" HorizontalAlignment="Left" Margin="10,36,0,0" VerticalAlignment="Top"/>
+            <ComboBox Margin="162,36,10,0" VerticalAlignment="Top" SelectedItem="{Binding DictionaryType, NotifyOnValidationError=True, ValidatesOnNotifyDataErrors=True}" ItemsSource="{x:Static constant:DictionaryTypes.Types}">
+                <ComboBox.Style>
+                    <Style TargetType="ComboBox">
+                        <Setter Property="IsEnabled" Value="False"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Type}" Value="{x:Static constant:ControlTypes.Dictionary}">
+                                <Setter Property="IsEnabled" Value="True"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ComboBox.Style>
+            </ComboBox>
+            <Label Content="Таблица словаря" HorizontalAlignment="Left" Margin="10,62.96,0,0" VerticalAlignment="Top"/>
+            <TextBox Height="23" Margin="162,62.96,10,0" TextWrapping="Wrap" Text="{Binding DictionaryTableName, NotifyOnValidationError=True}" VerticalAlignment="Top">
+                <TextBox.Style>
+                    <Style TargetType="TextBox">
+                        <Setter Property="IsEnabled" Value="False"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding DictionaryType}" Value="{x:Static constant:DictionaryTypes.SimpleDictionary}">
+                                <Setter Property="IsEnabled" Value="True"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding DictionaryType}" Value="{x:Static constant:DictionaryTypes.DictionaryTable}">
+                                <Setter Property="IsEnabled" Value="True"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBox.Style>
+            </TextBox>
         </Grid>
     </DataTemplate>
     <DataTemplate DataType="{x:Type viewModels:PanelViewModel}">
@@ -130,7 +159,7 @@
                     <Button Grid.Row="3" HorizontalAlignment="Right" Content="Выбрать" cal:Message.Attach="SetGroupName()" IsEnabled="{Binding SelectedField, Converter={StaticResource IsNotNullConverter}}"/>
                     <TextBlock Grid.Row="4" Text="{Binding TypeField.Value, StringFormat='Описание типа данных: \{0\}'}" Height="Auto" HorizontalAlignment="Left" Margin="0,0,20,0"/>
                     <Button Grid.Row="4" HorizontalAlignment="Right" Content="Выбрать" cal:Message.Attach="SetType()" IsEnabled="{Binding SelectedField, Converter={StaticResource IsNotNullConverter}}"/>
-                    
+
                 </Grid>
             </avalonWizard:WizardPage>
             <avalonWizard:WizardPage>
@@ -140,6 +169,6 @@
                 </Grid>
             </avalonWizard:WizardPage>
         </avalonWizard:Wizard>
-        
+
     </DataTemplate>
 </ResourceDictionary>

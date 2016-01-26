@@ -1,5 +1,8 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Windows;
+using Atom.Constant;
+using Atom.Validation;
 using Newtonsoft.Json;
 
 namespace Atom.ViewModels
@@ -10,16 +13,14 @@ namespace Atom.ViewModels
     public class ModalViewModel : WebPageBaseViewModel
     {
         private string _tableName;
+        private string _dictionaryType;
+        private string _dictionaryTableName;
 
         public ModalViewModel(WebPageBaseViewModel parent)
         {
             Parent = parent;
-            //Types = new[] { "int", "decimal", "bit", "varchar", "file", "dictionary", "hyperlink", "datetime", "date", "time" };
             Validate();
         }
-        //[JsonIgnore]
-        //public IEnumerable<string> Types { get; set; }
-
 
         public string TableName
         {
@@ -30,6 +31,38 @@ namespace Atom.ViewModels
                 _tableName = value;
                 ValidateProperty(value);
                 OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Тип словаря(если тип dictionary)
+        /// </summary>
+        [TriggerRequired("Type", new[] { ControlTypes.Dictionary })]
+        public string DictionaryType
+        {
+            get { return _dictionaryType; }
+            set
+            {
+                if (value == _dictionaryType) return;
+                _dictionaryType = value;
+                OnPropertyChanged();
+                Validate();
+            }
+        }
+
+        /// <summary>
+        /// Таблица словаря если тип словаря SimpleDictionary, DictionaryTable
+        /// </summary>
+        [TriggerRequired("DictionaryType", new[] { DictionaryTypes.DictionaryTable, DictionaryTypes.SimpleDictionary })]
+        public string DictionaryTableName
+        {
+            get { return _dictionaryTableName; }
+            set
+            {
+                if (value == _dictionaryTableName) return;
+                _dictionaryTableName = value;
+                OnPropertyChanged();
+                ValidateProperty(value);
             }
         }
 

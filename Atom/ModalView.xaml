@@ -1,7 +1,7 @@
 ﻿<Window x:Class="Atom.ModalView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="ModalView" MinHeight="400" MinWidth="600" SizeToContent="WidthAndHeight">
+        Title="ModalView" MinHeight="500" MinWidth="600" SizeToContent="WidthAndHeight">
     <Grid>
         <Button Content="OK" HorizontalAlignment="Right" Margin="0,0,10,10" Width="75" Click="Button_Click" Height="22" VerticalAlignment="Bottom" IsDefault="True" IsEnabled="{Binding IsValid}"/>
         <ContentControl Content="{Binding}" Margin="10,10,10,37"/>
