@@ -363,13 +363,13 @@ namespace Atom.ViewModels
                     {
                         model = new ModalViewModel(tmp);
                         tmp.Children.Add(model);
-                        model.TableName = (tmp as GridViewModel)?.TableName;
+                        //model.TableName = (tmp as GridViewModel)?.TableName;
                     }
                 }
                 model.FieldInDb = "field" + count.ToString();
                 model.RuDescription = field.Description;
                 model.Type = field.GetRightType();
-                model.TableName = model.TableName??BaseTable;
+                //model.TableName = model.TableName??BaseTable;
                 count++;
             }
         }

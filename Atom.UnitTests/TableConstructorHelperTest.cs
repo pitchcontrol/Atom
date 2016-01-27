@@ -40,23 +40,26 @@ namespace Atom.UnitTests
         [Test(Description = "Простой случай")]
         public void OneTableTest()
         {
+            _rootPanel.TableName = "Table";
             ModalViewModel model = new ModalViewModel(_rootPanel);
             model.FieldInDb = "Field1";
             model.Type = "int";
-            model.TableName = "Table";
             _rootPanel.Children.Add(model);
             model = new ModalViewModel(_rootPanel);
             model.FieldInDb = "Field2";
             model.Type = "varchar";
-            model.TableName = "Table";
             _rootPanel.Children.Add(model);
             model = new ModalViewModel(_rootPanel);
             model.FieldInDb = "Field3";
             model.Type = ControlTypes.Dictionary;
             model.DictionaryType = DictionaryTypes.FlName;
-            model.TableName = "Table";
             _rootPanel.Children.Add(model);
-
+            model = new ModalViewModel(_rootPanel);
+            model.FieldInDb = "Field4";
+            model.Type = ControlTypes.Dictionary;
+            model.DictionaryType = DictionaryTypes.SimpleDictionary;
+            model.DictionaryTableName = "MyDictionary";
+            _rootPanel.Children.Add(model);
 
             _helper.Construct(_properties, "../..");
 
@@ -74,10 +77,12 @@ namespace Atom.UnitTests
                                                          "[Field1] INT,\n" +
                                                          "[Field2] varchar(max),\n" +
                                                          "[Field3] INT,\n" +
+                                                         "[Field4] INT,\n" +
                                                          "CONSTRAINT [PK_Table] PRIMARY KEY CLUSTERED([pkid] ASC),\n" +
                                                          "CONSTRAINT [FK_Table_id] FOREIGN KEY (idRecord) REFERENCES [Table_id]([pkid]),\n" +
                                                          "CONSTRAINT [FK_Table_ul] FOREIGN KEY (idul) REFERENCES [ul]([pkid]),\n" +
-                                                         "CONSTRAINT [FK_Table_Field3_fl] FOREIGN KEY (Field3) REFERENCES [fl]([pkid])\n" +
+                                                         "CONSTRAINT [FK_Table_Field3_fl] FOREIGN KEY (Field3) REFERENCES [fl]([pkid]),\n" +
+                                                         "CONSTRAINT [FK_Table_Field4_MyDictionary] FOREIGN KEY (Field4) REFERENCES [MyDictionary]([pkid])\n" +
                                                          ")");
             Assert.AreEqual(expectedContent, tableContent);
 
@@ -101,18 +106,15 @@ namespace Atom.UnitTests
             ModalViewModel model = new ModalViewModel(_rootPanel);
             model.FieldInDb = "Field1";
             model.Type = "int";
-            model.TableName = "Table";
             grid.Children.Add(model);
             model = new ModalViewModel(_rootPanel);
             model.FieldInDb = "Field2";
             model.Type = "varchar";
-            model.TableName = "Table";
             grid.Children.Add(model);
             model = new ModalViewModel(_rootPanel);
             model.FieldInDb = "Field3";
             model.Type = ControlTypes.Dictionary;
             model.DictionaryType = DictionaryTypes.FlName;
-            model.TableName = "Table";
             grid.Children.Add(model);
 
             _helper.Construct(_properties, "../..");

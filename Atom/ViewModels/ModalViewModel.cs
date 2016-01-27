@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
 using Atom.Constant;
 using Atom.Validation;
+using JetBrains.Annotations;
 using Newtonsoft.Json;
 
 namespace Atom.ViewModels
@@ -12,28 +14,32 @@ namespace Atom.ViewModels
     /// </summary>
     public class ModalViewModel : WebPageBaseViewModel
     {
-        private string _tableName;
         private string _dictionaryType;
         private string _dictionaryTableName;
 
-        public ModalViewModel(WebPageBaseViewModel parent)
+        public ModalViewModel([NotNull] WebPageBaseViewModel parent)
         {
+            if (parent == null) throw new ArgumentNullException(nameof(parent));
             Parent = parent;
+            ParentCollection = Parent.Children;
             Validate();
         }
 
-        public string TableName
-        {
-            get { return _tableName; }
-            set
-            {
-                if (value == _tableName) return;
-                _tableName = value;
-                ValidateProperty(value);
-                OnPropertyChanged();
-            }
-        }
+        public string TableName => GetTableName(Parent);
 
+        /// <summary>
+        /// Получить таблицу родителя
+        /// </summary>
+        private string GetTableName(WebPageBaseViewModel parent)
+        {
+            if (parent == null)
+                return null;
+            if (parent is RootPanel)
+                return (parent as RootPanel).TableName;
+            if (parent is GridViewModel)
+                return (parent as GridViewModel).TableName;
+            return GetTableName(parent.Parent);
+        }
         /// <summary>
         /// Тип словаря(если тип dictionary)
         /// </summary>

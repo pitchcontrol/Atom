@@ -64,7 +64,7 @@ namespace Atom.ViewModels
         /// </summary>
         public void Set()
         {
-            SelectedModels.ForEach(i=> { i.TableName = TableName; });
+            //SelectedModels.ForEach(i=> { i.TableName = TableName; });
         }
     }
 }

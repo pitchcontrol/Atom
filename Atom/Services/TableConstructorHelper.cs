@@ -101,6 +101,9 @@ namespace Atom.Services
                     return $"CONSTRAINT [FK_{tableName}_{model.FieldInDb}_fl] FOREIGN KEY ({model.FieldInDb}) REFERENCES [fl]([pkid]),\n";
                 case DictionaryTypes.UlName:
                     return $"CONSTRAINT [FK_{tableName}_{model.FieldInDb}_ul] FOREIGN KEY ({model.FieldInDb}) REFERENCES [ul]([pkid]),\n";
+                case DictionaryTypes.SimpleDictionary:
+                case DictionaryTypes.DictionaryTable:
+                    return $"CONSTRAINT [FK_{tableName}_{model.FieldInDb}_{model.DictionaryTableName}] FOREIGN KEY ({model.FieldInDb}) REFERENCES [{model.DictionaryTableName}]([pkid]),\n";
             }
             return "";
         }

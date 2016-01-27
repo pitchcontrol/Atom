@@ -63,6 +63,9 @@ namespace Atom
 
         public ShellViewModel()
         {
+            Properties = new ObservableCollection<WebPageBaseViewModel>();
+            _rootPanel = new RootPanel(Properties);
+            Properties.Add(_rootPanel);
         }
         /// <summary>
         /// Конструктор

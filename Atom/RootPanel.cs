@@ -26,6 +26,21 @@ namespace Atom
             ParentCollection = parentCollection;
         }
 
+        private string _tableName;
+        /// <summary>
+        /// Основная таблица для страницы
+        /// </summary>
+        public string TableName
+        {
+            get { return _tableName; }
+            set
+            {
+                if (value == _tableName) return;
+                _tableName = value;
+                ValidateProperty(value);
+                OnPropertyChanged();
+            }
+        }
         public override string Type { get { return "RootPanel"; } }
 
         public override string ToString()
