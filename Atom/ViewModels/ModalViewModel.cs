@@ -17,11 +17,10 @@ namespace Atom.ViewModels
         private string _dictionaryType;
         private string _dictionaryTableName;
 
-        public ModalViewModel([NotNull] WebPageBaseViewModel parent)
+        public ModalViewModel(WebPageBaseViewModel parent)
         {
-            if (parent == null) throw new ArgumentNullException(nameof(parent));
             Parent = parent;
-            ParentCollection = Parent.Children;
+            //ParentCollection = Parent?.Children;
             Validate();
         }
 
@@ -71,8 +70,9 @@ namespace Atom.ViewModels
                 ValidateProperty(value);
             }
         }
+        
+        public override WebPageBaseViewModel Parent { get; set; }
 
-        public override WebPageBaseViewModel Parent { get; }
         public override bool IsDragable { get { return true; } }
         public override bool IsDropable { get { return false; } }
     }

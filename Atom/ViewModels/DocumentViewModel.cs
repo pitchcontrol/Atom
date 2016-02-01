@@ -317,6 +317,8 @@ namespace Atom.ViewModels
         {
             var description = GetGroupNames();
             RootPanel root = (RootPanel)properties.First();
+            //Устанавливаем базовою таблицу
+            root.TableName = BaseTable;
             var grids = Grids.Where(i => i.IsGrid);
             description.ForEach((i, c) =>
             {

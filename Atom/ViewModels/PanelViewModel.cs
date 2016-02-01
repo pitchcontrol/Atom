@@ -4,11 +4,11 @@ namespace Atom.ViewModels
 {
     public class PanelViewModel : WebPageBaseViewModel
     {
-        public override WebPageBaseViewModel Parent { get; }
+        public override WebPageBaseViewModel Parent { get; set; }
         public PanelViewModel(WebPageBaseViewModel parent)
         {
             Parent = parent;
-            ParentCollection = parent.Children;
+            //ParentCollection = parent?.Children;
             Validate();
         }
         public override string Type

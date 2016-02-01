@@ -129,8 +129,11 @@
     <Compile Include="Converters\IsNotNullConverter.cs" />
     <Compile Include="DelegateCommand.cs" />
     <Compile Include="Helpers.cs" />
+    <Compile Include="Interfaces\IDiskPath.cs" />
     <Compile Include="IShell.cs" />
     <Compile Include="Models\DocProperty.cs" />
+    <Compile Include="Models\PathDialog.cs" />
+    <Compile Include="Services\DiskPath.cs" />
     <Compile Include="Services\TableConstructorHelper.cs" />
     <Compile Include="ShellView.xaml.cs">
       <DependentUpon>ShellView.xaml</DependentUpon>

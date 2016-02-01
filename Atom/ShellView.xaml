@@ -90,9 +90,10 @@
             <MenuItem Header="Скрипт">
                 <MenuItem Header="Получить скрипт View" cal:Message.Attach="GetPageScript('v')" IsEnabled="{Binding CurrentMenuPageView, Converter={StaticResource IsNullConverter}}"/>
                 <MenuItem Header="Получить скрипт Edit" cal:Message.Attach="GetPageScript('e')" IsEnabled="{Binding CurrentMenuPageView, Converter={StaticResource IsNullConverter}}"/>
+                <MenuItem Header="Получить скрипт создания таблиц" x:Name="BuildTables"/>
             </MenuItem>
             <MenuItem Header="Редактирование">
-                <MenuItem Header="Установить всем" x:Name="SetAll"/>
+                <!--<MenuItem Header="Установить всем" x:Name="SetAll"/>-->
             </MenuItem>
             <MenuItem Header="ТЗ">
                 <MenuItem Header="Загрузит ТЗ" x:Name="LoadFromDocument"></MenuItem>

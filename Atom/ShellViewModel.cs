@@ -8,14 +8,16 @@ using System.IO;
 using System.Linq;
 using System.Resources;
 using System.Runtime.CompilerServices;
-using System.Windows;
+using System.Windows.Forms;
 using Atom.Annotations;
 using Atom.Models;
 using Atom.Services;
 using Atom.ViewModels;
 using Atom.Views;
-using Microsoft.Win32;
 using Newtonsoft.Json;
+using Clipboard = System.Windows.Clipboard;
+using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
+using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
 
 namespace Atom
 {
@@ -33,6 +35,8 @@ namespace Atom
         private string _resourceNameSpace;
         private string _resourceFilePath;
         private string _info;
+        private string _tableFolderPath;
+        private readonly DiskPath _diskPath;
 
         public RootPanel RootPanel
         {
@@ -66,6 +70,8 @@ namespace Atom
             Properties = new ObservableCollection<WebPageBaseViewModel>();
             _rootPanel = new RootPanel(Properties);
             Properties.Add(_rootPanel);
+
+
         }
         /// <summary>
         /// Конструктор
@@ -76,6 +82,13 @@ namespace Atom
             Properties = new ObservableCollection<WebPageBaseViewModel>();
             _rootPanel = new RootPanel(Properties);
             Properties.Add(_rootPanel);
+
+            _diskPath = new DiskPath();
+            _diskPath.Add("SaveProject", new PathDialog("json (*.json)|*.json") { Description = "Сохранить проект" })
+            .Add("LoadProject", new PathDialog("json (*.json)|*.json") { DefaultPathName = "defaultProjectDir", Description = "Загрузить проект" })
+            .Add("BuildTables", new PathDialog() { IsFolder = true, Description = "Расположение таблицы", Cache = true })
+            .Add("LoadDocument", new PathDialog("resx(*.docx) | *.docx") { Description = "Загрузить ТЗ" });
+
         }
         /// <summary>
         /// Информация
@@ -95,14 +108,13 @@ namespace Atom
         /// </summary>
         public void SaveProject()
         {
-            SaveFileDialog saveFileDialog = new SaveFileDialog { Filter = "json (*.json)|*.json" };
-            if (saveFileDialog.ShowDialog() == true)
+            if (_diskPath.GetPath("SaveProject"))
             {
                 string json = JsonConvert.SerializeObject(Properties, Formatting.Indented, new JsonSerializerSettings
                 {
                     TypeNameHandling = TypeNameHandling.Objects
                 });
-                File.WriteAllText(saveFileDialog.FileName, json);
+                File.WriteAllText(_diskPath.Path, json);
             }
             else
                 Info += "[Инфо]:Отказ сохранения\n";
@@ -112,12 +124,11 @@ namespace Atom
         /// </summary>
         public void LoadProject()
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog { Filter = "json (*.json)|*.json", InitialDirectory = ConfigurationManager.AppSettings["defaultProjectDir"] };
-            if (openFileDialog.ShowDialog() == true)
+            if (_diskPath.GetPath("LoadProject"))
             {
                 try
                 {
-                    string json = File.ReadAllText(openFileDialog.FileName);
+                    string json = File.ReadAllText(_diskPath.Path);
                     var pr = JsonConvert.DeserializeObject<ObservableCollection<WebPageBaseViewModel>>(json, new JsonSerializerSettings
                     {
                         TypeNameHandling = TypeNameHandling.Objects
@@ -142,7 +153,8 @@ namespace Atom
         {
             foreach (WebPageBaseViewModel webPageBaseViewModel in parent.Children)
             {
-                webPageBaseViewModel.ParentCollection = parent.Children;
+                //webPageBaseViewModel.ParentCollection = parent.Children;
+                webPageBaseViewModel.Parent = parent;
                 SetParentsCollections(webPageBaseViewModel);
             }
         }
@@ -183,7 +195,7 @@ namespace Atom
         }
         public void EditProperty()
         {
-            if (CurrentProperty == null || CurrentProperty is RootPanel)
+            if (CurrentProperty == null)
                 return;
             ModalView window = new ModalView();
             window.DataContext = CurrentProperty;
@@ -252,6 +264,20 @@ namespace Atom
             return true;
         }
 
+        public void BuildTables()
+        {
+            if (_diskPath.GetPath("BuildTables"))
+            {
+                TableConstructorHelper helper = new TableConstructorHelper();
+                helper.ParentTableIdName = _rootPanel.ParentTableId;
+                helper.Construct(Properties, _diskPath.Path);
+                Info += "[Инфо]:Созданны таблицы\n";
+            }
+            else
+            {
+                Info += "[Инфо]:Папка не выбрана\n";
+            }
+        }
         /// <summary>
         /// Записываем файл ресурсов
         /// </summary>
@@ -339,8 +365,7 @@ namespace Atom
             window.DataContext = model;
             if (window.ShowDialog() == true)
             {
-                ScriptConstructorHelper helper = new ScriptConstructorHelper();
-                helper.Visability = 3;
+                ScriptConstructorHelper helper = new ScriptConstructorHelper { Visability = 3 };
                 helper.Constructor(Properties, isEdit, CurrentMenuPageView.Id, model.SelectRoles.Select(i => i.Id));
                 Clipboard.SetText(helper.ToString());
                 Info += "[Инфо]:Скопированно в буфер";
@@ -393,7 +418,8 @@ namespace Atom
             parent.Insert(index, model);
             oldProperty.Children.ForEach(i =>
             {
-                i.ParentCollection = model.Children;
+                //i.ParentCollection = model.Children;
+                i.Parent = model;
                 model.Children.Add(i);
             });
             oldProperty.Children.Clear();
@@ -436,6 +462,20 @@ namespace Atom
             }
         }
         /// <summary>
+        /// Папка расположения таблиц
+        /// </summary>
+        public string TableFolderPath
+        {
+            get { return _tableFolderPath; }
+            set
+            {
+                if (value == _tableFolderPath) return;
+                _tableFolderPath = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
         /// Путь к файлу ресурсов
         /// </summary>
         public string ResourceFilePath
@@ -466,29 +506,13 @@ namespace Atom
         /// </summary>
         public void LoadFromDocument()
         {
-            OpenFileDialog dialog = new OpenFileDialog();
-            dialog.Title = "Загрузить ТЗ";
-            dialog.Filter = "resx(*.docx) | *.docx";
-            if (dialog.ShowDialog() == true)
+            if (_diskPath.GetPath("LoadDocument"))
             {
                 DocumentViewModel model = new DocumentViewModel();
-                model.Load(dialog.FileName);
+                model.Load(_diskPath.Path);
                 DocumentView view = new DocumentView { DataContext = model };
                 if (view.ShowDialog() == true)
                 {
-                    //var descriptions = model.GetDescriptions();
-                    //descriptions.ForEach((i, c) =>
-                    //{
-                    //    ModalViewModel field = new ModalViewModel(_rootPanel.Children) { FieldInDb = "fields" + c, RuDescription = i };
-                    //    _rootPanel.Children.Add(field);
-                    //});
-                    //var groups = model.GetGroupNames();
-                    //groups.ForEach((i, c) =>
-                    //{
-                    //    PanelViewModel panel = new PanelViewModel(_rootPanel.Children) { FieldInDb = "fields" + c, RuDescription = i };
-                    //    _rootPanel.Children.Add(panel);
-                    //});
-
                     model.Build(Properties);
 
                     OnPropertyChanged(nameof(CanWriteResourses));

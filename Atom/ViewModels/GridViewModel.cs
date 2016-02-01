@@ -13,7 +13,7 @@ namespace Atom.ViewModels
         public GridViewModel(WebPageBaseViewModel parent)
         {
             Parent = parent;
-            ParentCollection = parent.Children;
+            //ParentCollection = parent.Children;
             Validate();
         }
         public override string Type
@@ -40,8 +40,8 @@ namespace Atom.ViewModels
                 OnPropertyChanged();
             }
         }
-
-        public override WebPageBaseViewModel Parent { get; }
+        
+        public override WebPageBaseViewModel Parent { get; set; }
 
         public override bool IsDragable { get { return true; } }
         public override bool IsDropable { get { return true; } }

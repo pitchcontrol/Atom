@@ -10,7 +10,10 @@ namespace Atom
 {
     public class RootPanel : WebPageBaseViewModel
     {
-        public override WebPageBaseViewModel Parent => null;
+        
+        public override ObservableCollection<WebPageBaseViewModel> ParentCollection { get; }
+        public override WebPageBaseViewModel Parent { get; set; }
+
         public override bool IsDragable { get { return false; } }
         public override bool IsDropable { get { return true; } }
         public override string FieldInDb
@@ -27,6 +30,8 @@ namespace Atom
         }
 
         private string _tableName;
+        private string _parentTableId;
+
         /// <summary>
         /// Основная таблица для страницы
         /// </summary>
@@ -41,6 +46,21 @@ namespace Atom
                 OnPropertyChanged();
             }
         }
+
+        /// <summary>
+        /// Ид таблица на которую идет ссылка например idul
+        /// </summary>
+        public string ParentTableId
+        {
+            get { return _parentTableId; }
+            set
+            {
+                if (value == _parentTableId) return;
+                _parentTableId = value;
+                OnPropertyChanged();
+            }
+        }
+
         public override string Type { get { return "RootPanel"; } }
 
         public override string ToString()

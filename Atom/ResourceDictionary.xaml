@@ -19,7 +19,7 @@
             <Label Content="Поле в базе" HorizontalAlignment="Left" Margin="10,88.92,0,0" VerticalAlignment="Top"/>
             <TextBox Height="23" Margin="162,90.96,10,0" TextWrapping="Wrap" Text="{Binding FieldInDb, NotifyOnValidationError=True, ValidatesOnNotifyDataErrors=True}" VerticalAlignment="Top"/>
             <Label Content="Таблица" HorizontalAlignment="Left" Margin="10,174.96,0,0" VerticalAlignment="Top"/>
-            <TextBox Height="23" Margin="162,174.96,10,0"  Text="{Binding TableName, NotifyOnValidationError=True, ValidatesOnNotifyDataErrors=True}" VerticalAlignment="Top" />
+            <TextBox Height="23" Margin="162,174.96,10,0"  Text="{Binding TableName, NotifyOnValidationError=True, ValidatesOnNotifyDataErrors=True, Mode=OneWay}" VerticalAlignment="Top" IsReadOnly="True"/>
             <Label Content="RU" HorizontalAlignment="Left" Margin="10,205.92,0,0" VerticalAlignment="Top"/>
             <TextBox Height="72" Margin="162,202.96,10,0" TextWrapping="Wrap" Text="{Binding RuDescription, NotifyOnValidationError=True, ValidatesOnNotifyDataErrors=True}" VerticalAlignment="Top"/>
             <Label Content="EN" HorizontalAlignment="Left" Margin="10,279.96,0,-14.823" VerticalAlignment="Top" Width="40"/>
@@ -56,6 +56,14 @@
                     </Style>
                 </TextBox.Style>
             </TextBox>
+        </Grid>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type atom:RootPanel}">
+        <Grid d:DesignHeight="400" d:DesignWidth="400" >
+            <Label x:Name="label" Content="Корневая таблица" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+            <TextBox x:Name="textBox" Height="23" Margin="174.284,10,10,0" TextWrapping="Wrap" Text="{Binding TableName, Mode=TwoWay}" VerticalAlignment="Top"/>
+            <Label x:Name="label1" Content="Ид родительской таблицы" HorizontalAlignment="Left" Margin="10,40.96,0,0" VerticalAlignment="Top"/>
+            <TextBox x:Name="textBox1" Height="23" Margin="174.284,40.96,10,0" TextWrapping="Wrap" Text="{Binding ParentTableId}" VerticalAlignment="Top"/>
         </Grid>
     </DataTemplate>
     <DataTemplate DataType="{x:Type viewModels:PanelViewModel}">

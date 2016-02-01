@@ -14,7 +14,7 @@ namespace Atom
     public abstract class WebPageBaseViewModel : ViewModelBase
     {
         [JsonIgnore]
-        public ObservableCollection<WebPageBaseViewModel> ParentCollection { get; set; }
+        public virtual ObservableCollection<WebPageBaseViewModel> ParentCollection => Parent?.Children;
 
         public WebPageBaseViewModel()
         {
@@ -24,8 +24,8 @@ namespace Atom
             _enDescription = "Some text";
         }
         [JsonIgnore]
-        public abstract WebPageBaseViewModel Parent { get; }
-
+        public abstract WebPageBaseViewModel Parent { get; set; }
+        
         /// <summary>
         /// Можно таскать
         /// </summary>
@@ -41,7 +41,8 @@ namespace Atom
             //Удаляем у родителя
             data.ParentCollection.Remove(data);
             Children.Add(data);
-            data.ParentCollection = Children;
+            //data.ParentCollection = Children;
+            data.Parent = this;
         }
         private string _controlIdView;
         private string _controlIdEdit;
@@ -200,6 +201,7 @@ namespace Atom
         /// <summary>
         /// Кратинка
         /// </summary>
+        [JsonIgnore]
         public virtual string Image
         {
             get { return @"/Images/change.gif"; }
