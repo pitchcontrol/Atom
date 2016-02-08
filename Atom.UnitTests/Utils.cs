@@ -11,7 +11,7 @@ namespace Atom.UnitTests
     {
         public static string ReplaceSpaces(string text)
         {
-            Regex regex = new Regex(@"\s\s");
+            Regex regex = new Regex(@"(\s)+");
             return regex.Replace(text, " ");
         }
     }

@@ -134,6 +134,7 @@
     <Compile Include="Models\DocProperty.cs" />
     <Compile Include="Models\PathDialog.cs" />
     <Compile Include="Services\DiskPath.cs" />
+    <Compile Include="Services\ProcedureConstructorHeler.cs" />
     <Compile Include="Services\TableConstructorHelper.cs" />
     <Compile Include="ShellView.xaml.cs">
       <DependentUpon>ShellView.xaml</DependentUpon>

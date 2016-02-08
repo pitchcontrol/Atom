@@ -58,6 +58,7 @@
     <Compile Include="GridConstructorHelperTest.cs" />
     <Compile Include="HelperTest.cs" />
     <Compile Include="PageConstructotHelperTest.cs" />
+    <Compile Include="ProcedureConstructorHelerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resource.Designer.cs">
       <DependentUpon>Resource.resx</DependentUpon>
@@ -110,6 +111,11 @@
       <Project>{3110aa1f-61c5-4cbe-a759-7dd7a9ef89ec}</Project>
       <Name>Atom</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ProcedureConstructorHelerTest\AddProcedureTest.sql" />
+    <Content Include="ProcedureConstructorHelerTest\ByIdProcedureTest.sql" />
+    <Content Include="ProcedureConstructorHelerTest\DeleteProcedureTest.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
