@@ -116,6 +116,9 @@
     <Content Include="ProcedureConstructorHelerTest\AddProcedureTest.sql" />
     <Content Include="ProcedureConstructorHelerTest\ByIdProcedureTest.sql" />
     <Content Include="ProcedureConstructorHelerTest\DeleteProcedureTest.sql" />
+    <Content Include="ProcedureConstructorHelerTest\EditFunctionTest.sql" />
+    <Content Include="ProcedureConstructorHelerTest\UpdateProcedureTest.sql" />
+    <Content Include="ProcedureConstructorHelerTest\ViewFunctionTest.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

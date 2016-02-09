@@ -84,6 +84,10 @@
       <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="PoorMansTSqlFormatterLib35, Version=1.4.3.22897, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\PoorMansTSQLFormatter.1.4.3.1\lib\net35\PoorMansTSqlFormatterLib35.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
@@ -134,6 +138,7 @@
     <Compile Include="Models\DocProperty.cs" />
     <Compile Include="Models\PathDialog.cs" />
     <Compile Include="Services\DiskPath.cs" />
+    <Compile Include="Services\FormattUtil.cs" />
     <Compile Include="Services\ProcedureConstructorHeler.cs" />
     <Compile Include="Services\TableConstructorHelper.cs" />
     <Compile Include="ShellView.xaml.cs">

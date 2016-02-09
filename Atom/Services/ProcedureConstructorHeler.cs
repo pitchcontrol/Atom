@@ -30,6 +30,9 @@ namespace Atom.Services
                 AddRecordProcedure(groupTable, groupTable.Key, ParentTableIdName, folderName);
                 DeleteRecordProcedure(groupTable, groupTable.Key, ParentTableIdName, folderName);
                 ByIdRecordProcedure(groupTable, groupTable.Key, ParentTableIdName, folderName);
+                ViewRecordsFunction(groupTable, groupTable.Key, ParentTableIdName, folderName);
+                EditRecordsFunction(groupTable, groupTable.Key, ParentTableIdName, folderName);
+                UpdateRecordProcedureIEnumerable(groupTable, groupTable.Key, ParentTableIdName, folderName);
 
 
             }
@@ -107,6 +110,16 @@ namespace Atom.Services
             _stringBuilder.AppendLine("AS");
             _stringBuilder.Append("SELECT t.pkid id, t.fl_del");
             StringBuilder join = new StringBuilder();
+            WriteFields(fields, join);
+            _stringBuilder.AppendLine($" from {table} t");
+            _stringBuilder.Append(join.ToString());
+            _stringBuilder.Append($"where t.pkid = @id");
+            File.WriteAllText($"{folderName}/{table}ById.sql", _stringBuilder.ToString());
+            _stringBuilder.Clear();
+        }
+
+        private void WriteFields(IEnumerable<ModalViewModel> fields, StringBuilder join)
+        {
             foreach (ModalViewModel field in fields)
             {
                 if (field.Type == ControlTypes.File)
@@ -140,13 +153,91 @@ namespace Atom.Services
                 }
                 _stringBuilder.AppendFormat($", t.{field.FieldInDb}");
             }
+        }
+
+        private void EditRecordsFunction(IEnumerable<ModalViewModel> fields, string table, string parenTableId,
+            string folderName)
+        {
+            _stringBuilder.AppendFormat("--Чтение записей из таблицы {0}\n", table);
+            _stringBuilder.AppendFormat("--Пареметры\n");
+            _stringBuilder.AppendFormat("--@{0} - ИД родительской таблицы\n", ParentTableIdName);
+            _stringBuilder.AppendLine($"CREATE FUNCTION [dbo].[ufn_{table}Edit]");
+            _stringBuilder.AppendLine("(@dat datetime, @idul int, @idreq int)");
+            _stringBuilder.AppendLine("RETURNS TABLE");
+            _stringBuilder.AppendLine("AS");
+            _stringBuilder.AppendLine("RETURN");
+            _stringBuilder.AppendLine("(");
+            _stringBuilder.Append("SELECT t.pkid id, t.fl_del");
+            StringBuilder join = new StringBuilder();
+            WriteFields(fields, join);
             _stringBuilder.AppendLine($" from {table} t");
             _stringBuilder.Append(join.ToString());
-            _stringBuilder.Append($"where t.pkid = @id");
-            File.WriteAllText($"{folderName}/{table}ById.sql", _stringBuilder.ToString());
+            _stringBuilder.AppendLine("where (t.idul = @idul and t.fl_del in (1,2,3) and t.idreq = @idreq) or");
+            _stringBuilder.AppendLine("(t.idul = @idul and t.fl_del=0 and (@dat >= t.[dats] and @dat < t.[datf])");
+            _stringBuilder.AppendLine("and t.pkid not in (select [idcp] from [MainTable] where [idreq] = @idreq and [idcp] is not null))");
+            _stringBuilder.Append(")");
+
+
+            File.WriteAllText($"{folderName}/{table}Edit.sql", FormattUtil.Format(_stringBuilder.ToString()));
             _stringBuilder.Clear();
         }
 
+        private void ViewRecordsFunction(IEnumerable<ModalViewModel> fields, string table, string parenTableId,
+            string folderName)
+        {
+            _stringBuilder.AppendFormat("--Чтение записей из таблицы {0}\n", table);
+            _stringBuilder.AppendFormat("--Пареметры\n");
+            _stringBuilder.AppendFormat("--@{0} - ИД родительской таблицы\n", ParentTableIdName);
+            _stringBuilder.AppendLine($"CREATE FUNCTION [dbo].[ufn_{table}View]");
+            _stringBuilder.AppendLine("(@dat datetime, @idul int)");
+            _stringBuilder.AppendLine("RETURNS TABLE");
+            _stringBuilder.AppendLine("AS");
+            _stringBuilder.AppendLine("RETURN");
+            _stringBuilder.AppendLine("(");
+            _stringBuilder.Append("SELECT t.pkid id, t.fl_del");
+            StringBuilder join = new StringBuilder();
+            WriteFields(fields, join);
+            _stringBuilder.AppendLine($" from {table} t");
+            _stringBuilder.Append(join.ToString());
+            _stringBuilder.AppendLine("where t.dats<=@dat and t.datf>@dat and  t.fl_del=0 and  t.idul = @idul and t.idreq is null");
+            _stringBuilder.Append(")");
+            File.WriteAllText($"{folderName}/{table}View.sql", _stringBuilder.ToString());
+            _stringBuilder.Clear();
+        }
+
+        private void UpdateRecordProcedureIEnumerable(IEnumerable<ModalViewModel> fields, string table, string parenTableId, string folderName)
+        {
+            _stringBuilder.AppendFormat("--Обнавление записи в таблицу {0}\n", table);
+            _stringBuilder.AppendFormat("--Пареметры\n");
+            _stringBuilder.AppendFormat("--@id - pkid записи\n--@idreq - ИД заявки\n--@dat - ТА\n");
+            string header = string.Join("", fields.Select(i => "--@" + i.FieldInDb + " - " + i.RuDescription + "\n"));
+            _stringBuilder.AppendFormat(header);
+            _stringBuilder.AppendLine($"CREATE PROCEDURE [dbo].[usp_{table}Update]");
+            header = string.Join(",\n", fields.Select(i => "\t@" + i.FieldInDb + " " + GetDBType(i)));
+            _stringBuilder.AppendLine($"@id int,\n@idreq int,\n@dat datetime,\n {header}");
+            _stringBuilder.AppendLine("AS");
+            _stringBuilder.AppendLine($"if(exists(select * from [{table}] where fl_del <>0 and idreq = @idreq and pkid = @id))");
+            _stringBuilder.AppendLine("begin");
+            _stringBuilder.AppendLine($"update {table}");
+            _stringBuilder.AppendLine("SET");
+            header = string.Join("", fields.Select(i => i.FieldInDb + " = @" + i.FieldInDb + ",\n"));
+            _stringBuilder.Append(header);
+            _stringBuilder.AppendLine("fl_del = (case when [fl_del] = 3 then 2 else [fl_del] end)");
+            _stringBuilder.AppendLine("where pkid = @id");
+            _stringBuilder.AppendLine("end");
+            _stringBuilder.AppendLine("else");
+            _stringBuilder.AppendLine("begin");
+            _stringBuilder.AppendLine($"insert into [{table}]");
+            header = string.Join(", ", fields.Select(i => "[" + i.FieldInDb + "]"));
+            _stringBuilder.AppendLine($"([dats], [datf], [{IdFieldName}], [idreq], [idcp], [fl_del], [{parenTableId}], {header})");
+            header = string.Join(", ", fields.Select(i => "@" + i.FieldInDb));
+            _stringBuilder.AppendLine($"select cast('3000-01-01' as datetime), cast('3000-01-01' as datetime), {IdFieldName}, @idreq, pkid, 2, {parenTableId}, {header}");
+            _stringBuilder.AppendLine($"from {table}");
+            _stringBuilder.AppendLine($"where pkid = @id");
+            _stringBuilder.AppendLine("end");
+            File.WriteAllText($"{folderName}/{table}Update.sql", _stringBuilder.ToString());
+            _stringBuilder.Clear();
+        }
         /// <summary>
         /// Добавление процедуры - добавить запись
         /// </summary>
