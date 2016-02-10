@@ -61,8 +61,8 @@ namespace Atom.UnitTests
         {
             SimpleInit();
             _helper.Construct(_properties, "../..");
-            string tableContent = Utils.ReplaceSpaces(File.ReadAllText("../../MainTableAdd.sql"));
-            string expectedContent = Utils.ReplaceSpaces(File.ReadAllText("../../ProcedureConstructorHelerTest/AddProcedureTest.sql"));
+            string tableContent = File.ReadAllText("../../MainTableAdd.sql");
+            string expectedContent = FormattUtil.Format(File.ReadAllText("../../ProcedureConstructorHelerTest/AddProcedureTest.sql"));
             Assert.AreEqual(expectedContent, tableContent);
         }
         [Test(Description = "Процедура удаления")]
@@ -71,8 +71,8 @@ namespace Atom.UnitTests
             SimpleInit();
 
             _helper.Construct(_properties, "../..");
-            string tableContent = Utils.ReplaceSpaces(File.ReadAllText("../../MainTableDelete.sql"));
-            string expectedContent = Utils.ReplaceSpaces(File.ReadAllText("../../ProcedureConstructorHelerTest/DeleteProcedureTest.sql"));
+            string tableContent = File.ReadAllText("../../MainTableDelete.sql");
+            string expectedContent = FormattUtil.Format(File.ReadAllText("../../ProcedureConstructorHelerTest/DeleteProcedureTest.sql"));
             Assert.AreEqual(expectedContent, tableContent);
         }
         [Test(Description = "Процедура обновления")]
@@ -81,8 +81,8 @@ namespace Atom.UnitTests
             SimpleInit();
 
             _helper.Construct(_properties, "../..");
-            string tableContent = Utils.ReplaceSpaces(File.ReadAllText("../../MainTableUpdate.sql"));
-            string expectedContent = Utils.ReplaceSpaces(File.ReadAllText("../../ProcedureConstructorHelerTest/UpdateProcedureTest.sql"));
+            string tableContent = File.ReadAllText("../../MainTableUpdate.sql");
+            string expectedContent = FormattUtil.Format(File.ReadAllText("../../ProcedureConstructorHelerTest/UpdateProcedureTest.sql"));
             Assert.AreEqual(expectedContent, tableContent);
         }
         [Test(Description = "Процедура поиск по id")]
@@ -105,8 +105,8 @@ namespace Atom.UnitTests
             _rootPanel.Children.Add(model);
 
             _helper.Construct(_properties, "../..");
-            string tableContent = Utils.ReplaceSpaces(File.ReadAllText("../../MainTableById.sql"));
-            string expectedContent = Utils.ReplaceSpaces(File.ReadAllText("../../ProcedureConstructorHelerTest/ByIdProcedureTest.sql"));
+            string tableContent = File.ReadAllText("../../MainTableById.sql");
+            string expectedContent = FormattUtil.Format(File.ReadAllText("../../ProcedureConstructorHelerTest/ByIdProcedureTest.sql"));
             Assert.AreEqual(expectedContent, tableContent);
         }
         [Test(Description = "Отображение View")]
@@ -129,8 +129,8 @@ namespace Atom.UnitTests
             _rootPanel.Children.Add(model);
 
             _helper.Construct(_properties, "../..");
-            string tableContent = Utils.ReplaceSpaces(File.ReadAllText("../../MainTableView.sql"));
-            string expectedContent = Utils.ReplaceSpaces(File.ReadAllText("../../ProcedureConstructorHelerTest/ViewFunctionTest.sql"));
+            string tableContent = File.ReadAllText("../../MainTableView.sql");
+            string expectedContent = FormattUtil.Format(File.ReadAllText("../../ProcedureConstructorHelerTest/ViewFunctionTest.sql"));
             Assert.AreEqual(expectedContent, tableContent);
         }
         [Test(Description = "Отображение Edit")]
@@ -153,7 +153,7 @@ namespace Atom.UnitTests
             _rootPanel.Children.Add(model);
 
             _helper.Construct(_properties, "../..");
-            string tableContent = FormattUtil.Format(File.ReadAllText("../../MainTableEdit.sql"));
+            string tableContent = File.ReadAllText("../../MainTableEdit.sql");
             string expectedContent = FormattUtil.Format(File.ReadAllText("../../ProcedureConstructorHelerTest/EditFunctionTest.sql"));
             Assert.AreEqual(expectedContent, tableContent);
         }

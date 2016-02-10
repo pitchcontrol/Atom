@@ -91,6 +91,7 @@
                 <MenuItem Header="Получить скрипт View" cal:Message.Attach="GetPageScript('v')" IsEnabled="{Binding CurrentMenuPageView, Converter={StaticResource IsNullConverter}}"/>
                 <MenuItem Header="Получить скрипт Edit" cal:Message.Attach="GetPageScript('e')" IsEnabled="{Binding CurrentMenuPageView, Converter={StaticResource IsNullConverter}}"/>
                 <MenuItem Header="Получить скрипт создания таблиц" x:Name="BuildTables"/>
+                <MenuItem Header="Получить скрипт для процедур" x:Name="BuildProcedures"/>
             </MenuItem>
             <MenuItem Header="Редактирование">
                 <!--<MenuItem Header="Установить всем" x:Name="SetAll"/>-->

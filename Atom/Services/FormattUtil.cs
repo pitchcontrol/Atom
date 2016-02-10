@@ -8,6 +8,10 @@ namespace Atom.Services
 {
     public class FormattUtil
     {
+        public static string Format(StringBuilder sql)
+        {
+            return Format(sql.ToString());
+        }
         public static string Format(string sql)
         {
             var tokenizer = new PoorMansTSqlFormatterLib.Tokenizers.TSqlStandardTokenizer();

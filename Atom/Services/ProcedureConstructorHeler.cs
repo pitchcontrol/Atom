@@ -95,7 +95,7 @@ namespace Atom.Services
             _stringBuilder.AppendFormat("DECLARE @iddel int = SCOPE_IDENTITY();\n");
             _stringBuilder.AppendFormat("update {0}_id set fl_del = 3 where pkid = @iddel", table);
 
-            File.WriteAllText($"{folderName}/{table}Delete.sql", _stringBuilder.ToString());
+            File.WriteAllText($"{folderName}/{table}Delete.sql", FormattUtil.Format(_stringBuilder));
             _stringBuilder.Clear();
         }
 
@@ -114,7 +114,7 @@ namespace Atom.Services
             _stringBuilder.AppendLine($" from {table} t");
             _stringBuilder.Append(join.ToString());
             _stringBuilder.Append($"where t.pkid = @id");
-            File.WriteAllText($"{folderName}/{table}ById.sql", _stringBuilder.ToString());
+            File.WriteAllText($"{folderName}/{table}ById.sql", FormattUtil.Format(_stringBuilder));
             _stringBuilder.Clear();
         }
 
@@ -201,7 +201,7 @@ namespace Atom.Services
             _stringBuilder.Append(join.ToString());
             _stringBuilder.AppendLine("where t.dats<=@dat and t.datf>@dat and  t.fl_del=0 and  t.idul = @idul and t.idreq is null");
             _stringBuilder.Append(")");
-            File.WriteAllText($"{folderName}/{table}View.sql", _stringBuilder.ToString());
+            File.WriteAllText($"{folderName}/{table}View.sql", FormattUtil.Format(_stringBuilder));
             _stringBuilder.Clear();
         }
 
@@ -235,7 +235,7 @@ namespace Atom.Services
             _stringBuilder.AppendLine($"from {table}");
             _stringBuilder.AppendLine($"where pkid = @id");
             _stringBuilder.AppendLine("end");
-            File.WriteAllText($"{folderName}/{table}Update.sql", _stringBuilder.ToString());
+            File.WriteAllText($"{folderName}/{table}Update.sql", FormattUtil.Format(_stringBuilder));
             _stringBuilder.Clear();
         }
         /// <summary>
@@ -264,7 +264,7 @@ namespace Atom.Services
             _stringBuilder.AppendFormat("update {0} set idcp=@idcp where pkid=@idcp;\n", table);
             _stringBuilder.AppendFormat("select @idcp id");
 
-            File.WriteAllText($"{folderName}/{table}Add.sql", _stringBuilder.ToString());
+            File.WriteAllText($"{folderName}/{table}Add.sql", FormattUtil.Format(_stringBuilder));
             _stringBuilder.Clear();
         }
     }

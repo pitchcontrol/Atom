@@ -1,5 +1,5 @@
-﻿--Чтение записи по pkid из таблицу MainTable 
---Пареметры 
+﻿--Чтение записи по pkid из таблицу MainTable
+--Пареметры
 --@id - pkid
 CREATE PROCEDURE [dbo].[usp_MainTableById]
 	@id int

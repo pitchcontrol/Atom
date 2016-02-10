@@ -38,5 +38,9 @@ namespace Atom.Models
         /// Папка
         /// </summary>
         public bool IsFolder { get; set; }
+        /// <summary>
+        /// На открытие
+        /// </summary>
+        public bool OpenDialog { get; set; }
     }
 }

@@ -44,17 +44,34 @@ namespace Atom.Services
             }
             else
             {
-                OpenFileDialog openFileDialog = new OpenFileDialog()
+                if (dialog.OpenDialog)
                 {
-                    InitialDirectory = ConfigurationManager.AppSettings[dialog.DefaultPathName],
-                    Filter = dialog.Filter,
-                    Multiselect = false
-                };
-                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                    OpenFileDialog openFileDialog = new OpenFileDialog()
+                    {
+                        InitialDirectory = ConfigurationManager.AppSettings[dialog.DefaultPathName],
+                        Filter = dialog.Filter,
+                        Multiselect = false
+                    };
+                    if (openFileDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        dialog.Value = openFileDialog.FileName;
+                        Path = dialog.Value;
+                        return true;
+                    }
+                }
+                else
                 {
-                    dialog.Value = openFileDialog.FileName;
-                    Path = dialog.Value;
-                    return true;
+                    SaveFileDialog openFileDialog = new SaveFileDialog()
+                    {
+                        InitialDirectory = ConfigurationManager.AppSettings[dialog.DefaultPathName],
+                        Filter = dialog.Filter
+                    };
+                    if (openFileDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        dialog.Value = openFileDialog.FileName;
+                        Path = dialog.Value;
+                        return true;
+                    }
                 }
             }
             return false;

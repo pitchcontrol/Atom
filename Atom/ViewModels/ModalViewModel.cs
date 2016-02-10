@@ -16,6 +16,7 @@ namespace Atom.ViewModels
     {
         private string _dictionaryType;
         private string _dictionaryTableName;
+        private string _tableJoinAlias;
 
         public ModalViewModel(WebPageBaseViewModel parent)
         {
@@ -70,7 +71,26 @@ namespace Atom.ViewModels
                 ValidateProperty(value);
             }
         }
-        
+        /// <summary>
+        /// Алиас таблицы который будет использоватся при джойне
+        /// </summary>
+        [TriggerRequired("Type", new[] { ControlTypes.Dictionary, ControlTypes.File })]
+        public string TableJoinAlias
+        {
+            get { return _tableJoinAlias; }
+            set
+            {
+                if (value == _tableJoinAlias) return;
+                _tableJoinAlias = value;
+                OnPropertyChanged();
+                ValidateProperty(value);
+            }
+        }
+
+        private void SetTableJoinAlias()
+        {
+            
+        }
         public override WebPageBaseViewModel Parent { get; set; }
 
         public override bool IsDragable { get { return true; } }

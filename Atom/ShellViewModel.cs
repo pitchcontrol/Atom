@@ -85,9 +85,17 @@ namespace Atom
 
             _diskPath = new DiskPath();
             _diskPath.Add("SaveProject", new PathDialog("json (*.json)|*.json") { Description = "Сохранить проект" })
-            .Add("LoadProject", new PathDialog("json (*.json)|*.json") { DefaultPathName = "defaultProjectDir", Description = "Загрузить проект" })
-            .Add("BuildTables", new PathDialog() { IsFolder = true, Description = "Расположение таблицы", Cache = true })
-            .Add("LoadDocument", new PathDialog("resx(*.docx) | *.docx") { Description = "Загрузить ТЗ" });
+                .Add("LoadProject",
+                    new PathDialog("json (*.json)|*.json")
+                    {
+                        DefaultPathName = "defaultProjectDir",
+                        Description = "Загрузить проект",
+                        OpenDialog = true
+                    })
+                .Add("BuildTables",
+                    new PathDialog() { IsFolder = true, Description = "Расположение таблицы", Cache = true })
+                .Add("LoadDocument", new PathDialog("resx(*.docx) | *.docx") { Description = "Загрузить ТЗ" })
+                .Add("BuildProcedures", new PathDialog() { IsFolder = true, Description = "Расположение процедур", Cache = true });
 
         }
         /// <summary>
@@ -156,6 +164,21 @@ namespace Atom
                 //webPageBaseViewModel.ParentCollection = parent.Children;
                 webPageBaseViewModel.Parent = parent;
                 SetParentsCollections(webPageBaseViewModel);
+            }
+        }
+        /// <summary>
+        /// Построить процедуры
+        /// </summary>
+        public void BuildProcedures()
+        {
+            if (_diskPath.GetPath("BuildProcedures"))
+            {
+                ProcedureConstructorHeler helper = new ProcedureConstructorHeler();
+                helper.Construct(Properties, _diskPath.Path);
+            }
+            else
+            {
+                Info += "[Инфо]:Папка не выбранна";
             }
         }
         /// <summary>
