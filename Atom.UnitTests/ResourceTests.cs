@@ -7,6 +7,7 @@ using System.Resources;
 using System.Text;
 using System.Threading.Tasks;
 using Atom.ViewModels;
+using Caliburn.Micro;
 using NUnit.Framework;
 
 namespace Atom.UnitTests
@@ -14,7 +15,7 @@ namespace Atom.UnitTests
     [TestFixture]
     public class ResourceTests
     {
-        ShellViewModel _model;
+        ConstructorViewModel _model;
         [SetUp]
         public void Init()
         {
@@ -22,7 +23,7 @@ namespace Atom.UnitTests
                 File.Copy("../../Resource.resx", "../../ResourceTemp.resx");
             if (!File.Exists("../../ResourceTemp.ru-RU.resx"))
                 File.Copy("../../Resource.ru-RU.resx", "../../ResourceTemp.ru-RU.resx");
-            _model = new ShellViewModel();
+            _model = new ConstructorViewModel(new EventAggregator());
             _model.ResourceFilePath = "../../ResourceTemp.resx";
         }
 

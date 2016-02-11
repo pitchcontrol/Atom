@@ -10,14 +10,15 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Atom
+namespace Atom.Views
 {
     /// <summary>
-    /// Логика взаимодействия для ShellView.xaml
+    /// Логика взаимодействия для ShellViewModel.xaml
     /// </summary>
-    public partial class ShellView : Window
+    public partial class ShellView : UserControl
     {
         public ShellView()
         {

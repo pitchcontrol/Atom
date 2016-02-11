@@ -124,8 +124,8 @@ namespace Atom.Services
             {
                 if (field.Type == ControlTypes.File)
                 {
-                    _stringBuilder.AppendFormat(", df.prim, df.usr, df.format, df.typ, df.nam, df.datadd, df.path");
-                    join.AppendLine($"left join vw_ut_files df on df.pkid = t.{field.FieldInDb}");
+                    _stringBuilder.AppendFormat($", {field.TableJoinAlias}.prim, {field.TableJoinAlias}.usr, {field.TableJoinAlias}.format, {field.TableJoinAlias}.typ, {field.TableJoinAlias}.nam, {field.TableJoinAlias}.datadd, {field.TableJoinAlias}.path");
+                    join.AppendLine($"left join vw_ut_files {field.TableJoinAlias} on {field.TableJoinAlias}.pkid = t.{field.FieldInDb}");
                     continue;
                 }
                 if (field.Type == ControlTypes.Dictionary)
@@ -133,20 +133,20 @@ namespace Atom.Services
                     switch (field.DictionaryType)
                     {
                         case DictionaryTypes.FlName:
-                            _stringBuilder.Append($", {field.FieldInDb}, fl.nam");
-                            join.AppendLine($"left join fl_history fl on fl.pkid = t.{field.FieldInDb}");
+                            _stringBuilder.Append($", {field.FieldInDb}, {field.TableJoinAlias}.nam");
+                            join.AppendLine($"left join fl_history {field.TableJoinAlias} on {field.TableJoinAlias}.pkid = t.{field.FieldInDb}");
                             break;
                         case DictionaryTypes.UlName:
-                            _stringBuilder.Append($", {field.FieldInDb}, ul.nam");
-                            join.AppendLine($"left join ul_history ul on fl.pkid = t.{field.FieldInDb}");
+                            _stringBuilder.Append($", {field.FieldInDb}, {field.TableJoinAlias}.nam");
+                            join.AppendLine($"left join ul_history {field.TableJoinAlias} on {field.TableJoinAlias}.pkid = t.{field.FieldInDb}");
                             break;
                         case DictionaryTypes.SimpleDictionary:
-                            _stringBuilder.Append($", t.{field.FieldInDb}, {field.DictionaryTableName}.name");
-                            join.AppendLine($"left join {field.DictionaryTableName} on {field.DictionaryTableName}.pkid = t.{field.FieldInDb}");
+                            _stringBuilder.Append($", t.{field.FieldInDb}, {field.TableJoinAlias}.name");
+                            join.AppendLine($"left join {field.DictionaryTableName} {field.TableJoinAlias} on {field.TableJoinAlias}.pkid = t.{field.FieldInDb}");
                             break;
                         case DictionaryTypes.DictionaryTable:
-                            _stringBuilder.Append($", t.{field.FieldInDb}, {field.DictionaryTableName}.nam");
-                            join.AppendLine($"left join ufn_Universal_dic('{field.DictionaryTableName}',1) {field.DictionaryTableName} on {field.DictionaryTableName}.id = t.{field.FieldInDb}");
+                            _stringBuilder.Append($", t.{field.FieldInDb}, {field.TableJoinAlias}.nam");
+                            join.AppendLine($"left join ufn_Universal_dic('{field.DictionaryTableName}',1) {field.TableJoinAlias} on {field.TableJoinAlias}.id = t.{field.FieldInDb}");
                             break;
                     }
                     continue;

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Configuration;
@@ -8,30 +7,27 @@ using System.IO;
 using System.Linq;
 using System.Resources;
 using System.Runtime.CompilerServices;
-using System.Windows.Forms;
 using Atom.Annotations;
 using Atom.Models;
 using Atom.Services;
-using Atom.ViewModels;
 using Atom.Views;
+using Caliburn.Micro;
+using Microsoft.Practices.Unity;
 using Newtonsoft.Json;
 using Clipboard = System.Windows.Clipboard;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
 
-namespace Atom
+namespace Atom.ViewModels
 {
-    public class ShellViewModel : INotifyPropertyChanged, IShell
+    public class ConstructorViewModel : Screen
     {
-        readonly Dal _dal;
-        private string _page;
-        private MenuTree _currentMenuPageView;
-        private string _rolesStr;
+        private readonly IEventAggregator _aggregator;
         private WebPageBaseViewModel _currentProperty;
         private RootPanel _rootPanel;
         private ObservableCollection<WebPageBaseViewModel> _properties;
-        private IEnumerable<MenuTree> _menuGroupViews;
-        private IEnumerable<Role> _rolesForPage;
+        
+       
         private string _resourceNameSpace;
         private string _resourceFilePath;
         private string _info;
@@ -43,42 +39,14 @@ namespace Atom
             get { return _rootPanel; }
             set { _rootPanel = value; }
         }
-        /// <summary>
-        /// Страница ipmenupage или nam
-        /// </summary>
-        public string Page
-        {
-            get { return _page; }
-            set
-            {
-                if (value == _page) return;
-                _page = value;
-                OnPropertyChanged();
-                if (string.IsNullOrEmpty(_page))
-                    //При пустом значении сброс
-                    MenuGroupViews = _dal.GetMenuTree();
-                else
-                {
-                    int id;
-                    MenuGroupViews = int.TryParse(Page, out id) ? _dal.GetMenuTree(id) : _dal.GetMenuTree(_page);
-                }
-            }
-        }
-
-        public ShellViewModel()
-        {
-            Properties = new ObservableCollection<WebPageBaseViewModel>();
-            _rootPanel = new RootPanel(Properties);
-            Properties.Add(_rootPanel);
-
-
-        }
+        //[Microsoft.Practices.Unity.Dependency]
+        //public ShellViewModel Shell { get; set; }
         /// <summary>
         /// Конструктор
         /// </summary>
-        public ShellViewModel(Dal dal)
+        public ConstructorViewModel(IEventAggregator aggregator)
         {
-            _dal = dal;
+            _aggregator = aggregator;
             Properties = new ObservableCollection<WebPageBaseViewModel>();
             _rootPanel = new RootPanel(Properties);
             Properties.Add(_rootPanel);
@@ -98,19 +66,7 @@ namespace Atom
                 .Add("BuildProcedures", new PathDialog() { IsFolder = true, Description = "Расположение процедур", Cache = true });
 
         }
-        /// <summary>
-        /// Информация
-        /// </summary>
-        public string Info
-        {
-            get { return _info; }
-            set
-            {
-                if (value == _info) return;
-                _info = value;
-                OnPropertyChanged();
-            }
-        }
+
         /// <summary>
         /// Сохранить проект
         /// </summary>
@@ -125,7 +81,7 @@ namespace Atom
                 File.WriteAllText(_diskPath.Path, json);
             }
             else
-                Info += "[Инфо]:Отказ сохранения\n";
+                _aggregator.PublishOnUIThread("[Инфо]:Отказ сохранения\n");
         }
         /// <summary>
         ///Загрузить проект
@@ -153,8 +109,12 @@ namespace Atom
                 }
                 catch (Exception exception)
                 {
-                    Info += "[Ошибка]:" + exception + "\n";
+                    _aggregator.PublishOnUIThread("[Ошибка]:" + exception + "\n");
                 }
+            }
+            else
+            {
+                _aggregator.PublishOnUIThread("[Инфо]:Не выбран документ");
             }
         }
         private void SetParentsCollections(WebPageBaseViewModel parent)
@@ -178,7 +138,7 @@ namespace Atom
             }
             else
             {
-                Info += "[Инфо]:Папка не выбранна";
+                _aggregator.PublishOnUIThread("[Инфо]:Папка не выбранна");
             }
         }
         /// <summary>
@@ -191,7 +151,7 @@ namespace Atom
             {
                 if (value == _properties) return;
                 _properties = value;
-                OnPropertyChanged();
+                NotifyOfPropertyChange();
             }
         }
         /// <summary>
@@ -204,9 +164,9 @@ namespace Atom
             {
                 if (value == _currentProperty) return;
                 _currentProperty = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(CanEditProperty));
-                OnPropertyChanged(nameof(CanTurnGrid));
+                NotifyOfPropertyChange();
+                NotifyOfPropertyChange(nameof(CanEditProperty));
+                NotifyOfPropertyChange(nameof(CanTurnGrid));
             }
         }
         /// <summary>
@@ -239,7 +199,7 @@ namespace Atom
             helper.ResourceNamespace = ResourceNameSpace;
             helper.Construct(Properties, isEdit);
             Clipboard.SetText(helper.ToString());
-            Info += "[Инфо]:Скопированно в буфер";
+            _aggregator.PublishOnUIThread("[Инфо]:Скопированно в буфер");
         }
         /// <summary>
         /// Установить всем
@@ -280,7 +240,7 @@ namespace Atom
                 }
                 else
                 {
-                    Info += "[Инфо]:Файл не выбран\n";
+                    _aggregator.PublishOnUIThread("[Инфо]:Файл не выбран\n");
                     return false;
                 }
             }
@@ -294,11 +254,11 @@ namespace Atom
                 TableConstructorHelper helper = new TableConstructorHelper();
                 helper.ParentTableIdName = _rootPanel.ParentTableId;
                 helper.Construct(Properties, _diskPath.Path);
-                Info += "[Инфо]:Созданны таблицы\n";
+                _aggregator.PublishOnUIThread("[Инфо]:Созданны таблицы\n");
             }
             else
             {
-                Info += "[Инфо]:Папка не выбрана\n";
+                _aggregator.PublishOnUIThread("[Инфо]:Папка не выбрана\n");
             }
         }
         /// <summary>
@@ -346,7 +306,7 @@ namespace Atom
             if (window.ShowDialog() == true)
             {
                 _rootPanel.Children.Add(model);
-                OnPropertyChanged(nameof(CanWriteResourses));
+                NotifyOfPropertyChange(nameof(CanWriteResourses));
             }
         }
 
@@ -377,46 +337,9 @@ namespace Atom
             }
         }
 
-        /// <summary>
-        /// Получить скрипт для редактирования
-        /// </summary>
-        public void GetPageScript(string param)
-        {
-            bool isEdit = param == "e";
-            ModalView window = new ModalView();
-            RolesViewModel model = new RolesViewModel { Roles = _dal.GetGlobalRoles() };
-            window.DataContext = model;
-            if (window.ShowDialog() == true)
-            {
-                ScriptConstructorHelper helper = new ScriptConstructorHelper { Visability = 3 };
-                helper.Constructor(Properties, isEdit, CurrentMenuPageView.Id, model.SelectRoles.Select(i => i.Id));
-                Clipboard.SetText(helper.ToString());
-                Info += "[Инфо]:Скопированно в буфер";
-            }
-        }
-        public IEnumerable<MenuTree> MenuGroupViews
-        {
-            get { return _menuGroupViews; }
-            set
-            {
-                if (value == _menuGroupViews) return;
-                _menuGroupViews = value;
-                OnPropertyChanged();
-            }
-        }
-        /// <summary>
-        /// Роли для страницы как ид через запятую
-        /// </summary>
-        public string RolesStr
-        {
-            get { return _rolesStr; }
-            set
-            {
-                if (value == _rolesStr) return;
-                _rolesStr = value;
-                OnPropertyChanged();
-            }
-        }
+        
+        
+        
         /// <summary>
         /// Преобразовать в грид
         /// </summary>
@@ -448,42 +371,8 @@ namespace Atom
             oldProperty.Children.Clear();
             CurrentProperty = model;
         }
-        /// <summary>
-        /// Выбранная страница
-        /// </summary>
-        public MenuTree CurrentMenuPageView
-        {
-            set
-            {
-                if (value == _currentMenuPageView) return;
-                _currentMenuPageView = value;
-                OnPropertyChanged();
-                //TODO: Разобратся
-                //if (_currentMenuPageView != null && !_currentMenuPageView.IsGroup)
-                //    MenuFields = null;
-                //else
-                //    MenuFields = null;
-                if (_currentMenuPageView != null)
-                {
-                    RolesForPage = _currentMenuPageView.IsGroup ? _dal.GetRoleForGroup(_currentMenuPageView.Id) : _dal.GetRoleForPage(_currentMenuPageView.PageId);
-                    RolesStr = string.Join(", ", RolesForPage.Select(i => i.Id));
-                }
-            }
-            get { return _currentMenuPageView; }
-        }
-        /// <summary>
-        /// Роли для выбранной страницы
-        /// </summary>
-        public IEnumerable<Role> RolesForPage
-        {
-            get { return _rolesForPage; }
-            set
-            {
-                if (value == _rolesForPage) return;
-                _rolesForPage = value;
-                OnPropertyChanged();
-            }
-        }
+        
+        
         /// <summary>
         /// Папка расположения таблиц
         /// </summary>
@@ -494,7 +383,7 @@ namespace Atom
             {
                 if (value == _tableFolderPath) return;
                 _tableFolderPath = value;
-                OnPropertyChanged();
+                NotifyOfPropertyChange();
             }
         }
 
@@ -508,7 +397,7 @@ namespace Atom
             {
                 if (value == _resourceFilePath) return;
                 _resourceFilePath = value;
-                OnPropertyChanged();
+                NotifyOfPropertyChange();
             }
         }
         /// <summary>
@@ -521,7 +410,7 @@ namespace Atom
             {
                 if (value == _resourceNameSpace) return;
                 _resourceNameSpace = value;
-                OnPropertyChanged();
+                NotifyOfPropertyChange();
             }
         }
         /// <summary>
@@ -538,18 +427,23 @@ namespace Atom
                 {
                     model.Build(Properties);
 
-                    OnPropertyChanged(nameof(CanWriteResourses));
-                    Info += "[Инфо]:Загруженно ТЗ";
+                    NotifyOfPropertyChange(nameof(CanWriteResourses));
+                    _aggregator.PublishOnUIThread("[Инфо]:Загруженно ТЗ");
                 }
+            }
+            else
+            {
+                _aggregator.PublishOnUIThread("[Инфо]:Не выбран документ");
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            if (PropertyChanged != null)
-                PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        //public event PropertyChangedEventHandler PropertyChanged;
+        //[NotifyPropertyChangedInvocator]
+        //protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        //{
+        //    if (PropertyChanged != null)
+        //        PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        //}
+
     }
 }

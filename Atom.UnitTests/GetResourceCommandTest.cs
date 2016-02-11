@@ -8,6 +8,7 @@ using Atom.Commands;
 using Atom.Models;
 using Atom.Services;
 using Atom.ViewModels;
+using Caliburn.Micro;
 using NUnit.Framework;
 
 namespace Atom.UnitTests
@@ -17,14 +18,14 @@ namespace Atom.UnitTests
     {
         RootPanel _rootPanel;
         private GetResourceCommand _command;
-        private ShellViewModel _model;
+        private ConstructorViewModel _model;
         [SetUp]
         public void Init()
         {
             //ObservableCollection<WebPageBaseViewModel> properties = new ObservableCollection<WebPageBaseViewModel>();
             //_rootPanel = new RootPanel(properties);
             //properties.Add(_rootPanel);
-            _model = new ShellViewModel();
+            _model = new ConstructorViewModel(new EventAggregator());
             _rootPanel = _model.RootPanel;
             //properties.Clear();
 

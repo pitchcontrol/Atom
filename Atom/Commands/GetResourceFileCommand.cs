@@ -6,14 +6,15 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Xml.Linq;
+using Atom.ViewModels;
 using Microsoft.Win32;
 
 namespace Atom.Commands
 {
     public class GetResourceFileCommand : ICommand
     {
-        private ShellViewModel _model;
-        public GetResourceFileCommand(ShellViewModel model)
+        private ConstructorViewModel _model;
+        public GetResourceFileCommand(ConstructorViewModel model)
         {
             _model = model;
             _model.Properties.CollectionChanged += (s, e) =>

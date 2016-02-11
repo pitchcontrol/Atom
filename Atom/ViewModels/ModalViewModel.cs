@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 using System.Windows;
 using Atom.Constant;
 using Atom.Validation;
@@ -23,9 +24,28 @@ namespace Atom.ViewModels
             Parent = parent;
             //ParentCollection = Parent?.Children;
             Validate();
+
         }
 
         public string TableName => GetTableName(Parent);
+
+        /// <summary>
+        /// Тип поля
+        /// </summary>
+        [Required]
+        public override string Type
+        {
+            get { return _type; }
+            set
+            {
+                if (value == _type) return;
+                _type = value;
+                Validate();
+                OnPropertyChanged();
+                SetID();
+                SetTableJoinAlias();
+            }
+        }
 
         /// <summary>
         /// Получить таблицу родителя
@@ -53,6 +73,7 @@ namespace Atom.ViewModels
                 _dictionaryType = value;
                 OnPropertyChanged();
                 Validate();
+                SetTableJoinAlias();
             }
         }
 
@@ -69,6 +90,7 @@ namespace Atom.ViewModels
                 _dictionaryTableName = value;
                 OnPropertyChanged();
                 ValidateProperty(value);
+                SetTableJoinAlias();
             }
         }
         /// <summary>
@@ -89,7 +111,31 @@ namespace Atom.ViewModels
 
         private void SetTableJoinAlias()
         {
-            
+            if (string.IsNullOrEmpty(TableJoinAlias))
+            {
+                switch (Type)
+                {
+                    case ControlTypes.File:
+                        TableJoinAlias = "df";
+                        break;
+                    case ControlTypes.Dictionary:
+                        switch (DictionaryType)
+                        {
+                            case DictionaryTypes.UlName:
+                                TableJoinAlias = "ul";
+                                break;
+                            case DictionaryTypes.FlName:
+                                TableJoinAlias = "fl";
+                                break;
+                            case DictionaryTypes.DictionaryTable:
+                            case DictionaryTypes.SimpleDictionary:
+                                if (!string.IsNullOrEmpty(DictionaryTableName))
+                                    TableJoinAlias = DictionaryTableName;
+                                break;
+                        }
+                        break;
+                }
+            }
         }
         public override WebPageBaseViewModel Parent { get; set; }
 

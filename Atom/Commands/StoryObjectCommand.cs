@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using Atom.ViewModels;
 using Microsoft.Win32;
 using Newtonsoft.Json;
 
@@ -14,9 +15,9 @@ namespace Atom.Commands
 {
     public class StoryObjectCommand : ICommand
     {
-        private readonly ShellViewModel _model;
+        private readonly ConstructorViewModel _model;
 
-        public StoryObjectCommand(ShellViewModel model)
+        public StoryObjectCommand(ConstructorViewModel model)
         {
             _model = model;
             _model.PropertyChanged += (s, e) =>

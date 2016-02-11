@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Atom.Services;
 using Atom.ViewModels;
+using Caliburn.Micro;
 using NUnit.Framework;
 
 namespace Atom.UnitTests
@@ -12,11 +13,11 @@ namespace Atom.UnitTests
     [TestFixture]
     public class ShellViewModelTest
     {
-        private ShellViewModel _model;
+        private ConstructorViewModel _model;
         [SetUp]
         public void Init()
         {
-            _model = new ShellViewModel(new Dal());
+            _model = new ConstructorViewModel(new EventAggregator());
         }
         [Test]
         public void TurnGridTest()

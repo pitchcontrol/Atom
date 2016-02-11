@@ -5,6 +5,7 @@ using System.Resources;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Atom.ViewModels;
 
 namespace Atom.Commands
 {
@@ -13,9 +14,9 @@ namespace Atom.Commands
     /// </summary>
     public class GetResourceCommand : ICommand
     {
-        private readonly ShellViewModel _model;
+        private readonly ConstructorViewModel _model;
 
-        public GetResourceCommand(ShellViewModel model)
+        public GetResourceCommand(ConstructorViewModel model)
         {
             _model = model;
             _model.Properties.CollectionChanged += (s, e) =>

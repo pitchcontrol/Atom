@@ -49,7 +49,7 @@ namespace Atom
         private string _fieldInDb;
         private string _ruDescription;
         private string _enDescription;
-        private string _type;
+        protected string _type;
         private bool _isEditable;
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace Atom
             {
                 if (value == _type) return;
                 _type = value;
-                ValidateProperty(value);
+                Validate();
                 OnPropertyChanged();
                 SetID();
             }
