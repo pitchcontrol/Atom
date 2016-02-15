@@ -22,6 +22,7 @@ namespace Atom.ViewModels
             _aggregator = aggregator;
             _aggregator.Subscribe(this);
             Show(constructorViewModel);
+            DisplayName = "Конструктор";
         }
 
         public string Info
@@ -35,18 +36,24 @@ namespace Atom.ViewModels
             }
         }
 
-       public void Show(object parametr)
+        public void Show(object parametr)
         {
+            _activeView = parametr;
             ActivateItem(parametr);
         }
+        public bool CanShowConstructor => _constructorViewModel != _activeView;
 
         public void ShowConstructor()
         {
+            _activeView = _constructorViewModel;
             ActivateItem(_constructorViewModel);
         }
 
+        public bool CanShowRoles => _rolePageViewModel != _activeView;
+
         public void ShowRoles()
         {
+            _activeView = _rolePageViewModel;
             ActivateItem(_rolePageViewModel);
         }
 

@@ -59,5 +59,23 @@ namespace Atom.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на &lt;%@ Page Language=&quot;C#&quot; AutoEventWireup=&quot;true&quot; Inherits=&quot;SAM.Web.Pages.UL.AdditionalInfo.CommentsView&quot; MasterPageFile=&quot;~/MasterPages/MasterPage.master&quot; Codebehind=&quot;CommentsView.aspx.cs&quot; %&gt;
+        ///
+        ///&lt;asp:Content ID=&quot;Content1&quot; ContentPlaceHolderID=&quot;WorkAreaPH&quot; runat=&quot;Server&quot;&gt;
+        ///	&lt;%--Карточка--%&gt;    
+        ///	&lt;asp:UpdatePanel UpdateMode=&quot;Conditional&quot; ID=&quot;updCard&quot; runat=&quot;server&quot;&gt;
+        ///	&lt;ContentTemplate&gt;        
+        ///		{#content#}
+        ///	&lt;/ContentTemplate&gt;
+        ///	&lt;/asp:UpdatePanel&gt;
+        ///&lt;/asp:Content&gt;.
+        /// </summary>
+        internal static string PageView {
+            get {
+                return ResourceManager.GetString("PageView", resourceCulture);
+            }
+        }
     }
 }

@@ -1,0 +1,10 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" Inherits="{#ClassName#}" MasterPageFile="~/MasterPages/MasterPage.master" Codebehind="{#Codebehind#}" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="WorkAreaPH" runat="Server">
+	<%--Карточка--%>    
+	<asp:UpdatePanel UpdateMode="Conditional" ID="updCard" runat="server">
+	<ContentTemplate>        
+		{#content#}
+	</ContentTemplate>
+	</asp:UpdatePanel>
+</asp:Content>

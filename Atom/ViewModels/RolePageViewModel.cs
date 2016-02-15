@@ -19,13 +19,18 @@ namespace Atom.ViewModels
         private IEnumerable<MenuTree> _menuGroupViews;
         private IEnumerable<Role> _rolesForPage;
         private string _rolesStr;
-        public RolePageViewModel(Dal dal, IEventAggregator aggregator)
+        private readonly ConstructorViewModel _constructorViewModel;
+
+
+        public RolePageViewModel(Dal dal, IEventAggregator aggregator, ConstructorViewModel constructorViewModel)
         {
             _dal = dal;
             _aggregator = aggregator;
+            _constructorViewModel = constructorViewModel;
         }
-        //[Microsoft.Practices.Unity.Dependency]
-        public ShellViewModel Shell { get; set; }
+
+        public override string DisplayName { get { return "Роли страницы страницы"; } }
+
         public IEnumerable<MenuTree> MenuGroupViews
         {
             get { return _menuGroupViews; }
@@ -95,7 +100,7 @@ namespace Atom.ViewModels
             if (window.ShowDialog() == true)
             {
                 ScriptConstructorHelper helper = new ScriptConstructorHelper { Visability = 3 };
-                //helper.Constructor(Properties, isEdit, CurrentMenuPageView.Id, model.SelectRoles.Select(i => i.Id));
+                helper.Constructor(_constructorViewModel.Properties, isEdit, CurrentMenuPageView.Id, model.SelectRoles.Select(i => i.Id));
                 Clipboard.SetText(helper.ToString());
                 _aggregator.PublishOnUIThread("[Инфо]:Скопированно в буфер");
             }

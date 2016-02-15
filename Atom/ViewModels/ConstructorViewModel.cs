@@ -26,8 +26,8 @@ namespace Atom.ViewModels
         private WebPageBaseViewModel _currentProperty;
         private RootPanel _rootPanel;
         private ObservableCollection<WebPageBaseViewModel> _properties;
-        
-       
+
+
         private string _resourceNameSpace;
         private string _resourceFilePath;
         private string _info;
@@ -62,8 +62,9 @@ namespace Atom.ViewModels
                     })
                 .Add("BuildTables",
                     new PathDialog() { IsFolder = true, Description = "Расположение таблицы", Cache = true })
-                .Add("LoadDocument", new PathDialog("resx(*.docx) | *.docx") { Description = "Загрузить ТЗ" })
+                .Add("LoadDocument", new PathDialog("resx(*.docx) | *.docx") { Description = "Загрузить ТЗ", OpenDialog = true })
                 .Add("BuildProcedures", new PathDialog() { IsFolder = true, Description = "Расположение процедур", Cache = true });
+            DisplayName = "Конструктор страницы";
 
         }
 
@@ -233,9 +234,18 @@ namespace Atom.ViewModels
                 {
                     ResourceFilePath = openFileDialog.FileName;
                     int index = openFileDialog.FileName.IndexOf("App_GlobalResources");
-                    string subString = openFileDialog.FileName.Substring(index + "App_GlobalResources".Length);
+                    string subString = openFileDialog.FileName;
+                    if (index != -1)
+                        subString = openFileDialog.FileName.Substring(index + "App_GlobalResources".Length);
+                    else
+                    {
+                        string parent = Directory.GetDirectoryRoot(ResourceFilePath);
+                        subString = subString.Remove(0, parent.Length);
+                    }
+
+
                     ResourceNameSpace =
-                        subString.Replace(@"\", ".").TrimStart(new[] { '.' }).TrimEnd(new[] { '.', 'r', 'e', 's', 'x' });
+                        subString.Replace(@"\", ".").TrimStart(new[] { '.' }).Replace(".resx", "");
                     return true;
                 }
                 else
@@ -337,9 +347,9 @@ namespace Atom.ViewModels
             }
         }
 
-        
-        
-        
+
+
+
         /// <summary>
         /// Преобразовать в грид
         /// </summary>
@@ -371,8 +381,8 @@ namespace Atom.ViewModels
             oldProperty.Children.Clear();
             CurrentProperty = model;
         }
-        
-        
+
+
         /// <summary>
         /// Папка расположения таблиц
         /// </summary>
@@ -422,7 +432,7 @@ namespace Atom.ViewModels
             {
                 DocumentViewModel model = new DocumentViewModel();
                 model.Load(_diskPath.Path);
-                DocumentView view = new DocumentView { DataContext = model };
+                Views.DocumentView view = new Views.DocumentView { DataContext = model };
                 if (view.ShowDialog() == true)
                 {
                     model.Build(Properties);

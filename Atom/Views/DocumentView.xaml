@@ -3,22 +3,19 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Atom.Views"
         xmlns:avalonWizard="http://schemas.pavel.fedarovich.com/winfx/2010/xaml/presentation"
         xmlns:converters="clr-namespace:Atom.Converters"
         xmlns:cal="http://www.caliburnproject.org"
-        xmlns:atom="clr-namespace:Atom"
         xmlns:viewModels="clr-namespace:Atom.ViewModels"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-        xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
         xmlns:behavior="clr-namespace:Atom.Behavior"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=viewModels:DocumentViewModel, IsDesignTimeCreatable=False}"
         Title="Загрузка ТЗ" Height="600" Width="600">
     <Grid>
-        <avalonWizard:Wizard  avalonWizard:Designer.PageIndex="2"
+        <avalonWizard:Wizard  WizardStyle="Aero"
+                              avalonWizard:Designer.PageIndex="2"
                               NextButtonContent="Далее" 
-                              WizardStyle="Auto" 
                               FinishButtonContent="Готово"
                               CancelButtonContent="Отмена" Cancelled="Wizard_OnCancelled" Finished="Wizard_OnFinished">
             <i:Interaction.Behaviors>

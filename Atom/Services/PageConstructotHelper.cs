@@ -1,6 +1,11 @@
+п»їusing System;
 using System.Collections.Generic;
 using System.Text;
+using System.Windows;
+using System.Windows.Resources;
+using Atom.Constant;
 using Atom.Models;
+using Atom.Properties;
 using Atom.ViewModels;
 
 namespace Atom.Services
@@ -9,9 +14,18 @@ namespace Atom.Services
     {
         readonly StringBuilder _stringBuilder = new StringBuilder();
         /// <summary>
-        /// Расположени ресурсов
+        /// Р Р°СЃРїРѕР»РѕР¶РµРЅРё СЂРµСЃСѓСЂСЃРѕРІ
         /// </summary>
         public string ResourceNamespace { get; set; }
+        /// <summary>
+        /// РџРѕР»РЅР°СЏ СЃС‚СЂР°РЅРёС†Р°
+        /// </summary>
+        public bool FullPage { get; set; }
+        /// <summary>
+        /// РРјСЏ РєР»Р°СЃСЃР° СЃ РЅР°Р№РјСЃРїРµР№СЃРѕРј
+        /// </summary>
+        public string ClassName { get; set; }
+        public string Codebehind { get; set; }
 
         public void Construct(IEnumerable<WebPageBaseViewModel> collection, bool isEdit)
         {
@@ -61,9 +75,9 @@ namespace Atom.Services
             }
         }
         /// <summary>
-        /// Создает контрол в режиме View
+        /// РЎРѕР·РґР°РµС‚ РєРѕРЅС‚СЂРѕР» РІ СЂРµР¶РёРјРµ View
         /// </summary>
-        /// <param name="modalViewModel">Обьект поле</param>
+        /// <param name="modalViewModel">РћР±СЊРµРєС‚ РїРѕР»Рµ</param>
         private void WriteView(WebPageBaseViewModel modalViewModel)
         {
             _stringBuilder.AppendFormat("<%--{0}--%>\n", modalViewModel.RuDescription);
@@ -102,7 +116,7 @@ namespace Atom.Services
             }
         }
         /// <summary>
-        /// Добавить грид
+        /// Р”РѕР±Р°РІРёС‚СЊ РіСЂРёРґ
         /// </summary>
         /// <param name="modalViewModel"></param>
         private void WriteGrid(IEnumerable<WebPageBaseViewModel> collection)
@@ -150,9 +164,9 @@ namespace Atom.Services
             }
         }
         /// <summary>
-        /// Создает контрол в режиме Edit
+        /// РЎРѕР·РґР°РµС‚ РєРѕРЅС‚СЂРѕР» РІ СЂРµР¶РёРјРµ Edit
         /// </summary>
-        /// <param name="modalViewModel">Обьект поле</param>
+        /// <param name="modalViewModel">РћР±СЊРµРєС‚ РїРѕР»Рµ</param>
         private void WriteEdit(WebPageBaseViewModel modalViewModel)
         {
             _stringBuilder.AppendFormat("<%--{0}--%>\n", modalViewModel.RuDescription);
@@ -201,6 +215,14 @@ namespace Atom.Services
         }
         public override string ToString()
         {
+            if (FullPage)
+            {
+                string template = Resources.PageView;
+                return
+                    template.Replace(Templates.Content, _stringBuilder.ToString())
+                        .Replace(Templates.ClassName, ClassName)
+                        .Replace(Templates.Codebehind, Codebehind);
+            }
             return _stringBuilder.ToString();
         }
     }
