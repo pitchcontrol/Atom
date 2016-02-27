@@ -1,0 +1,55 @@
+﻿namespace SAM.Web.Pages.UL.Documents
+{
+    using System;
+    using System.Collections;
+    using System.Data;
+    using System.Web.UI;
+    using System.Web.UI.WebControls;
+	using GP.Web.UI.Controls;
+    using GP.Web.UI.Controls.Navigation;
+    using Resources.UL.Accounting;
+    using Resources.UL.Documents;
+    using SAM.Controls;
+    using SAM.DAL;
+    using SAM.SiteStructure;
+    using SAM.Web.Core;
+    using SAM.Web.ViewBase.Pages.UL;
+
+    using MenuItem = GP.Web.UI.Controls.Navigation.MenuItem;
+
+    public partial class {#ShortClassName#} : ULCardPage
+    {
+       
+        /// <summary>
+        /// The bind data.
+        /// </summary>
+        protected override void BindData()
+        {
+            base.BindData();
+        }
+        /// <summary>
+        /// The page init.
+        /// </summary>
+        protected override void PageInit()
+        {
+            base.PageInit();
+        }
+
+        /// <summary>
+        /// Обработчик события "Загрузка страницы"
+        /// </summary>
+        /// <param name="sender">
+        /// The source of the event.
+        /// </param>
+        /// <param name="e">
+        /// The <see cref="System.EventArgs"/> instance containing the event data.
+        /// </param>
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            if (!this.IsPostBack)
+            {
+            }
+        }
+
+    }
+}

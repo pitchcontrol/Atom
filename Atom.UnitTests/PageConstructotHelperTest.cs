@@ -12,7 +12,7 @@ using NUnit.Framework;
 namespace Atom.UnitTests
 {
     [TestFixture]
-    public class PageConstructotHelperTest
+    public class PageConstructotHelperTest: FileTemplateExtender
     {
         RootPanel _rootPanel;
         private PageConstructotHelper _helper;
@@ -147,5 +147,19 @@ namespace Atom.UnitTests
             result += "</gp:CollapsePanel>\n";
             Assert.AreEqual(result, _helper.ToString());
         }
+
+        [Test(Description = "Тестируем все страницу")]
+        public void FullViewPageTest()
+        {
+            _rootPanel.Children.Add(new PanelViewModel(_rootPanel) { ControlIdView = "clId1", RuDescription = "Комент" });
+            _helper.Construct(_rootPanel.Children, false);
+            _helper.ClassName = "Mynamespace.class";
+            _helper.Codebehind = "class.aspx.cs";
+            _helper.FullPage = true;
+            string expected = GetTemplateText();
+            //TestContext.CurrentContext.TestDirectory+"/../../PageConstructotHelperTest/FullViewPageTest.txt")
+            Assert.AreEqual(Utils.ReplaceSpaces(expected), Utils.ReplaceSpaces(_helper.ToString()));
+        }
+
     }
 }

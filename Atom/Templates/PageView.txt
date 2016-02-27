@@ -4,7 +4,7 @@
 	<%--Карточка--%>    
 	<asp:UpdatePanel UpdateMode="Conditional" ID="updCard" runat="server">
 	<ContentTemplate>        
-		{#content#}
+		{#Content#}
 	</ContentTemplate>
 	</asp:UpdatePanel>
 </asp:Content>

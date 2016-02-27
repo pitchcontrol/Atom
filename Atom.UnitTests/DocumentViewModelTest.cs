@@ -16,7 +16,7 @@ namespace Atom.UnitTests
         public void Init()
         {
             _model = new DocumentViewModel();
-            _model.Load("../../Test.docx");
+            _model.Load(TestContext.CurrentContext.TestDirectory+"/../../Test.docx");
         }
         [Test]
         public void TableCountTest()

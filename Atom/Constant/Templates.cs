@@ -5,5 +5,6 @@
         public const string Content = "{#Content#}";
         public const string ClassName = "{#ClassName#}";
         public const string Codebehind = "{#Codebehind#}";
+        public const string ShortClassName = "{#ShortClassName#}";
     }
 }

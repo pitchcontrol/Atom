@@ -1,0 +1,12 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" Inherits="Mynamespace.class" MasterPageFile="~/MasterPages/MasterPage.master" Codebehind="class.aspx.cs" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="WorkAreaPH" runat="Server">
+	<%--Карточка--%>    
+	<asp:UpdatePanel UpdateMode="Conditional" ID="updCard" runat="server">
+	<ContentTemplate>        
+		<%--Комент--%>
+		<gp:CollapsePanel ID="clId1" runat="server" Caption="<%$ Resources: , clId1 %>" SkinID="CollapsePanel">
+		</gp:CollapsePanel>
+	</ContentTemplate>
+	</asp:UpdatePanel>
+</asp:Content>

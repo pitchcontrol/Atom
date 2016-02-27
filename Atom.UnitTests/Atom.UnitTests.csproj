@@ -55,6 +55,7 @@
   <ItemGroup>
     <Compile Include="DocumentViewModelTest.cs" />
     <Compile Include="DragDropTest.cs" />
+    <Compile Include="FileTemplateExtender.cs" />
     <Compile Include="GetResourceCommandTest.cs" />
     <Compile Include="GridConstructorHelperTest.cs" />
     <Compile Include="HelperTest.cs" />
@@ -114,6 +115,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="PageConstructotHelperTest\FullViewPageTest.txt" />
     <Content Include="ProcedureConstructorHelerTest\AddProcedureTest.sql" />
     <Content Include="ProcedureConstructorHelerTest\ByIdProcedureTest.sql" />
     <Content Include="ProcedureConstructorHelerTest\DeleteProcedureTest.sql" />

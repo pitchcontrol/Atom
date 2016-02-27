@@ -121,4 +121,7 @@
   <data name="PageView" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\templates\pageview.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
+  <data name="PageView_cs" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\templates\pageview.cs.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
 </root>

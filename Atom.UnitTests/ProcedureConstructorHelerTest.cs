@@ -32,12 +32,12 @@ namespace Atom.UnitTests
         [TearDown]
         public void Cleanup()
         {
-            File.Delete("../../MainTableAdd.sql");
-            File.Delete("../../MainTableDelete.sql");
-            File.Delete("../../MainTableView.sql");
-            File.Delete("../../ MainTableEdit.sql");
-            File.Delete("../../ MainTableById.sql");
-            File.Delete("../../ UpdateProcedureTest.sql");
+            File.Delete(TestContext.CurrentContext.TestDirectory + "/../../MainTableAdd.sql");
+            File.Delete(TestContext.CurrentContext.TestDirectory + "/../../MainTableDelete.sql");
+            File.Delete(TestContext.CurrentContext.TestDirectory + "/../../MainTableView.sql");
+            File.Delete(TestContext.CurrentContext.TestDirectory + "/../../ MainTableEdit.sql");
+            File.Delete(TestContext.CurrentContext.TestDirectory + "/../../ MainTableById.sql");
+            File.Delete(TestContext.CurrentContext.TestDirectory + "/../../ UpdateProcedureTest.sql");
         }
 
 
@@ -60,9 +60,9 @@ namespace Atom.UnitTests
         public void AddProcedureTest()
         {
             SimpleInit();
-            _helper.Construct(_properties, "../..");
-            string tableContent = File.ReadAllText("../../MainTableAdd.sql");
-            string expectedContent = FormattUtil.Format(File.ReadAllText("../../ProcedureConstructorHelerTest/AddProcedureTest.sql"));
+            _helper.Construct(_properties, TestContext.CurrentContext.TestDirectory + "/../..");
+            string tableContent = File.ReadAllText(TestContext.CurrentContext.TestDirectory +"/../../MainTableAdd.sql");
+            string expectedContent = FormattUtil.Format(File.ReadAllText(TestContext.CurrentContext.TestDirectory + "/../../ProcedureConstructorHelerTest/AddProcedureTest.sql"));
             Assert.AreEqual(expectedContent, tableContent);
         }
         [Test(Description = "Процедура удаления")]
@@ -70,9 +70,9 @@ namespace Atom.UnitTests
         {
             SimpleInit();
 
-            _helper.Construct(_properties, "../..");
-            string tableContent = File.ReadAllText("../../MainTableDelete.sql");
-            string expectedContent = FormattUtil.Format(File.ReadAllText("../../ProcedureConstructorHelerTest/DeleteProcedureTest.sql"));
+            _helper.Construct(_properties, TestContext.CurrentContext.TestDirectory + "/../..");
+            string tableContent = File.ReadAllText(TestContext.CurrentContext.TestDirectory + "/../../MainTableDelete.sql");
+            string expectedContent = FormattUtil.Format(File.ReadAllText(TestContext.CurrentContext.TestDirectory + "/../../ProcedureConstructorHelerTest/DeleteProcedureTest.sql"));
             Assert.AreEqual(expectedContent, tableContent);
         }
         [Test(Description = "Процедура обновления")]
@@ -80,9 +80,9 @@ namespace Atom.UnitTests
         {
             SimpleInit();
 
-            _helper.Construct(_properties, "../..");
-            string tableContent = File.ReadAllText("../../MainTableUpdate.sql");
-            string expectedContent = FormattUtil.Format(File.ReadAllText("../../ProcedureConstructorHelerTest/UpdateProcedureTest.sql"));
+            _helper.Construct(_properties, TestContext.CurrentContext.TestDirectory + "/../..");
+            string tableContent = File.ReadAllText(TestContext.CurrentContext.TestDirectory + "/../../MainTableUpdate.sql");
+            string expectedContent = FormattUtil.Format(File.ReadAllText(TestContext.CurrentContext.TestDirectory + "/../../ProcedureConstructorHelerTest/UpdateProcedureTest.sql"));
             Assert.AreEqual(expectedContent, tableContent);
         }
         [Test(Description = "Процедура поиск по id")]
@@ -104,9 +104,9 @@ namespace Atom.UnitTests
             model.RuDescription = "Поле 4";
             _rootPanel.Children.Add(model);
 
-            _helper.Construct(_properties, "../..");
-            string tableContent = File.ReadAllText("../../MainTableById.sql");
-            string expectedContent = FormattUtil.Format(File.ReadAllText("../../ProcedureConstructorHelerTest/ByIdProcedureTest.sql"));
+            _helper.Construct(_properties, TestContext.CurrentContext.TestDirectory + "/../..");
+            string tableContent = File.ReadAllText(TestContext.CurrentContext.TestDirectory + "/../../MainTableById.sql");
+            string expectedContent = FormattUtil.Format(File.ReadAllText(TestContext.CurrentContext.TestDirectory + "/../../ProcedureConstructorHelerTest/ByIdProcedureTest.sql"));
             Assert.AreEqual(expectedContent, tableContent);
         }
         [Test(Description = "Отображение View")]
@@ -128,9 +128,9 @@ namespace Atom.UnitTests
             model.RuDescription = "Поле 4";
             _rootPanel.Children.Add(model);
 
-            _helper.Construct(_properties, "../..");
-            string tableContent = File.ReadAllText("../../MainTableView.sql");
-            string expectedContent = FormattUtil.Format(File.ReadAllText("../../ProcedureConstructorHelerTest/ViewFunctionTest.sql"));
+            _helper.Construct(_properties, TestContext.CurrentContext.TestDirectory + "/../..");
+            string tableContent = File.ReadAllText(TestContext.CurrentContext.TestDirectory + "/../../MainTableView.sql");
+            string expectedContent = FormattUtil.Format(File.ReadAllText(TestContext.CurrentContext.TestDirectory + "/../../ProcedureConstructorHelerTest/ViewFunctionTest.sql"));
             Assert.AreEqual(expectedContent, tableContent);
         }
         [Test(Description = "Отображение Edit")]
@@ -152,9 +152,9 @@ namespace Atom.UnitTests
             model.RuDescription = "Поле 4";
             _rootPanel.Children.Add(model);
 
-            _helper.Construct(_properties, "../..");
-            string tableContent = File.ReadAllText("../../MainTableEdit.sql");
-            string expectedContent = FormattUtil.Format(File.ReadAllText("../../ProcedureConstructorHelerTest/EditFunctionTest.sql"));
+            _helper.Construct(_properties, TestContext.CurrentContext.TestDirectory + "/../..");
+            string tableContent = File.ReadAllText(TestContext.CurrentContext.TestDirectory + "/../../MainTableEdit.sql");
+            string expectedContent = FormattUtil.Format(File.ReadAllText(TestContext.CurrentContext.TestDirectory + "/../../ProcedureConstructorHelerTest/EditFunctionTest.sql"));
             Assert.AreEqual(expectedContent, tableContent);
         }
     }

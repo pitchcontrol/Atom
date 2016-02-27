@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Resources;
@@ -212,6 +213,14 @@ namespace Atom.Services
                     break;
 
             }
+        }
+
+        public string GetCodebehind()
+        {
+            string template = Resources.PageView_cs;
+            string className = ClassName.Split('.').LastOrDefault();
+
+            return template.Replace(Templates.ShortClassName, className);
         }
         public override string ToString()
         {

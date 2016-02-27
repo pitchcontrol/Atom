@@ -19,19 +19,19 @@ namespace Atom.UnitTests
         [SetUp]
         public void Init()
         {
-            if (!File.Exists("../../ResourceTemp.resx"))
-                File.Copy("../../Resource.resx", "../../ResourceTemp.resx");
-            if (!File.Exists("../../ResourceTemp.ru-RU.resx"))
-                File.Copy("../../Resource.ru-RU.resx", "../../ResourceTemp.ru-RU.resx");
+            if (!File.Exists(TestContext.CurrentContext.TestDirectory + "/../../ResourceTemp.resx"))
+                File.Copy(TestContext.CurrentContext.TestDirectory + "/../../Resource.resx", TestContext.CurrentContext.TestDirectory + "/../../ResourceTemp.resx");
+            if (!File.Exists(TestContext.CurrentContext.TestDirectory + "/../../ResourceTemp.ru-RU.resx"))
+                File.Copy(TestContext.CurrentContext.TestDirectory + "/../../Resource.ru-RU.resx", TestContext.CurrentContext.TestDirectory + "/../../ResourceTemp.ru-RU.resx");
             _model = new ConstructorViewModel(new EventAggregator());
-            _model.ResourceFilePath = "../../ResourceTemp.resx";
+            _model.ResourceFilePath = TestContext.CurrentContext.TestDirectory + "/../../ResourceTemp.resx";
         }
 
         [TearDown]
         public void Cleanup()
         {
-            File.Delete("../../ResourceTemp.resx");
-            File.Delete("../../ResourceTemp.ru-RU.resx");
+            File.Delete(TestContext.CurrentContext.TestDirectory + "/../../ResourceTemp.resx");
+            File.Delete(TestContext.CurrentContext.TestDirectory + "/../../ResourceTemp.ru-RU.resx");
 
         }
         [Test]
@@ -45,13 +45,13 @@ namespace Atom.UnitTests
             ResXResourceReader reader = new ResXResourceReader(_model.ResourceFilePath);
             var dictionary = reader.Cast<DictionaryEntry>();
             Assert.AreEqual(2, dictionary.Count());
-            Assert.IsNotNull(dictionary.FirstOrDefault(i => i.Key == "Id1"));
+            Assert.IsNotNull(dictionary.FirstOrDefault(i => (string) i.Key == "Id1"));
             reader.Close();
 
             reader = new ResXResourceReader(_model.ResourceFilePath.Replace(".resx", ".ru-RU.resx"));
             dictionary = reader.Cast<DictionaryEntry>();
             Assert.AreEqual(2, dictionary.Count());
-            Assert.IsNotNull(dictionary.FirstOrDefault(i => i.Key == "Id1"));
+            Assert.IsNotNull(dictionary.FirstOrDefault(i => (string) i.Key == "Id1"));
             reader.Close();
         }
         [Test]

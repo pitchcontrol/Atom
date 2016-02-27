@@ -61,13 +61,13 @@ namespace Atom.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на &lt;%@ Page Language=&quot;C#&quot; AutoEventWireup=&quot;true&quot; Inherits=&quot;SAM.Web.Pages.UL.AdditionalInfo.CommentsView&quot; MasterPageFile=&quot;~/MasterPages/MasterPage.master&quot; Codebehind=&quot;CommentsView.aspx.cs&quot; %&gt;
+        ///   Ищет локализованную строку, похожую на &lt;%@ Page Language=&quot;C#&quot; AutoEventWireup=&quot;true&quot; Inherits=&quot;{#ClassName#}&quot; MasterPageFile=&quot;~/MasterPages/MasterPage.master&quot; Codebehind=&quot;{#Codebehind#}&quot; %&gt;
         ///
         ///&lt;asp:Content ID=&quot;Content1&quot; ContentPlaceHolderID=&quot;WorkAreaPH&quot; runat=&quot;Server&quot;&gt;
         ///	&lt;%--Карточка--%&gt;    
         ///	&lt;asp:UpdatePanel UpdateMode=&quot;Conditional&quot; ID=&quot;updCard&quot; runat=&quot;server&quot;&gt;
         ///	&lt;ContentTemplate&gt;        
-        ///		{#content#}
+        ///		{#Content#}
         ///	&lt;/ContentTemplate&gt;
         ///	&lt;/asp:UpdatePanel&gt;
         ///&lt;/asp:Content&gt;.
@@ -75,6 +75,15 @@ namespace Atom.Properties {
         internal static string PageView {
             get {
                 return ResourceManager.GetString("PageView", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на .
+        /// </summary>
+        internal static string PageView_cs {
+            get {
+                return ResourceManager.GetString("PageView_cs", resourceCulture);
             }
         }
     }
