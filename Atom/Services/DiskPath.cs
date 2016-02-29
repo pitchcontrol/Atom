@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -75,6 +76,11 @@ namespace Atom.Services
                 }
             }
             return false;
+        }
+
+        public void WriteFile(string text)
+        {
+            File.WriteAllText(Path, text);
         }
     }
 }

@@ -196,11 +196,13 @@
     <Compile Include="Services\GridConstructorHelper.cs" />
     <Compile Include="Services\PageConstructotHelper.cs" />
     <Compile Include="Services\ScriptConstructorHelper.cs" />
+    <Content Include="Templates\PageEdit.cs.txt" />
     <Compile Include="Validation\IfRequared.cs" />
     <Compile Include="Validation\MaxValueAttribute.cs" />
     <Compile Include="Validation\TriggerRequired.cs" />
     <Compile Include="ViewModels\ConstructorViewModel.cs" />
     <Compile Include="ViewModels\DocumentViewModel.cs" />
+    <Compile Include="ViewModels\EnterNameViewModel.cs" />
     <Compile Include="ViewModels\GridConvertViewModel.cs" />
     <Compile Include="ViewModels\GridViewModel.cs" />
     <Compile Include="ViewModels\MassiveSetViewModel.cs" />

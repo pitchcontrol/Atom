@@ -10,6 +10,12 @@
                     xmlns:constant="clr-namespace:Atom.Constant"
                     mc:Ignorable="d">
 
+    <DataTemplate DataType="{x:Type viewModels:EnterNameViewModel}">
+        <Grid>
+            <Label Content="{Binding Description}"/>
+            <TextBox Text="{Binding Value}"/>
+        </Grid>
+    </DataTemplate>
     <DataTemplate DataType="{x:Type viewModels:ModalViewModel}">
         <Grid d:DesignHeight="400" d:DesignWidth="400" >
             <Label Content="Тип" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>

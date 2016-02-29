@@ -61,6 +61,15 @@ namespace Atom.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на .
+        /// </summary>
+        internal static string PageEdit_cs {
+            get {
+                return ResourceManager.GetString("PageEdit_cs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на &lt;%@ Page Language=&quot;C#&quot; AutoEventWireup=&quot;true&quot; Inherits=&quot;{#ClassName#}&quot; MasterPageFile=&quot;~/MasterPages/MasterPage.master&quot; Codebehind=&quot;{#Codebehind#}&quot; %&gt;
         ///
         ///&lt;asp:Content ID=&quot;Content1&quot; ContentPlaceHolderID=&quot;WorkAreaPH&quot; runat=&quot;Server&quot;&gt;
@@ -79,7 +88,24 @@ namespace Atom.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на .
+        ///   Ищет локализованную строку, похожую на namespace SAM.Web.Pages.UL.Documents
+        ///{
+        ///    using System;
+        ///    using System.Collections;
+        ///    using System.Data;
+        ///    using System.Web.UI;
+        ///    using System.Web.UI.WebControls;
+        ///	using GP.Web.UI.Controls;
+        ///    using GP.Web.UI.Controls.Navigation;
+        ///    using Resources.UL.Accounting;
+        ///    using Resources.UL.Documents;
+        ///    using SAM.Controls;
+        ///    using SAM.DAL;
+        ///    using SAM.SiteStructure;
+        ///    using SAM.Web.Core;
+        ///    using SAM.Web.ViewBase.Pages.UL;
+        ///
+        ///    using MenuItem = GP.Web.UI.Controls.Navigation.M [остаток строки не уместился]&quot;;.
         /// </summary>
         internal static string PageView_cs {
             get {

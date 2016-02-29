@@ -215,9 +215,9 @@ namespace Atom.Services
             }
         }
 
-        public string GetCodebehind()
+        public string GetCodebehind(bool isEdit)
         {
-            string template = Resources.PageView_cs;
+            string template = isEdit ? Resources.PageEdit_cs:Resources.PageView;
             string className = ClassName.Split('.').LastOrDefault();
 
             return template.Replace(Templates.ShortClassName, className);

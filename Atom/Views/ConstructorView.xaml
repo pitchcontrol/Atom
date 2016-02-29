@@ -84,6 +84,7 @@
             </MenuItem>
             <MenuItem Header="Страница">
                 <MenuItem Header="Сформировать страницу View в буфер обмена" cal:Message.Attach="GetPage('v')"/>
+                <MenuItem Header="Сформировать страницу View" cal:Message.Attach="GetPage('vf')"/>
                 <MenuItem Header="Сформировать страницу Edit в буфер обмена" cal:Message.Attach="GetPage('e')"/>
             </MenuItem>
             <MenuItem Header="Скрипт">

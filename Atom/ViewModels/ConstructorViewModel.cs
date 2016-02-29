@@ -62,8 +62,12 @@ namespace Atom.ViewModels
                     })
                 .Add("BuildTables",
                     new PathDialog() { IsFolder = true, Description = "Расположение таблицы", Cache = true })
-                .Add("LoadDocument", new PathDialog("resx(*.docx) | *.docx") { Description = "Загрузить ТЗ", OpenDialog = true })
-                .Add("BuildProcedures", new PathDialog() { IsFolder = true, Description = "Расположение процедур", Cache = true });
+                .Add("LoadDocument",
+                    new PathDialog("resx(*.docx) | *.docx") { Description = "Загрузить ТЗ", OpenDialog = true })
+                .Add("BuildProcedures",
+                    new PathDialog() { IsFolder = true, Description = "Расположение процедур", Cache = true })
+                .Add("ViewPage", new PathDialog("resx(*.aspx) | *.aspx") { Description = "Расположение страницы View", Cache = true })
+                .Add("EditPage", new PathDialog("resx(*.aspx) | *.aspx") { Description = "Расположение страницы Edit", Cache = true });
             DisplayName = "Конструктор страницы";
 
         }
@@ -193,14 +197,60 @@ namespace Atom.ViewModels
         /// <param name="parametr"></param>
         public void GetPage(string parametr)
         {
-            bool isEdit = parametr == "e";
             if (!EnterResourcePath())
                 return;
             PageConstructotHelper helper = new PageConstructotHelper();
             helper.ResourceNamespace = ResourceNameSpace;
-            helper.Construct(Properties, isEdit);
-            Clipboard.SetText(helper.ToString());
-            _aggregator.PublishOnUIThread("[Инфо]:Скопированно в буфер");
+            switch (parametr)
+            {
+                case "e":
+                    helper.Construct(Properties, true);
+                    Clipboard.SetText(helper.ToString());
+                    _aggregator.PublishOnUIThread("[Инфо]:Скопированно в буфер");
+                    return;
+                case "v":
+                    helper.Construct(Properties, true);
+                    Clipboard.SetText(helper.ToString());
+                    _aggregator.PublishOnUIThread("[Инфо]:Скопированно в буфер");
+                    return;
+                case "ef":
+                    helper.Construct(Properties, true);
+                    helper.FullPage = true;
+                    if (_diskPath.GetPath("EditPage"))
+                    {
+                        string file = _diskPath.Path;
+                        string csfile = file + ".cs";
+                        string designerfile = file + ".designer.cs";
+                        File.WriteAllText(file, helper.ToString());
+                        File.WriteAllText(csfile, helper.GetCodebehind(true));
+                        File.WriteAllText(designerfile, "");
+                        _aggregator.PublishOnUIThread("[Инфо]:Записан файл");
+                    }
+
+                    return;
+                case "vf":
+                    if (_diskPath.GetPath("EditPage"))
+                    {
+                        EnterNameViewModel model = new EnterNameViewModel();
+                        ModalView window = new ModalView { DataContext = model };
+                        if (window.ShowDialog() == true && model.IsValid)
+                        {
+                            helper.ClassName = model.Value;
+                            helper.FullPage = true;
+                            helper.Construct(Properties, false);
+                            string file = _diskPath.Path;
+                            string csfile = file + ".cs";
+                            string designerfile = file + ".designer.cs";
+                            File.WriteAllText(file, helper.ToString());
+                            File.WriteAllText(csfile, helper.GetCodebehind(false));
+                            File.WriteAllText(designerfile, "");
+                            _aggregator.PublishOnUIThread("[Инфо]:Записан файл");
+                        }
+                    }
+                    return;
+            }
+
+
         }
         /// <summary>
         /// Установить всем
