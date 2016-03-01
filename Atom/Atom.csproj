@@ -95,6 +95,10 @@
       <HintPath>..\packages\JetBrains.Annotations.7.0\lib\net45\JetBrains.Annotations.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="LinqKit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=bc217f8844052a91, processorArchitecture=MSIL">
+      <HintPath>..\packages\LinqKit.1.0\lib\35\LinqKit.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.Expression.Interactions, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
@@ -212,9 +216,13 @@
     <Compile Include="ViewModels\RolesViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
     <Compile Include="ViewModels\ValidationBase.cs" />
+    <Compile Include="ViewModels\ValidationScreen.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="Views\DocumentView.xaml.cs">
       <DependentUpon>DocumentView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\EnterNameView.xaml.cs">
+      <DependentUpon>EnterNameView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\PanelView.xaml.cs">
       <DependentUpon>PanelView.xaml</DependentUpon>
@@ -244,6 +252,10 @@
     <Page Include="Views\DocumentView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\EnterNameView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\PanelView.xaml">
       <SubType>Designer</SubType>

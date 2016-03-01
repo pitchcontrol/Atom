@@ -25,7 +25,7 @@ namespace Atom.UnitTests
             //ObservableCollection<WebPageBaseViewModel> properties = new ObservableCollection<WebPageBaseViewModel>();
             //_rootPanel = new RootPanel(properties);
             //properties.Add(_rootPanel);
-            _model = new ConstructorViewModel(new EventAggregator());
+            _model = new ConstructorViewModel(new EventAggregator(), new WindowManager());
             _rootPanel = _model.RootPanel;
             //properties.Clear();
 

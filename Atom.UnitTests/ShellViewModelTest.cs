@@ -17,7 +17,7 @@ namespace Atom.UnitTests
         [SetUp]
         public void Init()
         {
-            _model = new ConstructorViewModel(new EventAggregator());
+            _model = new ConstructorViewModel(new EventAggregator(),new WindowManager());
         }
         [Test]
         public void TurnGridTest()

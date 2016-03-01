@@ -12,8 +12,12 @@
 
     <DataTemplate DataType="{x:Type viewModels:EnterNameViewModel}">
         <Grid>
-            <Label Content="{Binding Description}"/>
-            <TextBox Text="{Binding Value}"/>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="3*"/>
+            </Grid.ColumnDefinitions>
+            <Label Content="{Binding Description}" Height="Auto" VerticalAlignment="Center"  Margin="0,5.98"/>
+            <TextBox Text="{Binding Value}" Height="Auto" VerticalAlignment="Center" Grid.Column="1" Margin="0"/>
         </Grid>
     </DataTemplate>
     <DataTemplate DataType="{x:Type viewModels:ModalViewModel}">

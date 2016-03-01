@@ -23,7 +23,7 @@ namespace Atom.UnitTests
                 File.Copy(TestContext.CurrentContext.TestDirectory + "/../../Resource.resx", TestContext.CurrentContext.TestDirectory + "/../../ResourceTemp.resx");
             if (!File.Exists(TestContext.CurrentContext.TestDirectory + "/../../ResourceTemp.ru-RU.resx"))
                 File.Copy(TestContext.CurrentContext.TestDirectory + "/../../Resource.ru-RU.resx", TestContext.CurrentContext.TestDirectory + "/../../ResourceTemp.ru-RU.resx");
-            _model = new ConstructorViewModel(new EventAggregator());
+            _model = new ConstructorViewModel(new EventAggregator(),new WindowManager());
             _model.ResourceFilePath = TestContext.CurrentContext.TestDirectory + "/../../ResourceTemp.resx";
         }
 

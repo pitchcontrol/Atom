@@ -23,6 +23,7 @@ namespace Atom.ViewModels
     public class ConstructorViewModel : Screen
     {
         private readonly IEventAggregator _aggregator;
+        private readonly IWindowManager _windowManager;
         private WebPageBaseViewModel _currentProperty;
         private RootPanel _rootPanel;
         private ObservableCollection<WebPageBaseViewModel> _properties;
@@ -39,14 +40,16 @@ namespace Atom.ViewModels
             get { return _rootPanel; }
             set { _rootPanel = value; }
         }
+        public ConstructorViewModel() { }
         //[Microsoft.Practices.Unity.Dependency]
         //public ShellViewModel Shell { get; set; }
         /// <summary>
         /// Конструктор
         /// </summary>
-        public ConstructorViewModel(IEventAggregator aggregator)
+        public ConstructorViewModel(IEventAggregator aggregator, IWindowManager windowManager)
         {
             _aggregator = aggregator;
+            _windowManager = windowManager;
             Properties = new ObservableCollection<WebPageBaseViewModel>();
             _rootPanel = new RootPanel(Properties);
             Properties.Add(_rootPanel);
@@ -69,9 +72,30 @@ namespace Atom.ViewModels
                 .Add("ViewPage", new PathDialog("resx(*.aspx) | *.aspx") { Description = "Расположение страницы View", Cache = true })
                 .Add("EditPage", new PathDialog("resx(*.aspx) | *.aspx") { Description = "Расположение страницы Edit", Cache = true });
             DisplayName = "Конструктор страницы";
-
         }
 
+        protected override void OnActivate()
+        {
+            TryLoadLastProject();
+        }
+
+        private void TryLoadLastProject()
+        {
+            try
+            {
+                if (!File.Exists("./lastProject.path"))
+                    return;
+                string path = File.ReadAllText("./lastProject.path");
+                if (!File.Exists(path))
+                    return;
+                LoadFromFile(path);
+                _aggregator.PublishOnUIThread($"[Инфо]:Загружен файл {path}\n");
+            }
+            catch (Exception exception)
+            {
+                _aggregator.PublishOnUIThread("[Ошибка]:" + exception + "\n");
+            }
+        }
         /// <summary>
         /// Сохранить проект
         /// </summary>
@@ -97,20 +121,8 @@ namespace Atom.ViewModels
             {
                 try
                 {
-                    string json = File.ReadAllText(_diskPath.Path);
-                    var pr = JsonConvert.DeserializeObject<ObservableCollection<WebPageBaseViewModel>>(json, new JsonSerializerSettings
-                    {
-                        TypeNameHandling = TypeNameHandling.Objects
-                    });
-
-                    Properties.Clear();
-                    foreach (WebPageBaseViewModel webPageBaseViewModel in pr)
-                    {
-                        if (webPageBaseViewModel is RootPanel)
-                            RootPanel = (RootPanel)webPageBaseViewModel;
-                        Properties.Add(webPageBaseViewModel);
-                    }
-                    SetParentsCollections(RootPanel);
+                    LoadFromFile(_diskPath.Path);
+                    File.WriteAllText("./lastProject.path", _diskPath.Path);
                 }
                 catch (Exception exception)
                 {
@@ -122,6 +134,25 @@ namespace Atom.ViewModels
                 _aggregator.PublishOnUIThread("[Инфо]:Не выбран документ");
             }
         }
+
+        private void LoadFromFile(string path)
+        {
+            string json = File.ReadAllText(path);
+            var pr = JsonConvert.DeserializeObject<ObservableCollection<WebPageBaseViewModel>>(json, new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.Objects
+            });
+
+            Properties.Clear();
+            foreach (WebPageBaseViewModel webPageBaseViewModel in pr)
+            {
+                if (webPageBaseViewModel is RootPanel)
+                    RootPanel = (RootPanel)webPageBaseViewModel;
+                Properties.Add(webPageBaseViewModel);
+            }
+            SetParentsCollections(RootPanel);
+        }
+
         private void SetParentsCollections(WebPageBaseViewModel parent)
         {
             foreach (WebPageBaseViewModel webPageBaseViewModel in parent.Children)
@@ -231,9 +262,9 @@ namespace Atom.ViewModels
                 case "vf":
                     if (_diskPath.GetPath("EditPage"))
                     {
-                        EnterNameViewModel model = new EnterNameViewModel();
-                        ModalView window = new ModalView { DataContext = model };
-                        if (window.ShowDialog() == true && model.IsValid)
+                        EnterNameViewModel model = EnterNameViewModel.CreateEnterNamespace();
+                        //ModalView window = new ModalView { DataContext = model };
+                        if (_windowManager.ShowDialog(model) == true && model.IsValid)
                         {
                             helper.ClassName = model.Value;
                             helper.FullPage = true;
@@ -496,14 +527,6 @@ namespace Atom.ViewModels
                 _aggregator.PublishOnUIThread("[Инфо]:Не выбран документ");
             }
         }
-
-        //public event PropertyChangedEventHandler PropertyChanged;
-        //[NotifyPropertyChangedInvocator]
-        //protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        //{
-        //    if (PropertyChanged != null)
-        //        PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        //}
 
     }
 }
